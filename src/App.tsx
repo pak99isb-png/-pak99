@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster } from 'react-hot-toast';
+
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TourCard } from './components/TourCard';
@@ -36,7 +36,6 @@ import { VisaDetailsPage } from './pages/VisaDetailsPage';
 import { AdminApp } from './admin/AdminApp';
 
 export function App() {
-  const [isAdminAuth, setIsAdminAuth] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
