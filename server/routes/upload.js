@@ -35,4 +35,22 @@ router.post('/multiple', auth, upload.array('images', 10), async (req, res) => {
   }
 });
 
+// DELETE /api/upload — delete image from cloudinary by URL
+router.delete('/', auth, async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ message: 'URL is required.' });
+
+    // Extract public_id from Cloudinary URL
+    const match = url.match(/\/upload\/(?:v\d+\/)?([^\.]+)/);
+    if (match && match[1]) {
+      const { cloudinary } = await import('../config/cloudinary.js');
+      await cloudinary.uploader.destroy(match[1]);
+    }
+    res.json({ message: 'Image deleted from Cloudinary.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting image.', error: error.message });
+  }
+});
+
 export default router;

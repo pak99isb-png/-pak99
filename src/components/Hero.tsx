@@ -1,13 +1,7 @@
 import { CATEGORIES } from '../types';
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Star, ShieldCheck, Users, Compass, ArrowRight } from 'lucide-react';
-
-const SLIDER_IMAGES = [
-  "/images/destinations/hunza_valley_2.jpg",
-  "/images/destinations/skardu_2.jpg",
-  "/images/destinations/naran_kaghan_2.png",
-  "/images/destinations/fairy_meadows_2.png",
-];
+import { destinationsAPI, settingsAPI } from '../services/api';
 
 interface HeroProps {
   searchQuery: string;
@@ -25,19 +19,41 @@ export const Hero: React.FC<HeroProps> = ({
   onExploreClick
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [sliderImages, setSliderImages] = useState<string[]>([
+    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80" // Initial single fallback while loading
+  ]);
+
+  useEffect(() => {
+    settingsAPI.get().then((settings: any) => {
+      if (settings?.heroSliderImages && settings.heroSliderImages.length > 0) {
+        setSliderImages(settings.heroSliderImages);
+      } else {
+        // Fallback to dynamic destinations
+        destinationsAPI.getAll().then((data: any) => {
+          if (data && data.length > 0) {
+            const allImages = data.flatMap((d: any) => d.sliderImages || []);
+            const uniqueImages = Array.from(new Set(allImages)).slice(0, 6) as string[];
+            if (uniqueImages.length > 0) {
+              setSliderImages(uniqueImages);
+            }
+          }
+        }).catch(() => {});
+      }
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length);
+      setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [sliderImages.length]);
 
   return (
     <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       {/* Background Image Slider */}
       <div className="absolute inset-0 w-full h-full bg-slate-900">
-        {SLIDER_IMAGES.map((img, index) => (
+        {sliderImages.map((img, index) => (
           <img
             key={img}
             src={img}
@@ -62,11 +78,11 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Main Heading (Pakistan Tours Style) */}
         <div className="space-y-4">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight mx-auto">
+          <h1 className="scroll-animate text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight mx-auto">
             Fly High & Explore <span className="text-[#ff5500]">Majestic Peaks</span><br />
             <span className="text-amber-400">& Holy Places</span>
           </h1>
-          <p className="text-slate-200 text-lg sm:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="scroll-animate delay-100 text-slate-200 text-lg sm:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
             Pak99 Travel & Tours delivers world-class travel experiences across Hunza, Skardu, Swat, Naran, customized family expeditions, and VIP Umrah packages.
           </p>
         </div>
@@ -137,7 +153,7 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
+        <div className="scroll-animate delay-300 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
           <div className="bg-white p-4 rounded-2xl text-center border border-slate-200 shadow-md hover:border-orange-500/50 transition-all">
             <div className="flex justify-center text-[#ff5500] mb-1">
               <Users className="w-5 h-5" />
@@ -174,7 +190,7 @@ export const Hero: React.FC<HeroProps> = ({
 
       {/* Carousel Indicators */}
       <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-20">
-        {SLIDER_IMAGES.map((_, idx) => (
+        {sliderImages.map((_, idx) => (
           <div
             key={idx}
             onClick={() => setCurrentSlide(idx)}

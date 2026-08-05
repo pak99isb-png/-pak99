@@ -242,5 +242,17 @@ export const uploadAPI = {
     if (!res.ok) throw new Error('Upload failed');
     return res.json();
   },
+  deleteImage: async (url: string): Promise<void> => {
+    const token = localStorage.getItem('pak99_admin_token');
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ url }),
+    });
+    if (!res.ok) throw new Error('Delete failed');
+  }
 };
 

@@ -391,6 +391,78 @@ const SettingsPanel = () => {
     }
   };
 
+  const handleUploadSliderImage = async (key: 'heroSliderImages' | 'pakistanToursSliderImages', file: File) => {
+    setUploading(true);
+    try {
+      const result = await uploadAPI.uploadImage(file);
+      setSettings((prev: any) => ({
+        ...prev,
+        [key]: [...(prev[key] || []), result.url]
+      }));
+    } catch (err) {
+      alert('Image upload failed.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveSliderImage = async (key: 'heroSliderImages' | 'pakistanToursSliderImages', index: number) => {
+    const urlToDelete = settings[key]?.[index];
+    
+    // Optimistically update UI
+    setSettings((prev: any) => {
+      const arr = [...(prev[key] || [])];
+      arr.splice(index, 1);
+      return { ...prev, [key]: arr };
+    });
+
+    // Delete from Cloudinary
+    if (urlToDelete) {
+      try {
+        await uploadAPI.deleteImage(urlToDelete);
+        // Also automatically save the updated array to settings API to persist
+        await settingsAPI.update({
+          [key]: settings[key].filter((_: any, i: number) => i !== index)
+        });
+      } catch (e) {
+        console.error("Failed to delete from Cloudinary", e);
+      }
+    }
+  };
+
+  const renderImageArrayManager = (title: string, key: 'heroSliderImages' | 'pakistanToursSliderImages', description: string) => {
+    const images = settings[key] || [];
+    return (
+      <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50 mt-6">
+        <h4 className="text-[#ff5500] font-bold mb-1">{title}</h4>
+        <p className="text-xs text-slate-400 mb-4">{description}</p>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+          {images.map((img: string, idx: number) => (
+            <div key={idx} className="relative group rounded-xl overflow-hidden aspect-video border border-slate-600">
+              <img src={img} alt={`Slide ${idx + 1}`} className="w-full h-full object-cover" />
+              <button 
+                onClick={() => handleRemoveSliderImage(key, idx)}
+                className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          {images.length < 6 && (
+            <label className="flex flex-col items-center justify-center aspect-video border-2 border-slate-600 border-dashed rounded-xl cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <div className="flex flex-col items-center justify-center">
+                <Upload className={`w-6 h-6 mb-2 ${uploading ? 'text-[#ff5500] animate-bounce' : 'text-slate-400'}`} />
+                <span className="text-xs font-bold text-slate-300">Add Image</span>
+              </div>
+              <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleUploadSliderImage(key, e.target.files[0])} disabled={uploading} />
+            </label>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const saveSettings = async () => {
     setIsSaving(true);
     try {
@@ -448,6 +520,17 @@ const SettingsPanel = () => {
           </div>
         </div>
         
+        {renderImageArrayManager(
+          "Home Page Hero Slider", 
+          "heroSliderImages", 
+          "Upload up to 6 images for the main homepage banner. Leave empty to use automatic fallback images."
+        )}
+
+        {renderImageArrayManager(
+          "Pakistan Tours Slider", 
+          "pakistanToursSliderImages", 
+          "Upload up to 6 images for the Northern Pakistan Tours page banner. Leave empty to use automatic fallback images."
+        )}
         <button onClick={saveSettings} disabled={isSaving} className="px-6 py-3 bg-[#ff5500] hover:bg-orange-600 text-white font-extrabold rounded-xl shadow-lg transition-colors flex items-center gap-2 cursor-pointer">
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Settings

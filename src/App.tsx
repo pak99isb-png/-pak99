@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Toaster } from 'react-hot-toast';
+import { useGlobalScrollAnimation } from './hooks/useGlobalScrollAnimation';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TourCard } from './components/TourCard';
@@ -35,6 +37,11 @@ import { VisaDetailsPage } from './pages/VisaDetailsPage';
 import { AdminApp } from './admin/AdminApp';
 
 export function App() {
+  const [isAdminAuth, setIsAdminAuth] = useState(false);
+  
+  // Enable smooth fade-in animations on scroll globally
+  useGlobalScrollAnimation();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeTourModal, setActiveTourModal] = useState<TourPackage | null>(null);
@@ -55,8 +62,8 @@ export function App() {
     localStorage.removeItem('pak99_theme');
   }, []);
 
-  // Top 3 Handpicked Featured Packages for Clean Home Page Showcase
-  const featuredHomeTours = allTours.slice(0, 3);
+  // Show all available tours on the home page showcase (or a larger limit)
+  const featuredHomeTours = allTours;
 
   const handleOpenBooking = (tourTitle?: string) => {
     setBookingTourTitle(tourTitle);
