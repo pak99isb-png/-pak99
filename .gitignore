@@ -23,6 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# Datasets and Large Images
+dataset/
+dataset_refined/
+public/images/
+
 # Environment Variables
 .env
 .env.*
