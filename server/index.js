@@ -46,6 +46,27 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Pak99 Tours API is running 🚀' });
 });
 
+// Debug route
+app.get('/api/debug', async (req, res) => {
+  try {
+    const mongoose = (await import('mongoose')).default;
+    await mongoose.connect(process.env.MONGODB_URI);
+    res.json({ 
+      status: 'success', 
+      message: 'Connected to MongoDB successfully!',
+      uri_exists: !!process.env.MONGODB_URI,
+      uri_start: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 15) + '...' : 'none'
+    });
+  } catch (err) {
+    res.json({ 
+      status: 'error', 
+      message: err.message, 
+      name: err.name,
+      uri_exists: !!process.env.MONGODB_URI
+    });
+  }
+});
+
 // Connect to MongoDB and start server if not running on Vercel
 if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
   connectDB().then(() => {
