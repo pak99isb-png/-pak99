@@ -1,5 +1,6 @@
 import { CATEGORIES } from '../types';
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Search, MapPin, Star, ShieldCheck, Users, Compass, ArrowRight } from 'lucide-react';
 import { destinationsAPI, settingsAPI } from '../services/api';
 
@@ -78,13 +79,25 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Main Heading (Pakistan Tours Style) */}
         <div className="space-y-4">
-          <h1 className="scroll-animate text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight mx-auto"
+          >
             Fly High & Explore <span className="text-[#ff5500]">Majestic Peaks</span><br />
             <span className="text-amber-400">& Holy Places</span>
-          </h1>
-          <p className="scroll-animate delay-100 text-slate-200 text-lg sm:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-slate-200 text-lg sm:text-xl font-medium max-w-2xl mx-auto leading-relaxed"
+          >
             Pak99 Travel & Tours delivers world-class travel experiences across Hunza, Skardu, Swat, Naran, customized family expeditions, and VIP Umrah packages.
-          </p>
+          </motion.p>
         </div>
 
         {/* Interactive Pure White Search Card */}
@@ -153,7 +166,13 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
 
         {/* Stats Row */}
-        <div className="scroll-animate delay-300 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto"
+        >
           <div className="bg-white p-4 rounded-2xl text-center border border-slate-200 shadow-md hover:border-orange-500/50 transition-all">
             <div className="flex justify-center text-[#ff5500] mb-1">
               <Users className="w-5 h-5" />
@@ -185,7 +204,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="text-2xl font-extrabold text-[#0b2f64]">100%</div>
             <div className="text-xs text-slate-600 font-bold">Safe & Guaranteed</div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Carousel Indicators */}

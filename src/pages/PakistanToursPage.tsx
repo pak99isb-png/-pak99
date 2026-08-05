@@ -1,5 +1,6 @@
 import { type TourPackage } from '../types';
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { PortraitTourCard } from '../components/PortraitTourCard';
 import { toursAPI, settingsAPI } from '../services/api';
 import { PhoneCall, Sparkles, ArrowRight, ArrowDown, Loader2 } from 'lucide-react';
@@ -72,20 +73,44 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left space-y-6 mt-12">
           {/* Excellence Badge */}
-          <div className="scroll-animate inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-[#0b2f64]/60 border border-slate-400/30 text-amber-300 backdrop-blur-md">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-[#0b2f64]/60 border border-slate-400/30 text-amber-300 backdrop-blur-md"
+          >
             <Sparkles className="w-3.5 h-3.5" /> 10+ Years of Excellence
-          </div>
+          </motion.div>
 
-          <h1 className="scroll-animate delay-100 text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight"
+          >
             Discover the <span className="text-[#ff5500]">Majestic</span><br />
             <span className="text-amber-400">Beauty</span> of Northern Pakistan
-          </h1>
+          </motion.h1>
 
-          <p className="scroll-animate delay-200 text-lg sm:text-xl text-slate-200 max-w-2xl font-medium leading-relaxed">
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-lg sm:text-xl text-slate-200 max-w-2xl font-medium leading-relaxed"
+          >
             Experience the majestic peaks of Hunza, the serene lakes of Skardu, and the lush valleys of Swat. Your ultimate adventure awaits.
-          </p>
+          </motion.p>
 
-          <div className="scroll-animate delay-300 pt-4 flex flex-col sm:flex-row gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="pt-4 flex flex-col sm:flex-row gap-4"
+          >
             <button
               onClick={handleExploreTours}
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#0b2f64] to-blue-800 hover:from-blue-800 hover:to-blue-700 text-white font-extrabold text-sm shadow-xl shadow-blue-900/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
@@ -98,7 +123,7 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
             >
               <PhoneCall className="w-4 h-4" /> Call Now
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* Carousel Indicators */}
@@ -126,13 +151,19 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
           ) : pakistanTours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8 col-span-full">
               {pakistanTours.map((tour, idx) => (
-                <div key={tour.id || idx} className={`scroll-animate delay-${Math.min(idx * 100, 500)}`}>
+                <motion.div 
+                  key={tour._id || idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: Math.min(idx * 0.1, 0.5) }}
+                >
                   <PortraitTourCard
                     tour={tour}
                     onSelectTour={onSelectTour}
                     onBookNow={onOpenBooking}
                   />
-                </div>
+                </motion.div>
               ))}
             </div>
           ) : (

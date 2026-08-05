@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
-import { useGlobalScrollAnimation } from './hooks/useGlobalScrollAnimation';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TourCard } from './components/TourCard';
@@ -38,9 +37,6 @@ import { AdminApp } from './admin/AdminApp';
 
 export function App() {
   const [isAdminAuth, setIsAdminAuth] = useState(false);
-  
-  // Enable smooth fade-in animations on scroll globally
-  useGlobalScrollAnimation();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -62,8 +58,8 @@ export function App() {
     localStorage.removeItem('pak99_theme');
   }, []);
 
-  // Show all available tours on the home page showcase (or a larger limit)
-  const featuredHomeTours = allTours;
+  // Only show packages that are explicitly marked as "featured" in the Admin Panel
+  const featuredHomeTours = allTours.filter(t => t.featured);
 
   const handleOpenBooking = (tourTitle?: string) => {
     setBookingTourTitle(tourTitle);
