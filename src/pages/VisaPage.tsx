@@ -16,9 +16,10 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    const fetchUrl = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/settings` : (import.meta.env.PROD ? '/api/settings' : 'http://localhost:5000/api/settings');
     Promise.all([
       visasAPI.getAll(),
-      fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/settings` : 'http://localhost:5000/api/settings').then(res => res.json()).catch(() => ({}))
+      fetch(fetchUrl).then(res => res.json()).catch(() => ({}))
     ])
       .then(([countriesData, settingsData]) => {
         setCountries(countriesData as any);
