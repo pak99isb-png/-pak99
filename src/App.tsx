@@ -15,25 +15,27 @@ import { type TourPackage } from './types';
 import { toursAPI } from './services/api';
 import { Compass, Sparkles, GraduationCap, Hotel, ArrowRight } from 'lucide-react';
 
-import { PakistanToursPage } from './pages/PakistanToursPage';
-import { InternationalToursPage } from './pages/InternationalToursPage';
-import { UmrahPage } from './pages/UmrahPage';
-import { StudyUkPage } from './pages/StudyUkPage';
-import { StudyAustraliaPage } from './pages/StudyAustraliaPage';
-import { StudyGermanyPage } from './pages/StudyGermanyPage';
-import { StudyCanadaPage } from './pages/StudyCanadaPage';
-import { ScholarshipsPage } from './pages/ScholarshipsPage';
-import { AttestationPage } from './pages/AttestationPage';
-import { HotelsPage } from './pages/HotelsPage';
-import { BlogsPage } from './pages/BlogsPage';
-import { BlogDetailsPage } from './pages/BlogDetailsPage';
-import { WhyUsPage } from './pages/WhyUsPage';
-import { ReviewsPage } from './pages/ReviewsPage';
-import { ContactPage } from './pages/ContactPage';
-import { TourDetailsPage } from './pages/TourDetailsPage';
-import { VisaPage } from './pages/VisaPage';
-import { VisaDetailsPage } from './pages/VisaDetailsPage';
-import { AdminApp } from './admin/AdminApp';
+import { Suspense, lazy } from 'react';
+
+// Lazy load all pages to drastically reduce the initial bundle size
+const PakistanToursPage = lazy(() => import('./pages/PakistanToursPage').then(m => ({ default: m.PakistanToursPage })));
+const UmrahPage = lazy(() => import('./pages/UmrahPage').then(m => ({ default: m.UmrahPage })));
+const StudyUkPage = lazy(() => import('./pages/StudyUkPage').then(m => ({ default: m.StudyUkPage })));
+const StudyAustraliaPage = lazy(() => import('./pages/StudyAustraliaPage').then(m => ({ default: m.StudyAustraliaPage })));
+const StudyGermanyPage = lazy(() => import('./pages/StudyGermanyPage').then(m => ({ default: m.StudyGermanyPage })));
+const StudyCanadaPage = lazy(() => import('./pages/StudyCanadaPage').then(m => ({ default: m.StudyCanadaPage })));
+const ScholarshipsPage = lazy(() => import('./pages/ScholarshipsPage').then(m => ({ default: m.ScholarshipsPage })));
+const AttestationPage = lazy(() => import('./pages/AttestationPage').then(m => ({ default: m.AttestationPage })));
+const HotelsPage = lazy(() => import('./pages/HotelsPage').then(m => ({ default: m.HotelsPage })));
+const BlogsPage = lazy(() => import('./pages/BlogsPage').then(m => ({ default: m.BlogsPage })));
+const BlogDetailsPage = lazy(() => import('./pages/BlogDetailsPage').then(m => ({ default: m.BlogDetailsPage })));
+const WhyUsPage = lazy(() => import('./pages/WhyUsPage').then(m => ({ default: m.WhyUsPage })));
+const ReviewsPage = lazy(() => import('./pages/ReviewsPage').then(m => ({ default: m.ReviewsPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const TourDetailsPage = lazy(() => import('./pages/TourDetailsPage').then(m => ({ default: m.TourDetailsPage })));
+const VisaPage = lazy(() => import('./pages/VisaPage').then(m => ({ default: m.VisaPage })));
+const VisaDetailsPage = lazy(() => import('./pages/VisaDetailsPage').then(m => ({ default: m.VisaDetailsPage })));
+const AdminApp = lazy(() => import('./admin/AdminApp').then(m => ({ default: m.AdminApp })));
 
 export function App() {
 
@@ -101,8 +103,13 @@ export function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-orange-500 selection:text-white flex flex-col relative">
       <Navbar onOpenBooking={handleOpenBooking} />
 
-      <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
-        <Routes location={location} key={location.pathname}>
+      <Suspense fallback={
+        <div className="w-full h-[100svh] flex items-center justify-center bg-slate-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff5500]"></div>
+        </div>
+      }>
+        <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+          <Routes location={location} key={location.pathname}>
           <Route path="/" element={
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="flex-1 flex flex-col">
               <SEO title="Home" />
@@ -188,7 +195,6 @@ export function App() {
 
           {/* Standard Routes */}
           <Route path="/pakistan-tours" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><PakistanToursPage onSelectTour={(t) => navigate(`/tours/${t.id}`)} onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/international-tours" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><InternationalToursPage onSelectTour={(t) => setActiveTourModal(t)} onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/umrah" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><UmrahPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/study-uk" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyUkPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/study-australia" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyAustraliaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
@@ -200,15 +206,19 @@ export function App() {
           <Route path="/blogs" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><BlogsPage onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/blog/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><BlogDetailsPage /></motion.div>} />
           <Route path="/why-us" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><WhyUsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/reviews" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ReviewsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/contact" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ContactPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/visa" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} onSelectCountry={(c) => navigate(`/visa/${c.code}`)} /></motion.div>} />
           
           <Route path="/tours/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TourDetailsPage onNavigate={(p) => navigate(`/${p}`)} onOpenBooking={handleOpenBooking} /></motion.div>} />
-          <Route path="/visa/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />
+          <Route path="/visas/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />
+          
+          {/* Admin Area */}
+          <Route path="/admin/*" element={<AdminApp />} />
+          
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
+      </Suspense>
 
       <Footer onNavigateToTour={handleNavigateToTour} />
 

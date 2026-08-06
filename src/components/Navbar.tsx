@@ -18,6 +18,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const [studyDropdownOpen, setStudyDropdownOpen] = useState(false);
   const [whyDropdownOpen, setWhyDropdownOpen] = useState(false);
 
+  // Mobile Accordion states
+  const [mobileToursOpen, setMobileToursOpen] = useState(false);
+  const [mobileStudyOpen, setMobileStudyOpen] = useState(false);
+  const [mobileWhyOpen, setMobileWhyOpen] = useState(false);
+
   const toursRef = useRef<HTMLDivElement>(null);
   const studyRef = useRef<HTMLDivElement>(null);
   const whyRef = useRef<HTMLDivElement>(null);
@@ -327,18 +332,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
             {/* Mobile Tours Expandable */}
             <div className="space-y-2 py-1 border-y border-slate-100">
-              <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
-                Tours
-              </div>
-              <div className="pl-3 space-y-2">
-                <button
-                  onClick={() => handleNavClick('pakistan-tours')}
-                  className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
-                >
-                  Pakistan Tours
-                </button>
-
-              </div>
+              <button 
+                onClick={() => setMobileToursOpen(!mobileToursOpen)}
+                className="w-full flex items-center justify-between text-left"
+              >
+                <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
+                  Tours
+                </div>
+                <ChevronDown className={`w-4 h-4 text-[#ff5500] transition-transform ${mobileToursOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {mobileToursOpen && (
+                <div className="pl-3 space-y-2 animate-fade-in">
+                  <button
+                    onClick={() => handleNavClick('pakistan-tours')}
+                    className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
+                  >
+                    Pakistan Tours
+                  </button>
+                </div>
+              )}
             </div>
 
             <button
@@ -356,29 +369,38 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
             {/* Mobile Study Section */}
             <div className="space-y-2 py-1 border-b border-slate-100">
-              <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
-                Study
-              </div>
-              <div className="pl-3 space-y-2">
-                <button onClick={() => handleNavClick('study-uk')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Study in UK
-                </button>
-                <button onClick={() => handleNavClick('study-australia')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Study in Australia
-                </button>
-                <button onClick={() => handleNavClick('study-germany')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Study in Germany
-                </button>
-                <button onClick={() => handleNavClick('study-canada')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Study in Canada
-                </button>
-                <button onClick={() => handleNavClick('scholarships')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Scholarships & Grants
-                </button>
-                <button onClick={() => handleNavClick('attestation')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                  Document Translation & Attestation
-                </button>
-              </div>
+              <button 
+                onClick={() => setMobileStudyOpen(!mobileStudyOpen)}
+                className="w-full flex items-center justify-between text-left"
+              >
+                <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
+                  Study
+                </div>
+                <ChevronDown className={`w-4 h-4 text-[#ff5500] transition-transform ${mobileStudyOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {mobileStudyOpen && (
+                <div className="pl-3 space-y-2 animate-fade-in">
+                  <button onClick={() => handleNavClick('study-uk')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Study in UK
+                  </button>
+                  <button onClick={() => handleNavClick('study-australia')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Study in Australia
+                  </button>
+                  <button onClick={() => handleNavClick('study-germany')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Study in Germany
+                  </button>
+                  <button onClick={() => handleNavClick('study-canada')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Study in Canada
+                  </button>
+                  <button onClick={() => handleNavClick('scholarships')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Scholarships & Grants
+                  </button>
+                  <button onClick={() => handleNavClick('attestation')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Document Translation & Attestation
+                  </button>
+                </div>
+              )}
             </div>
 
             <button
@@ -396,29 +418,38 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
             {/* Mobile Why Pak99 Expandable */}
             <div className="space-y-2 py-1 border-t border-slate-100">
-              <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
-                Why Pak99
-              </div>
-              <div className="pl-3 space-y-2">
-                <button
-                  onClick={() => handleNavClick('why-us')}
-                  className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
-                >
-                  Why Choose Pak99
-                </button>
-                <button
-                  onClick={() => handleNavClick('reviews')}
-                  className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
-                >
-                  Customer Reviews
-                </button>
-                <button
-                  onClick={() => handleNavClick('contact')}
-                  className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
-                >
-                  Contact Us
-                </button>
-              </div>
+              <button 
+                onClick={() => setMobileWhyOpen(!mobileWhyOpen)}
+                className="w-full flex items-center justify-between text-left"
+              >
+                <div className="text-xs font-extrabold text-[#ff5500] uppercase tracking-wider">
+                  Why Pak99
+                </div>
+                <ChevronDown className={`w-4 h-4 text-[#ff5500] transition-transform ${mobileWhyOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {mobileWhyOpen && (
+                <div className="pl-3 space-y-2 animate-fade-in">
+                  <button
+                    onClick={() => handleNavClick('why-us')}
+                    className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
+                  >
+                    Why Choose Pak99
+                  </button>
+                  <button
+                    onClick={() => handleNavClick('reviews')}
+                    className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
+                  >
+                    Customer Reviews
+                  </button>
+                  <button
+                    onClick={() => handleNavClick('contact')}
+                    className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+              )}
             </div>
 
             <button
