@@ -30,6 +30,17 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Ensure DB connection on every request for serverless environments
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Failed to connect to database in middleware:', error);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -71,17 +82,12 @@ app.get('/api/debug', async (req, res) => {
 
 // Connect to MongoDB and start server if not running on Vercel
 if (process.env.NODE_ENV !== 'production' || process.env.VERCEL !== '1') {
-  connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 Pak99 API Server running on http://localhost:${PORT}`);
-      console.log(`🩺 API Health: http://localhost:${PORT}/api/health`);
-    });
-  }).catch((err) => {
-    console.error('Failed to start server:', err);
+  app.listen(PORT, () => {
+    console.log(`🚀 Pak99 API Server running on http://localhost:${PORT}`);
+    console.log(`🩺 API Health: http://localhost:${PORT}/api/health`);
   });
 } else {
-  // If on Vercel, just connect DB (Vercel will handle listening)
-  connectDB().catch(console.error);
+  // If on Vercel, the global middleware handles the DB connection
 }
 
 export default app;

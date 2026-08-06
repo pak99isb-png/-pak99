@@ -72,6 +72,11 @@ export function App() {
     return t.featured;
   });
 
+  // If no tours are featured and user isn't searching, fallback to showing the first 3 tours
+  const finalDisplayTours = (displayHomeTours.length === 0 && searchQuery.trim() === '' && selectedCategory === 'All') 
+    ? allTours.slice(0, 3) 
+    : displayHomeTours;
+
   const handleOpenBooking = (tourTitle?: string) => {
     setBookingTourTitle(tourTitle);
     setIsBookingOpen(true);
@@ -144,8 +149,14 @@ export function App() {
                     <div>
                       {searchQuery || selectedCategory !== 'All' ? (
                         <>
-                          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">Search <span className="text-gradient">Results</span></h2>
-                          <p className="text-sm text-slate-600 font-semibold mt-1">Found {displayHomeTours.length} packages matching your criteria.</p>
+                          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">
+                            {searchQuery ? (
+                              <>Search results for <span className="text-gradient">"{searchQuery}"</span></>
+                            ) : (
+                              <>Search <span className="text-gradient">Results</span></>
+                            )}
+                          </h2>
+                          <p className="text-sm text-slate-600 font-semibold mt-1">Found {finalDisplayTours.length} packages matching your criteria.</p>
                         </>
                       ) : (
                         <>
@@ -158,9 +169,9 @@ export function App() {
                       <span>View All Packages</span><ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
-                  {displayHomeTours.length > 0 ? (
+                  {finalDisplayTours.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {displayHomeTours.map((tour) => (
+                      {finalDisplayTours.map((tour) => (
                         <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
                       ))}
                     </div>
