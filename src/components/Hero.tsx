@@ -52,7 +52,7 @@ export const Hero: React.FC<HeroProps> = ({
   }, [sliderImages.length]);
 
   return (
-    <section id="hero" className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section id="hero" className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-32 pb-24 overflow-hidden">
       {/* Background Image Slider */}
       <div className="absolute inset-0 w-full h-full bg-slate-900">
         {sliderImages.map((img, index) => (
@@ -71,7 +71,7 @@ export const Hero: React.FC<HeroProps> = ({
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b2f64]/80 via-slate-900/40 to-transparent" />
       </div>
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 animate-fade-in mt-12">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 animate-fade-in mt-4">
         {/* Top Badge (Pakistan Tours Style) */}
         <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-[#0b2f64]/60 border border-slate-400/30 text-amber-300 backdrop-blur-md mx-auto">
           <ShieldCheck className="w-3.5 h-3.5" /> 
