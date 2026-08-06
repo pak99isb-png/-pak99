@@ -264,7 +264,7 @@ export const ServicesSections: React.FC<ServicesSectionsProps> = ({ onOpenBookin
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div className="text-sm font-extrabold text-[#ff5500]">{hotel.price}</div>
+                    {hotel.price && <div className="text-sm font-extrabold text-[#ff5500]">{hotel.price}</div>}
                     <button
                       onClick={() => onOpenBooking(`Hotel Booking: ${hotel.name}`)}
                       className="px-3 py-1.5 bg-slate-100 hover:bg-[#ff5500] text-[#0b2f64] hover:text-white rounded-lg text-xs font-extrabold transition-colors cursor-pointer"

@@ -2,7 +2,7 @@ import { type TourPackage } from '../types';
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PortraitTourCard } from '../components/PortraitTourCard';
-import { toursAPI, settingsAPI } from '../services/api';
+import { toursAPI, carouselsAPI } from '../services/api';
 import { PhoneCall, Sparkles, ArrowRight, ArrowDown, Loader2 } from 'lucide-react';
 
 interface PageProps {
@@ -22,14 +22,15 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
 
   useEffect(() => {
     Promise.all([
-      settingsAPI.get().catch(() => ({} as any)),
+      carouselsAPI.getAll().catch(() => []),
       toursAPI.getAll().catch(() => [])
-    ]).then(([settings, toursData]) => {
+    ]).then(([carousels, toursData]) => {
       const pakTours = (toursData as TourPackage[]).filter((t) => t.category === 'Northern Pakistan');
       setPakistanTours(pakTours);
       
-      if (settings?.pakistanToursSliderImages && settings.pakistanToursSliderImages.length > 0) {
-        setSliderImages(settings.pakistanToursSliderImages);
+      const ptCarousel = (carousels as any[]).find(c => c.name === 'Pakistan Tours Slider');
+      if (ptCarousel && ptCarousel.images && ptCarousel.images.length > 0) {
+        setSliderImages(ptCarousel.images);
       } else if (pakTours.length > 0) {
         const uniqueImages = Array.from(new Set(pakTours.map(t => t.image).filter(Boolean))).slice(0, 4) as string[];
         if (uniqueImages.length > 0) setSliderImages(uniqueImages);

@@ -46,7 +46,7 @@ export const PortraitTourCard: React.FC<PortraitTourCardProps> = ({ tour, onSele
           <div className="flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
             <div className="flex items-baseline gap-1.5 text-white">
               <span className="text-xs text-slate-300">From</span>
-              <span className="text-lg font-extrabold text-[#ff5500]">PKR {tour.pricePKR.toLocaleString()}</span>
+              {tour.pricePKR > 0 && <span className="text-lg font-extrabold text-[#ff5500]">PKR {tour.pricePKR.toLocaleString()}</span>}
             </div>
             
             <button

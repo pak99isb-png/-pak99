@@ -92,9 +92,11 @@ export const TourCard: React.FC<TourCardProps> = ({ tour, onSelectTour, onBookNo
             <div className="text-[10px] uppercase tracking-wider text-slate-500 font-extrabold">Starting From</div>
             <div className="flex flex-col">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-lg font-extrabold text-[#ff5500]">
-                  PKR {tour.pricePKR.toLocaleString()} <span className="text-[10px] text-slate-500 font-medium">{tour.couplePricePKR ? '(Solo)' : ''}</span>
-                </span>
+                {tour.pricePKR > 0 && (
+                  <span className="text-lg font-extrabold text-[#ff5500]">
+                    PKR {tour.pricePKR.toLocaleString()} <span className="text-[10px] text-slate-500 font-medium">{tour.couplePricePKR ? '(Solo)' : ''}</span>
+                  </span>
+                )}
                 {tour.originalPricePKR && (
                   <span className="text-xs text-slate-400 line-through">
                     PKR {tour.originalPricePKR.toLocaleString()}

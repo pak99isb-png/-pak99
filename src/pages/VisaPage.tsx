@@ -41,7 +41,7 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
             <div className="inline-flex px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-blue-100 text-sm font-bold tracking-wide w-max">
               🌟 Premium Visa Services
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
               Get Your <span className="text-amber-400">Done Base</span> Visa
             </h1>
             <p className="text-lg md:text-xl text-blue-100 font-medium max-w-lg leading-relaxed">

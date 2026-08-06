@@ -197,6 +197,12 @@ export interface ApiReview {
   avatar?: string;
 }
 
+export interface ApiCarousel {
+  _id?: string;
+  name: string;
+  images: string[];
+}
+
 export const toursAPI = createCrudAPI<ApiTour>('tours');
 export const umrahAPI = createCrudAPI<ApiUmrahPackage>('umrah');
 export const visasAPI = createCrudAPI<ApiVisaCountry>('visas');
@@ -204,6 +210,7 @@ export const destinationsAPI = createCrudAPI<ApiDestination>('destinations');
 export const blogsAPI = createCrudAPI<ApiBlog>('blogs');
 export const hotelsAPI = createCrudAPI<ApiHotel>('hotels');
 export const reviewsAPI = createCrudAPI<ApiReview>('reviews');
+export const carouselsAPI = createCrudAPI<ApiCarousel>('carousels');
 
 export const settingsAPI = {
   get: () => apiFetch<Record<string, any>>('/settings'),

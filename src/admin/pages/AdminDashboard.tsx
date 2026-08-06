@@ -3,10 +3,10 @@ import {
   LayoutDashboard, Map, Plane, Hotel, Star, BookOpen, LogOut,
   ChevronRight, Plus, Pencil, Trash2, X, Save, Loader2, Upload, Menu, FileText, Moon, Settings as SettingsIcon
 } from 'lucide-react';
-import { toursAPI, blogsAPI, hotelsAPI, reviewsAPI, destinationsAPI, uploadAPI, visasAPI, umrahAPI, settingsAPI } from '../../services/api';
-import type { ApiTour, ApiBlog, ApiHotel, ApiReview, ApiDestination, ApiVisaCountry, ApiUmrahPackage } from '../../services/api';
+import { toursAPI, blogsAPI, hotelsAPI, reviewsAPI, destinationsAPI, uploadAPI, visasAPI, umrahAPI, settingsAPI, carouselsAPI } from '../../services/api';
+import type { ApiTour, ApiBlog, ApiHotel, ApiReview, ApiDestination, ApiVisaCountry, ApiUmrahPackage, ApiCarousel } from '../../services/api';
 
-type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'settings';
+type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'carousels' | 'settings';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -94,7 +94,7 @@ function DataTable<T extends { _id?: string }>({
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image';
+  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image' | 'image_array';
   options?: string[];
   quickOptions?: string[];
   required?: boolean;
@@ -120,7 +120,7 @@ function FormModal<T extends Record<string, any>>({
     if (isOpen) {
       const defaults: Record<string, any> = {};
       fields.forEach(f => {
-        if (f.type === 'array') defaults[f.key] = (initialData as any)?.[f.key] || [];
+        if (f.type === 'array' || f.type === 'image_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
         else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
         else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
         else defaults[f.key] = (initialData as any)?.[f.key] || '';
@@ -184,6 +184,25 @@ function FormModal<T extends Record<string, any>>({
   };
 
   return (
+    <>
+      {(saving || uploading) && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md">
+          <Loader2 className="w-12 h-12 text-[#ff5500] animate-spin mb-4" />
+          <p className="text-white text-lg font-bold mb-6">
+            {uploading ? 'Uploading Data...' : 'Saving... Please wait.'}
+          </p>
+          <button 
+            type="button" 
+            onClick={() => {
+              if (uploading) setUploading(false);
+              else window.location.reload();
+            }}
+            className="px-6 py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition border border-slate-600 cursor-pointer font-bold"
+          >
+            Cancel Action
+          </button>
+        </div>
+      )}
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-10 overflow-y-auto">
       <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-slate-700">
@@ -290,6 +309,52 @@ function FormModal<T extends Record<string, any>>({
                 </div>
               )}
 
+              
+              {field.type === 'image_array' && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {(formData[field.key] || []).map((img: string, idx: number) => (
+                      <div key={idx} className="relative group rounded-xl overflow-hidden aspect-video border border-slate-600">
+                        <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                        <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                    <label className="flex flex-col items-center justify-center aspect-video border-2 border-slate-600 border-dashed rounded-xl cursor-pointer bg-slate-700/30 hover:bg-slate-700/50 hover:border-[#ff5500]/50 transition-all">
+                      <div className="flex flex-col items-center justify-center">
+                        <Upload className={`w-6 h-6 mb-2 ${uploading ? 'text-[#ff5500] animate-bounce' : 'text-slate-400'}`} />
+                        <span className="text-xs font-bold text-slate-300">Add Image(s)</span>
+                      </div>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const files = e.target.files;
+                          if (!files || files.length === 0) return;
+                          setUploading(true);
+                          try {
+                            const uploadPromises = Array.from(files).map(file => uploadAPI.uploadImage(file));
+                            const results = await Promise.all(uploadPromises);
+                            const newUrls = results.map(res => res.url);
+                            setFormData(prev => ({
+                              ...prev,
+                              [field.key]: [...(prev[field.key] || []), ...newUrls]
+                            }));
+                          } catch (err) {
+                            onError('Image upload failed.');
+                          } finally {
+                            setUploading(false);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              )}
+
               {field.type === 'array' && (
                 <div className="space-y-3">
                   {(formData[field.key] || []).map((item: string, idx: number) => (
@@ -342,8 +407,9 @@ function FormModal<T extends Record<string, any>>({
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
-      </div>
+            </div>
     </div>
+    </>
   );
 }
 
@@ -355,6 +421,7 @@ const SettingsPanel = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [alertDialog, setAlertDialog] = useState({ isOpen: false, title: '', message: '' });
 
   useEffect(() => {
     settingsAPI.get().then((data: any) => {
@@ -385,7 +452,7 @@ const SettingsPanel = () => {
       const result = await uploadAPI.uploadImage(file);
       handleChange('visaVideoThumbnail', result.url);
     } catch (err) {
-      alert('Thumbnail upload failed.');
+      setAlertDialog({ isOpen: true, title: 'Error', message: 'Thumbnail upload failed.' });
     } finally {
       setUploading(false);
     }
@@ -400,7 +467,7 @@ const SettingsPanel = () => {
         [key]: [...(prev[key] || []), result.url]
       }));
     } catch (err) {
-      alert('Image upload failed.');
+      setAlertDialog({ isOpen: true, title: 'Error', message: 'Image upload failed.' });
     } finally {
       setUploading(false);
     }
@@ -467,9 +534,9 @@ const SettingsPanel = () => {
     setIsSaving(true);
     try {
       await settingsAPI.update(settings);
-      alert('Settings saved successfully!');
+      setAlertDialog({ isOpen: true, title: 'Success', message: 'Settings saved successfully!' });
     } catch (error) {
-      alert('Failed to save settings.');
+      setAlertDialog({ isOpen: true, title: 'Error', message: 'Failed to save settings.' });
     }
     setIsSaving(false);
   };
@@ -477,6 +544,25 @@ const SettingsPanel = () => {
   if (isLoading) return <div className="p-10 text-center"><Loader2 className="w-8 h-8 text-[#ff5500] animate-spin mx-auto" /></div>;
 
   return (
+    <>
+      {(isSaving || uploading) && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md">
+          <Loader2 className="w-12 h-12 text-[#ff5500] animate-spin mb-4" />
+          <p className="text-white text-lg font-bold mb-6">
+            {uploading ? 'Uploading Thumbnail...' : 'Saving Settings...'}
+          </p>
+          <button 
+            type="button" 
+            onClick={() => {
+              if (uploading) setUploading(false);
+              else window.location.reload();
+            }}
+            className="px-6 py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition border border-slate-600 cursor-pointer font-bold"
+          >
+            Cancel Action
+          </button>
+        </div>
+      )}
     <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
       <h3 className="text-xl font-extrabold text-white mb-6">Global Page Settings</h3>
       
@@ -520,23 +606,35 @@ const SettingsPanel = () => {
           </div>
         </div>
         
-        {renderImageArrayManager(
-          "Home Page Hero Slider", 
-          "heroSliderImages", 
-          "Upload up to 6 images for the main homepage banner. Leave empty to use automatic fallback images."
-        )}
+        
 
-        {renderImageArrayManager(
-          "Pakistan Tours Slider", 
-          "pakistanToursSliderImages", 
-          "Upload up to 6 images for the Northern Pakistan Tours page banner. Leave empty to use automatic fallback images."
-        )}
+        
         <button onClick={saveSettings} disabled={isSaving} className="px-6 py-3 bg-[#ff5500] hover:bg-orange-600 text-white font-extrabold rounded-xl shadow-lg transition-colors flex items-center gap-2 cursor-pointer">
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Settings
-        </button>
+                </button>
       </div>
     </div>
+
+    {/* Custom Alert Dialog for Settings */}
+    {alertDialog.isOpen && (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] flex items-center justify-center p-4">
+        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+          <h3 className="text-xl font-extrabold text-white mb-2">{alertDialog.title}</h3>
+          <p className="text-slate-300 text-sm mb-6">{alertDialog.message}</p>
+          <div className="flex justify-end">
+            <button 
+              onClick={() => setAlertDialog(prev => ({ ...prev, isOpen: false }))} 
+              className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    </>
   );
 };
 
@@ -555,6 +653,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   const [destinations, setDestinations] = useState<ApiDestination[]>([]);
   const [visas, setVisas] = useState<ApiVisaCountry[]>([]);
   const [umrah, setUmrah] = useState<ApiUmrahPackage[]>([]);
+  const [carousels, setCarousels] = useState<ApiCarousel[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -567,10 +666,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [t, b, h, r, d, v, u] = await Promise.all([
-        toursAPI.getAll(), blogsAPI.getAll(), hotelsAPI.getAll(), reviewsAPI.getAll(), destinationsAPI.getAll(), visasAPI.getAll(), umrahAPI.getAll()
+      const [t, b, h, r, d, v, u, c] = await Promise.all([
+        toursAPI.getAll(), blogsAPI.getAll(), hotelsAPI.getAll(), reviewsAPI.getAll(), destinationsAPI.getAll(), visasAPI.getAll(), umrahAPI.getAll(), carouselsAPI.getAll()
       ]);
-      setTours(t); setBlogs(b); setHotels(h); setReviews(r); setDestinations(d); setVisas(v); setUmrah(u);
+      setTours(t); setBlogs(b); setHotels(h); setReviews(r); setDestinations(d); setVisas(v); setUmrah(u); setCarousels(c);
     } catch (err) {
       console.error('Failed to fetch data:', err);
     } finally {
@@ -588,7 +687,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       onConfirm: async () => {
         setConfirmDialog(prev => ({ ...prev, isOpen: false }));
         try {
-          const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI }[resource] as any;
+          const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI }[resource] as any;
           if (api) { await api.delete(id); fetchData(); }
         } catch (err) { 
           setAlertDialog({isOpen: true, title: 'Error', message: 'Delete failed.'});
@@ -606,7 +705,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
         finalData.pricing = { sharing: finalData.pricing_sharing, quad: finalData.pricing_quad, triple: finalData.pricing_triple, double: finalData.pricing_double };
       }
 
-      const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI }[resource] as any;
+      const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI }[resource] as any;
       if (!api) return;
       
       if (editingItem?._id) {
@@ -633,6 +732,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { id: 'reviews', icon: <Star className="w-4 h-4" />, label: 'Reviews' },
     { id: 'visas', icon: <FileText className="w-4 h-4" />, label: 'Visas' },
     { id: 'umrah', icon: <Moon className="w-4 h-4" />, label: 'Umrah' },
+    { id: 'carousels', icon: <Upload className="w-4 h-4" />, label: 'Carousels' },
     { id: 'settings', icon: <SettingsIcon className="w-4 h-4" />, label: 'Settings' },
   ];
 
@@ -644,7 +744,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'category', label: 'Category (Use "Northern Pakistan" for the main Pakistan page)', type: 'select', options: ['Northern Pakistan', 'International', 'Umrah', 'Customized'], required: true },
     { key: 'location', label: 'Location', type: 'text', required: true },
     { key: 'duration', label: 'Duration', type: 'text', required: true, placeholder: 'e.g. 3 Days / 2 Nights' },
-    { key: 'pricePKR', label: 'Price (PKR)', type: 'number', required: true },
+    { key: 'pricePKR', label: 'Price (PKR)', type: 'number' },
     { key: 'couplePricePKR', label: 'Couple Price (PKR)', type: 'number' },
     { key: 'originalPricePKR', label: 'Original Price (PKR) — for strikethrough', type: 'number' },
     { key: 'departure', label: 'Departure Schedule', type: 'text', placeholder: 'e.g. Mon & Thurs Night' },
@@ -683,7 +783,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'name', label: 'Hotel Name', type: 'text', required: true },
     { key: 'location', label: 'Location', type: 'text', required: true },
     { key: 'rating', label: 'Rating', type: 'number' },
-    { key: 'price', label: 'Price', type: 'text', required: true, placeholder: 'PKR 24,000 / Night' },
+    { key: 'price', label: 'Price', type: 'text', placeholder: 'PKR 24,000 / Night' },
     { key: 'image', label: 'Image', type: 'image', required: true },
     { key: 'amenities', label: 'Amenities', type: 'array' },
   ];
@@ -730,6 +830,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'note', label: 'Important Note', type: 'textarea' },
   ];
 
+  
+  const carouselFields: FormField[] = [
+    { 
+      key: 'name', 
+      label: 'Carousel Position', 
+      type: 'select', 
+      options: ['Home Page Hero Slider', 'Pakistan Tours Slider'],
+      required: true 
+    },
+    { key: 'images', label: 'Carousel Images', type: 'image_array' }
+  ];
+
   const umrahFields: FormField[] = [
     { key: 'packageId', label: 'Package ID', type: 'text', required: true },
     { key: 'city', label: 'Departure City', type: 'select', options: ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'], required: true },
@@ -740,10 +852,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'flightRoute', label: 'Flight Route (e.g. LHE-JED-LHE)', type: 'text', required: true },
     { key: 'hotels_makkah', label: 'Hotel in Makkah', type: 'text', required: true },
     { key: 'hotels_madinah', label: 'Hotel in Madinah', type: 'text', required: true },
-    { key: 'pricing_sharing', label: 'Sharing Price (PKR)', type: 'text', required: true },
-    { key: 'pricing_quad', label: 'Quad Price (PKR)', type: 'text', required: true },
-    { key: 'pricing_triple', label: 'Triple Price (PKR)', type: 'text', required: true },
-    { key: 'pricing_double', label: 'Double Price (PKR)', type: 'text', required: true },
+    { key: 'pricing_sharing', label: 'Sharing Price (PKR)', type: 'text' },
+    { key: 'pricing_quad', label: 'Quad Price (PKR)', type: 'text' },
+    { key: 'pricing_triple', label: 'Triple Price (PKR)', type: 'text' },
+    { key: 'pricing_double', label: 'Double Price (PKR)', type: 'text' },
   ];
 
   // ===========================
@@ -799,7 +911,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
               { key: 'image', label: 'Image', render: (t: ApiTour) => <img src={t.image} alt="" className="w-12 h-12 rounded-lg object-cover" /> },
               { key: 'title', label: 'Title', render: (t: ApiTour) => <span className="font-bold text-white">{t.title}</span> },
               { key: 'category', label: 'Category' },
-              { key: 'pricePKR', label: 'Price', render: (t: ApiTour) => <span className="text-[#ff5500] font-bold">PKR {t.pricePKR?.toLocaleString()}</span> },
+              { key: 'pricePKR', label: 'Price', render: (t: ApiTour) => <span className="text-[#ff5500] font-bold">{t.pricePKR ? `PKR ${t.pricePKR.toLocaleString()}` : '-'}</span> },
               { key: 'featured', label: 'Featured', render: (t: ApiTour) => t.featured ? <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">Yes</span> : <span className="text-slate-500">—</span> },
             ]}
             onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
@@ -917,6 +1029,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
             resourceName="Umrah Packages"
           />
         );
+      
+      case 'carousels':
+        return (
+          <ResourceManager
+            title="Image Carousels"
+            data={carousels}
+            columns={[
+              { key: 'name', label: 'Name', render: (c: ApiCarousel) => <span className="font-bold text-white">{c.name}</span> },
+              { key: 'images', label: 'Images', render: (c: ApiCarousel) => <span className="text-[#ff5500] font-bold">{c.images?.length || 0} images</span> },
+            ]}
+            onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+            onDelete={(id) => handleDelete('carousels', id)}
+            onAdd={() => { setEditingItem(null); setModalOpen(true); }}
+            loading={loading}
+            resourceName="Carousels"
+          />
+        );
+
       case 'settings':
         return <SettingsPanel />;
     }
@@ -931,6 +1061,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       case 'destinations': return destinationFields;
       case 'visas': return visaFields;
       case 'umrah': return umrahFields;
+      case 'carousels': return carouselFields;
       default: return [];
     }
   };
@@ -944,12 +1075,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       case 'destinations': return 'destinations';
       case 'visas': return 'visas';
       case 'umrah': return 'umrah';
+      case 'carousels': return 'carousels';
       default: return 'tours';
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex">
+    <div className="h-screen overflow-hidden bg-slate-900 flex">
       {/* Sidebar Overlay (mobile) */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -965,7 +1097,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
           <p className="text-[10px] text-slate-400 mt-1 font-bold">Content Management System</p>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {navItems.map(item => (
             <button
               key={item.id}

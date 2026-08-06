@@ -77,7 +77,7 @@ export const HotelsPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome 
                 </div>
   
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <div className="text-base font-extrabold text-[#ff5500]">{h.price}</div>
+                  {h.price && <div className="text-base font-extrabold text-[#ff5500]">{h.price}</div>}
                   <button
                     onClick={() => onOpenBooking(`Hotel Reservation: ${h.name}`)}
                     className="px-5 py-2.5 bg-[#0b2f64] hover:bg-blue-900 text-white rounded-xl text-xs font-extrabold transition-colors cursor-pointer"

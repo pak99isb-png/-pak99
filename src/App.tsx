@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { Navbar } from './components/Navbar';
@@ -168,7 +168,7 @@ export function App() {
           
           <Route path="/tours/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TourDetailsPage onNavigate={(p) => navigate(`/${p}`)} onOpenBooking={handleOpenBooking} /></motion.div>} />
           <Route path="/visa/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />
-
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
 

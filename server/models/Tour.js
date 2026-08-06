@@ -5,7 +5,7 @@ const tourSchema = new mongoose.Schema({
   category: { type: String, required: true, enum: ['Northern Pakistan', 'International', 'Umrah', 'Customized'] },
   location: { type: String, required: true },
   duration: { type: String, required: true },
-  pricePKR: { type: Number, required: true },
+  pricePKR: { type: Number },
   couplePricePKR: { type: Number },
   originalPricePKR: { type: Number },
   departure: { type: String },

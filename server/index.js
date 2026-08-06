@@ -12,6 +12,7 @@ import Destination from './models/Destination.js';
 import Blog from './models/Blog.js';
 import Hotel from './models/Hotel.js';
 import Review from './models/Review.js';
+import Carousel from './models/Carousel.js';
 
 // Routes
 import authRoutes from './routes/auth.js';
@@ -40,6 +41,7 @@ app.use('/api/destinations', createCrudRoutes(Destination, 'Destination'));
 app.use('/api/blogs', createCrudRoutes(Blog, 'Blog'));
 app.use('/api/hotels', createCrudRoutes(Hotel, 'Hotel'));
 app.use('/api/reviews', createCrudRoutes(Review, 'Review'));
+app.use('/api/carousels', createCrudRoutes(Carousel, 'Carousel'));
 
 // Health check
 app.get('/api/health', (req, res) => {

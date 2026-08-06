@@ -2,7 +2,7 @@ import { CATEGORIES } from '../types';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, MapPin, Star, ShieldCheck, Users, Compass, ArrowRight } from 'lucide-react';
-import { destinationsAPI, settingsAPI } from '../services/api';
+import { destinationsAPI, carouselsAPI } from '../services/api';
 
 interface HeroProps {
   searchQuery: string;
@@ -25,9 +25,10 @@ export const Hero: React.FC<HeroProps> = ({
   ]);
 
   useEffect(() => {
-    settingsAPI.get().then((settings: any) => {
-      if (settings?.heroSliderImages && settings.heroSliderImages.length > 0) {
-        setSliderImages(settings.heroSliderImages);
+    carouselsAPI.getAll().then((carousels: any[]) => {
+      const heroCarousel = carousels.find(c => c.name === 'Home Page Hero Slider');
+      if (heroCarousel && heroCarousel.images && heroCarousel.images.length > 0) {
+        setSliderImages(heroCarousel.images);
       } else {
         // Fallback to dynamic destinations
         destinationsAPI.getAll().then((data: any) => {
