@@ -57,8 +57,20 @@ export function App() {
     localStorage.removeItem('pak99_theme');
   }, []);
 
-  // Only show packages that are explicitly marked as "featured" in the Admin Panel
-  const featuredHomeTours = allTours.filter(t => t.featured);
+  // Filter packages based on search query or category, otherwise just show featured tours
+  const displayHomeTours = allTours.filter(t => {
+    const isSearching = searchQuery.trim() !== '' || selectedCategory !== 'All';
+    
+    if (isSearching) {
+      const matchesSearch = !searchQuery || 
+        t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        t.location?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || t.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    }
+    
+    return t.featured;
+  });
 
   const handleOpenBooking = (tourTitle?: string) => {
     setBookingTourTitle(tourTitle);
@@ -89,7 +101,7 @@ export function App() {
           <Route path="/" element={
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="flex-1 flex flex-col">
               <SEO title="Home" />
-              <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} onExploreClick={() => { const sec = document.getElementById('home-services'); if (sec) sec.scrollIntoView({ behavior: 'smooth' }); }} />
+              <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} onExploreClick={() => { const sec = document.getElementById('tours-section'); if (sec) sec.scrollIntoView({ behavior: 'smooth' }); }} />
               <main className="flex-1 space-y-20 py-12 bg-slate-50">
                 <section id="home-services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 scroll-mt-24">
                   <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -127,21 +139,36 @@ export function App() {
                     </motion.button>
                   </div>
                 </section>
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <section id="tours-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-24">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-6">
                     <div>
-                      <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">Featured <span className="text-gradient">Travel Packages</span></h2>
-                      <p className="text-sm text-slate-600 font-semibold mt-1">Our top recommended luxury travel itineraries for families, couples & adventurers.</p>
+                      {searchQuery || selectedCategory !== 'All' ? (
+                        <>
+                          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">Search <span className="text-gradient">Results</span></h2>
+                          <p className="text-sm text-slate-600 font-semibold mt-1">Found {displayHomeTours.length} packages matching your criteria.</p>
+                        </>
+                      ) : (
+                        <>
+                          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">Featured <span className="text-gradient">Travel Packages</span></h2>
+                          <p className="text-sm text-slate-600 font-semibold mt-1">Our top recommended luxury travel itineraries for families, couples & adventurers.</p>
+                        </>
+                      )}
                     </div>
                     <button onClick={() => navigate('/pakistan-tours')} className="text-xs font-extrabold text-[#ff5500] hover:underline flex items-center gap-1 cursor-pointer">
                       <span>View All Packages</span><ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {featuredHomeTours.map((tour) => (
-                      <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
-                    ))}
-                  </div>
+                  {displayHomeTours.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      {displayHomeTours.map((tour) => (
+                        <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-12 text-center text-slate-500 font-bold bg-white rounded-3xl border border-slate-200">
+                      No tours found matching your search criteria.
+                    </div>
+                  )}
                 </section>
                 <ContactSection />
               </main>
