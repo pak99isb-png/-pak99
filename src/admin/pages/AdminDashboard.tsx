@@ -196,6 +196,38 @@ function FormModal<T extends Record<string, any>>({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Strict Client-Side Validation
+    for (const field of fields) {
+      if (field.required) {
+        const val = formData[field.key];
+        
+        // 1. Text, Textarea, Select, Image (Strings)
+        if (typeof val === 'string' && !val.trim()) {
+          onError(`Field "${field.label}" is required.`);
+          return;
+        }
+        
+        // 2. Numbers
+        if (typeof val === 'number' && isNaN(val)) {
+          onError(`Field "${field.label}" is required.`);
+          return;
+        }
+
+        // 3. Arrays (Custom array fields like itinerary, images, etc.)
+        if (Array.isArray(val) && val.length === 0) {
+          onError(`Field "${field.label}" requires at least one item.`);
+          return;
+        }
+
+        // 4. Undefined/Null catch-all
+        if (val === undefined || val === null) {
+          onError(`Field "${field.label}" is required.`);
+          return;
+        }
+      }
+    }
+
     onSave(formData as T);
   };
 
