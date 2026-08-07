@@ -115,9 +115,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToTour }) => {
           <button onClick={(e) => { e.preventDefault(); window.location.href='/admin'; }} className="hover:text-white transition-colors cursor-pointer">
             Admin Login
           </button>
-          <span className="flex items-center gap-1">
-            Designed with <Heart className="w-3.5 h-3.5 text-[#ff5500] fill-[#ff5500]" /> for Travel Explorers.
-          </span>
+          <a
+            href="https://wa.me/923012980226"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white transition-colors"
+          >
+            Developed by Saad Ali (SM IT Agency)
+          </a>
         </div>
       </div>
     </footer>

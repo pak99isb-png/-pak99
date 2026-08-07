@@ -134,14 +134,14 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
               {filteredPackages.map((pkg) => (
                 <div key={pkg._id || pkg.packageId} className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden group">
                   {/* Card Header */}
-                  <div className="bg-gradient-to-r from-[#0b2f64] to-[#1a4a8c] p-5 text-white flex justify-between items-start relative">
-                    <div className="space-y-1 relative z-10">
-                      <div className="flex items-center gap-2">
-                        <span className="bg-[#ff5500] text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-sm">
+                  <div className="bg-gradient-to-r from-[#0b2f64] to-[#1a4a8c] p-5 text-white flex justify-between items-start relative gap-3">
+                    <div className="space-y-1 relative z-10 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="bg-[#ff5500] text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow-sm whitespace-nowrap">
                           {pkg.packageId}
                         </span>
                         {pkg.seatsAvailable && (
-                          <span className="bg-emerald-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                          <span className="bg-emerald-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm whitespace-nowrap">
                             <Users className="w-3 h-3" /> {pkg.seatsAvailable} Seats Left
                           </span>
                         )}
@@ -155,7 +155,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       </p>
                     </div>
                     {/* Airline Badge */}
-                    <div className="bg-white text-[#0b2f64] p-2 rounded-xl text-center min-w-[80px] shadow-lg relative z-10">
+                    <div className="bg-white text-[#0b2f64] p-2 rounded-xl text-center min-w-[80px] shadow-lg relative z-10 shrink-0">
                       {pkg.airlineLogo ? (
                         <img src={pkg.airlineLogo} alt={pkg.airline} className="h-6 w-auto mx-auto mb-1 object-contain" />
                       ) : (
@@ -198,7 +198,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                     <h4 className="text-xs font-extrabold text-[#0b2f64] uppercase tracking-wider mb-3">
                       Package Pricing (PKR)
                     </h4>
-                    <div className="grid grid-cols-4 gap-2 text-center">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
                       <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
                         <div className="text-[10px] font-bold text-slate-500 uppercase">Sharing</div>
                         <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing?.sharing || '-'}</div>
