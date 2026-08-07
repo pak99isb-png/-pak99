@@ -644,7 +644,7 @@ const SettingsPanel = () => {
     });
   }, []);
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: any) => {
     setSettings((prev: any) => ({ ...prev, [key]: value }));
     
     // Auto-fetch YouTube thumbnail if it's a YouTube link
