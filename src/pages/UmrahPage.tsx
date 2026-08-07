@@ -95,7 +95,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
             <h3 className="text-sm font-extrabold text-[#0b2f64] uppercase tracking-wider flex items-center gap-2">
               <Building className="w-4 h-4 text-[#ff5500]" /> Select Package Type
             </h3>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               {TIERS.map((tier) => (
                 <button
                   key={tier}
@@ -107,7 +107,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                   }`}
                 >
                   {tier === 'Star' ? <Sparkles className="w-4 h-4" /> : null}
-                  {tier} Package
+                  <span className="whitespace-nowrap">{tier} Package</span>
                 </button>
               ))}
             </div>
@@ -116,11 +116,11 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
 
         {/* Results Section */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h2 className="text-2xl font-extrabold text-[#0b2f64]">
               {selectedTier} Packages from {selectedCity}
             </h2>
-            <span className="text-sm font-bold text-slate-500 bg-white px-3 py-1 rounded-full shadow-sm border border-slate-200">
+            <span className="text-sm font-bold text-slate-500 bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-200 w-fit whitespace-nowrap">
               {filteredPackages.length} Packages Found
             </span>
           </div>
