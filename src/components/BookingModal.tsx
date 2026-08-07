@@ -52,7 +52,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs font-semibold text-slate-700">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 text-xs font-semibold text-slate-700">
           <div>
             <label className="block text-slate-700 font-bold mb-1">Selected Package / Service</label>
             <input
@@ -67,7 +67,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div>
               <label className="block font-bold mb-1">Full Name *</label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3 shrink-0" />
                 <input
                   type="text"
                   required
@@ -82,7 +82,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div>
               <label className="block font-bold mb-1">WhatsApp / Phone *</label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3 shrink-0" />
                 <input
                   type="tel"
                   required
@@ -99,7 +99,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div>
               <label className="block font-bold mb-1">Expected Travel Date</label>
               <div className="relative">
-                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3 shrink-0" />
                 <input
                   type="date"
                   value={formData.travelDate}
@@ -112,7 +112,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div>
               <label className="block font-bold mb-1">Number of Travelers</label>
               <div className="relative">
-                <Users className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Users className="w-4 h-4 text-slate-400 absolute left-3 top-3 shrink-0" />
                 <select
                   value={formData.travelersCount}
                   onChange={(e) => setFormData({ ...formData, travelersCount: e.target.value })}
@@ -142,7 +142,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             type="submit"
             className="w-full py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold rounded-xl shadow-lg shadow-green-500/25 text-xs flex items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-[1.02]"
           >
-            <MessageSquare className="w-4 h-4 fill-white" /> Send Inquiry to WhatsApp
+            <MessageSquare className="w-4 h-4 fill-white shrink-0" /> Send Inquiry to WhatsApp
           </button>
         </form>
       </div>

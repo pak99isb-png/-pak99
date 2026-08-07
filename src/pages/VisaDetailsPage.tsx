@@ -162,9 +162,9 @@ export const VisaDetailsPage: React.FC<VisaDetailsPageProps> = ({
             {/* Documents Sections */}
             <div className="space-y-10">
               {country.normalDocs && country.normalDocs.length > 0 && (
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-                  <h3 className="text-lg font-extrabold text-[#0b2f64] flex items-center gap-2 mb-6">
-                    <FileText className="text-[#ff5500] w-5 h-5" />
+                <div className="bg-white rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-md">
+                  <h3 className="text-lg font-extrabold text-[#0b2f64] flex items-start sm:items-center gap-2 mb-6">
+                    <FileText className="text-[#ff5500] w-5 h-5 shrink-0 mt-0.5 sm:mt-0" />
                     Documents Required For Normal Processing
                   </h3>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -181,9 +181,9 @@ export const VisaDetailsPage: React.FC<VisaDetailsPageProps> = ({
               )}
 
               {country.doneBaseDocs && country.doneBaseDocs.length > 0 && (
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md">
-                  <h3 className="text-lg font-extrabold text-[#0b2f64] flex items-center gap-2 mb-6">
-                    <CheckCircle2 className="text-[#25D366] w-5 h-5" />
+                <div className="bg-white rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-md">
+                  <h3 className="text-lg font-extrabold text-[#0b2f64] flex items-start sm:items-center gap-2 mb-6">
+                    <CheckCircle2 className="text-[#25D366] w-5 h-5 shrink-0 mt-0.5 sm:mt-0" />
                     Documents Required For Done Base Processing
                   </h3>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">

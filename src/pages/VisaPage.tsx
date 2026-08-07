@@ -48,7 +48,7 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
             <div className="inline-flex px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-blue-100 text-sm font-bold tracking-wide w-max">
               🌟 Premium Visa Services
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white break-words">
               Get Your <span className="text-amber-400">Done Base</span> Visa
             </h1>
             <p className="text-lg md:text-xl text-blue-100 font-medium max-w-lg leading-relaxed">
@@ -59,7 +59,7 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
               {['Expert Legal Support', 'Meeting Your Unique Needs', 'Tailored Immigration Solutions'].map((item, idx) => (
                 <li key={idx} className="flex items-center gap-4 font-medium text-lg">
                   <div className="w-8 h-8 rounded-full bg-amber-400/20 flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="w-5 h-5 text-amber-400" />
+                    <CheckCircle2 className="w-5 h-5 text-amber-400 shrink-0" />
                   </div>
                   {item}
                 </li>
@@ -106,8 +106,8 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
       {/* Countries Grid Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center md:text-left mb-12">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-[#0b2f64]">
-            Make Your Choice for the <br />
+          <h2 className="text-2xl md:text-4xl font-extrabold text-[#0b2f64] break-words">
+            Make Your Choice for the <br className="hidden sm:block" />
             <span className="text-slate-500">Preferred Nation</span>
           </h2>
         </div>
@@ -131,7 +131,7 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
                     className="w-full h-full object-cover" 
                   />
                 </div>
-                <span className="text-xs font-bold text-slate-700 group-hover:text-[#ff5500] text-left leading-tight">
+                <span className="text-xs font-bold text-slate-700 group-hover:text-[#ff5500] text-left leading-tight break-words">
                   {country.name}
                 </span>
               </button>

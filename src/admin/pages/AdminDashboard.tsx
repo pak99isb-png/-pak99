@@ -712,6 +712,29 @@ const SettingsPanel = () => {
       
       <div className="space-y-6 max-w-2xl">
         <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
+          <h4 className="text-[#ff5500] font-bold mb-4">Website Appearance</h4>
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <div className="relative flex items-center justify-center w-6 h-6 border-2 border-slate-500 rounded-md bg-slate-800 group-hover:border-[#ff5500] transition-colors">
+              <input
+                type="checkbox"
+                className="opacity-0 absolute inset-0 cursor-pointer w-full h-full"
+                checked={settings.showTopBanner !== false}
+                onChange={(e) => handleChange('showTopBanner', e.target.checked)}
+              />
+              {settings.showTopBanner !== false && (
+                <svg className="w-4 h-4 text-[#ff5500]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-bold text-white">Show Top Banner (Special Offer)</span>
+              <span className="text-xs text-slate-400">Display the special offer banner at the very top of the website.</span>
+            </div>
+          </label>
+        </div>
+
+        <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
           <h4 className="text-[#ff5500] font-bold mb-4">Visa Page Video</h4>
           <div className="space-y-4">
             <div>

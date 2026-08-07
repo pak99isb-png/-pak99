@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Phone, MessageSquare, Menu, X, Sparkles, Send, ChevronDown } from 'lucide-react';
+import { settingsAPI } from '../services/api';
 
 interface NavbarProps {
   onOpenBooking: (tourTitle?: string) => void;
@@ -12,6 +13,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const currentPage = location.pathname.substring(1) || 'home';
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [settings, setSettings] = useState<any>(null);
 
   // Dropdown states
   const [toursDropdownOpen, setToursDropdownOpen] = useState(false);
@@ -28,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const whyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    settingsAPI.get().then(setSettings).catch(console.error);
     const handleScroll = () => {
       if (window.scrollY > 20) {
         setScrolled(true);
@@ -72,29 +75,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   return (
     <>
       {/* Top Announcement Bar - hidden in overlay mode to match exact reference design */}
-      {!isOverlayMode && (
+      {!isOverlayMode && settings?.showTopBanner !== false && (
         <div className="bg-[#0b2f64] text-white text-xs py-2 px-4 shadow-sm border-b border-orange-500/30">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="flex items-center gap-2 font-medium">
-              <span className="bg-[#ff5500] text-white font-extrabold px-2.5 py-0.5 rounded-full text-[10px] flex items-center gap-1 uppercase tracking-wide shadow-sm">
-                <Sparkles className="w-3 h-3 text-amber-200" /> Special Offer
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 font-medium">
+              <span className="bg-[#ff5500] text-white font-extrabold px-2.5 py-0.5 rounded-full text-[10px] flex items-center gap-1 uppercase tracking-wide shadow-sm shrink-0">
+                <Sparkles className="w-3 h-3 text-amber-200 shrink-0" /> Special Offer
               </span>
-              <span className="font-semibold text-slate-100">Up to 20% OFF on Hunza, Skardu, Student Visas & Umrah!</span>
+              <span className="font-semibold text-slate-100 text-center">Up to 20% OFF on Hunza, Skardu, Student Visas & Umrah!</span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-100">
-              <div className="flex items-center gap-1.5 transition-colors font-semibold">
-                <Phone className="w-3.5 h-3.5 text-orange-400" />
-                <span><a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a></span>
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-slate-100">
+              <div className="flex items-center gap-1.5 transition-colors font-semibold text-[10px] sm:text-xs">
+                <Phone className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                <span className="whitespace-nowrap"><a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a></span>
               </div>
-              <span className="text-blue-400">|</span>
+              <span className="hidden sm:inline text-blue-400">|</span>
               <a
                 href="https://wa.me/923108032999?text=Hello%20Pak99%20Travel%20and%20Tours,%20I%20want%20to%20inquire%20about%20tour%20packages%20and%20Study."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-extrabold transition-colors"
+                className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-extrabold transition-colors text-[10px] sm:text-xs whitespace-nowrap shrink-0"
               >
-                <MessageSquare className="w-3.5 h-3.5" />
+                <MessageSquare className="w-3.5 h-3.5 shrink-0" />
                 <span>WhatsApp Inquiry</span>
               </a>
             </div>
@@ -114,17 +117,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-4 xl:px-8 flex items-center justify-between">
           {/* Brand Logo & Name */}
-          <button onClick={() => handleNavClick('home')} className="flex items-center gap-3 group text-left cursor-pointer">
-            <div className="relative p-1 bg-white rounded-xl shadow-md border border-slate-200 group-hover:scale-105 transition-transform overflow-hidden">
+          <button onClick={() => handleNavClick('home')} className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer shrink-0">
+            <div className="relative p-1 bg-white rounded-xl shadow-md border border-slate-200 group-hover:scale-105 transition-transform overflow-hidden shrink-0">
               <img
                 src="/logo.png"
                 alt="Pak99 Travel and Tours Logo"
-                className="h-11 w-auto object-contain"
+                className="h-8 sm:h-11 w-auto object-contain"
               />
             </div>
             <div className="flex flex-col items-start justify-center">
-              <span className={`font-extrabold text-2xl tracking-tight leading-none transition-colors ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>PAK 99</span>
-              <span className="text-[9px] font-bold px-1.5 py-0.5 mt-1 rounded bg-[#ff5500] text-white uppercase shadow-sm whitespace-nowrap">TRAVEL & TOURS</span>
+              <span className={`font-extrabold text-base sm:text-2xl tracking-tight leading-none transition-colors ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>PAK 99</span>
+              <span className="text-[9px] sm:text-[9px] font-bold px-1.5 py-0.5 mt-1 rounded bg-[#ff5500] text-white uppercase shadow-sm whitespace-nowrap min-w-max inline-block">TRAVEL & TOURS</span>
             </div>
           </button>
 

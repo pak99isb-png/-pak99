@@ -121,42 +121,42 @@ export function App() {
                 <section id="home-services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 scroll-mt-24">
                   <div className="text-center space-y-2 max-w-2xl mx-auto">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-orange-500/10 text-[#ff5500] border border-orange-500/30">
-                      <Compass className="w-3.5 h-3.5" /> What Are You Looking For?
+                      <Compass className="w-3.5 h-3.5 shrink-0" /> What Are You Looking For?
                     </div>
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0b2f64]">
+                    <h2 className="text-2xl sm:text-4xl font-extrabold text-[#0b2f64] break-words">
                       Explore Our <span className="text-gradient">Primary Services</span>
                     </h2>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <motion.button onClick={() => navigate('/pakistan-tours')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                    <motion.button onClick={() => navigate('/pakistan-tours')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
                       <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#ff5500] flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform">🇵🇰</div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Pakistan Tours</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Hunza, Skardu, Swat, Naran & Fairy Meadows.</p>
-                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
-                    <motion.button onClick={() => navigate('/international-tours')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                    <motion.button onClick={() => navigate('/international-tours')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
                       <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform">✈️</div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">International</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Dubai, Turkey, Baku, Thailand & more.</p>
-                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
-                    <motion.button onClick={() => navigate('/umrah')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
-                      <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><Sparkles className="w-6 h-6 text-amber-600" /></div>
+                    <motion.button onClick={() => navigate('/umrah')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><Sparkles className="w-6 h-6 text-amber-600 shrink-0" /></div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Umrah Services</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Walking distance Haram 4 & 5-Star hotels.</p>
-                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Umrah Plans</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Umrah Plans</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
-                    <motion.button onClick={() => navigate('/study-uk')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><GraduationCap className="w-6 h-6 text-indigo-600" /></div>
+                    <motion.button onClick={() => navigate('/study-uk')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><GraduationCap className="w-6 h-6 text-indigo-600 shrink-0" /></div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Study Abroad</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">UK, Australia, Germany & Canada Visas.</p>
-                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Explore Admissions</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Explore Admissions</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
-                    <motion.button onClick={() => navigate('/hotels')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
-                      <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><Hotel className="w-6 h-6 text-emerald-600" /></div>
+                    <motion.button onClick={() => navigate('/hotels')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><Hotel className="w-6 h-6 text-emerald-600 shrink-0" /></div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Hotel Booking</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Discounted luxury resort reservations.</p>
-                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Reserve Hotels</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Reserve Hotels</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
                   </div>
                 </section>

@@ -23,7 +23,7 @@ export const ContactSection: React.FC = () => {
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-[#ff5500] text-white">
               <Sparkles className="w-3.5 h-3.5" /> Instant WhatsApp Response
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight break-words">
               Get in Touch <span className="text-[#ff5500]">With Pak99</span>
             </h2>
             <p className="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">
@@ -37,7 +37,7 @@ export const ContactSection: React.FC = () => {
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">WhatsApp Support Desk</div>
                 <a href="https://wa.me/923315290155" target="_blank" rel="noopener noreferrer" className="text-white font-extrabold text-sm hover:text-orange-400">
-                  0310-8032999 / 051-2757282
+                  0310-8032999 <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> 051-2757282
                 </a>
               </div>
             </div>
@@ -47,7 +47,7 @@ export const ContactSection: React.FC = () => {
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Phone Call Line</div>
                 <div className="text-white font-extrabold text-sm">
-                  <a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a>
+                  <a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@ export const ContactSection: React.FC = () => {
               <MapPin className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Main Office</div>
-                <div className="text-white font-bold text-xs">Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad</div>
+                <div className="text-white font-bold text-[11px] sm:text-xs break-words pr-2">Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad</div>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@ export const ContactSection: React.FC = () => {
               type="submit"
               className="w-full py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold rounded-xl shadow-lg shadow-green-500/25 text-xs flex items-center justify-center gap-2 cursor-pointer transition-transform hover:scale-[1.02]"
             >
-              <MessageSquare className="w-4 h-4 fill-white" />
+              <MessageSquare className="w-4 h-4 fill-white shrink-0" />
               Submit & Send to WhatsApp
             </button>
           </form>

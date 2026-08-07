@@ -147,7 +147,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                         )}
                       </div>
                       <h3 className="text-xl font-extrabold text-white flex items-center gap-2 mt-2">
-                        <CalendarDays className="w-5 h-5 text-amber-400" />
+                        <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
                         {pkg.departureDate}
                       </h3>
                       <p className="text-blue-200 text-sm font-medium flex items-center gap-1">
@@ -159,7 +159,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       {pkg.airlineLogo ? (
                         <img src={pkg.airlineLogo} alt={pkg.airline} className="h-6 w-auto mx-auto mb-1 object-contain" />
                       ) : (
-                        <PlaneTakeoff className="w-6 h-6 mx-auto mb-1 text-[#ff5500]" />
+                        <PlaneTakeoff className="w-6 h-6 mx-auto mb-1 text-[#ff5500] shrink-0" />
                       )}
                       <div className="text-[10px] font-extrabold uppercase">{pkg.airline}</div>
                       <div className="text-[9px] font-bold text-slate-500 border-t border-slate-200 mt-1 pt-1">{pkg.flightRoute.split(' ')[0]}</div>
@@ -167,9 +167,9 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                   </div>
 
                   {/* Hotels */}
-                  <div className="p-6 space-y-4 bg-slate-50 border-b border-slate-200">
+                  <div className="p-4 sm:p-6 space-y-4 bg-slate-50 border-b border-slate-200">
                     <h4 className="text-xs font-extrabold text-[#0b2f64] uppercase tracking-wider flex items-center gap-1.5">
-                      <Building className="w-4 h-4 text-slate-400" /> Included Hotels
+                      <Building className="w-4 h-4 text-slate-400 shrink-0" /> Included Hotels
                     </h4>
                     <div className="space-y-3">
                       <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
@@ -194,7 +194,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                   </div>
 
                   {/* Pricing Table */}
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <h4 className="text-xs font-extrabold text-[#0b2f64] uppercase tracking-wider mb-3">
                       Package Pricing (PKR)
                     </h4>
@@ -232,7 +232,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
           ) : (
             <div className="bg-white border-2 border-dashed border-slate-300 rounded-3xl p-12 text-center space-y-4">
               <div className="mx-auto w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
-                <Info className="w-8 h-8 text-slate-400" />
+                <Info className="w-8 h-8 text-slate-400 shrink-0" />
               </div>
               <h3 className="text-xl font-extrabold text-[#0b2f64]">No Packages Available</h3>
               <p className="text-slate-500 font-medium max-w-md mx-auto">

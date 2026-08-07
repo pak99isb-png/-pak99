@@ -73,14 +73,14 @@ export const TicketDetailsPage: React.FC<PageProps> = ({ onOpenBooking }) => {
         <div className="bg-white shadow-xl border border-slate-200 rounded-2xl overflow-hidden">
           
           {/* Header Section */}
-          <div className="py-6 px-8 flex flex-col md:flex-row items-center justify-between border-b-4 border-[#0b2f64] bg-white gap-6">
+          <div className="py-6 px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between border-b-4 border-[#0b2f64] bg-white gap-6">
             <div className="flex items-center gap-3">
               {airlineLogo ? (
                 <div className="w-12 h-12 flex items-center justify-center bg-white p-1 rounded-lg border border-slate-200">
                   <img src={airlineLogo} alt={airlineName} className="w-full h-full object-contain" />
                 </div>
               ) : (
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center shrink-0">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full text-green-700">
                     <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
                   </svg>
@@ -93,7 +93,7 @@ export const TicketDetailsPage: React.FC<PageProps> = ({ onOpenBooking }) => {
 
 
 
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#0b2f64] tracking-wide">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#0b2f64] tracking-wide break-words text-center md:text-right">
               {routeDisplay}
             </div>
           </div>

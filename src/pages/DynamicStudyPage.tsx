@@ -57,13 +57,13 @@ export const DynamicStudyPage: React.FC<PageProps> = ({ slug: propSlug, onOpenBo
 
   // Helper to map string icon names to Lucide components
   const renderIcon = (iconName?: string) => {
-    if (!iconName) return <CheckCircle className="w-8 h-8 text-[#ff5500]" />;
+    if (!iconName) return <CheckCircle className="w-8 h-8 text-[#ff5500] shrink-0" />;
     
     switch (iconName.toLowerCase()) {
-      case 'graduationcap': return <GraduationCap className="w-8 h-8 text-[#ff5500]" />;
-      case 'award': return <Award className="w-8 h-8 text-[#ff5500]" />;
-      case 'filetext': return <FileText className="w-8 h-8 text-[#ff5500]" />;
-      default: return <CheckCircle className="w-8 h-8 text-[#ff5500]" />;
+      case 'graduationcap': return <GraduationCap className="w-8 h-8 text-[#ff5500] shrink-0" />;
+      case 'award': return <Award className="w-8 h-8 text-[#ff5500] shrink-0" />;
+      case 'filetext': return <FileText className="w-8 h-8 text-[#ff5500] shrink-0" />;
+      default: return <CheckCircle className="w-8 h-8 text-[#ff5500] shrink-0" />;
     }
   };
 
@@ -141,7 +141,7 @@ export const DynamicStudyPage: React.FC<PageProps> = ({ slug: propSlug, onOpenBo
 
       {/* Call to Action */}
       {data.ctaTitle && (
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg text-center space-y-4">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-lg text-center space-y-4">
           <h3 className="text-2xl font-extrabold text-[#0b2f64] break-words">{data.ctaTitle}</h3>
           {data.ctaDescription && (
             <p className="text-xs text-slate-600 font-semibold max-w-xl mx-auto break-words">
@@ -152,7 +152,8 @@ export const DynamicStudyPage: React.FC<PageProps> = ({ slug: propSlug, onOpenBo
             onClick={() => onOpenBooking(data.ctaButtonText || 'Book Free Assessment')}
             className="px-8 py-3.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white font-extrabold rounded-xl shadow-md text-xs cursor-pointer hover:scale-105 transition-all inline-flex items-center gap-2"
           >
-            {renderIcon(data.items?.[0]?.icon)} {data.ctaButtonText || 'Book Free Assessment'}
+            <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0 fill-none stroke-current stroke-2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            {data.ctaButtonText || 'Book Free Assessment'}
           </button>
         </div>
       )}
