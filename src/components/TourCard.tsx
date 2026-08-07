@@ -111,17 +111,17 @@ export const TourCard: React.FC<TourCardProps> = ({ tour, onSelectTour, onBookNo
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => onSelectTour(tour)}
-              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0b2f64] border border-slate-200 transition-colors text-xs font-extrabold cursor-pointer"
+              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0b2f64] border border-slate-200 transition-colors text-xs font-extrabold cursor-pointer whitespace-nowrap shrink-0"
               title="View Itinerary Details"
             >
               Details
             </button>
             <button
               onClick={() => onBookNow(tour.title)}
-              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-[#ff5500] to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-md shadow-orange-500/20 transition-all flex items-center gap-1 cursor-pointer"
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-[#ff5500] to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-md shadow-orange-500/20 transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
             >
               <span>Book</span>
               <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
