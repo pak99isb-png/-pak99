@@ -1,5 +1,6 @@
 import React from 'react';
 import { WhyChooseUs } from '../components/WhyChooseUs';
+import { SEO } from '../components/SEO';
 
 interface PageProps {
   onOpenBooking: (title?: string) => void;
@@ -9,6 +10,12 @@ interface PageProps {
 export const WhyUsPage: React.FC<PageProps> = ({ onNavigateHome }) => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
+      <SEO
+        title="Why Choose Pak99 - Pakistan's Top Travel Agency"
+        description="Why Pak99 Travel & Tours is Pakistan's most trusted travel agency — own Prado fleet, direct hotel partnerships, 24/7 support, 5,000+ happy travelers. Best tour operator in Islamabad."
+        keywords="why pak99, best travel agency pakistan, best tour operator islamabad, trusted travel agency, pak99 travel reviews, top travel agency pakistan, luxury travel pakistan, prado fleet tours"
+        canonicalPath="/why-us"
+      />
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
           <button onClick={onNavigateHome} className="hover:text-[#ff5500] cursor-pointer">Home</button>

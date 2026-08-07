@@ -13,6 +13,9 @@ import Blog from './models/Blog.js';
 import Hotel from './models/Hotel.js';
 import Review from './models/Review.js';
 import Carousel from './models/Carousel.js';
+import TicketGroup from './models/TicketGroup.js';
+import InsuranceService from './models/InsuranceService.js';
+import StudyProgram from './models/StudyProgram.js';
 
 // Routes
 import authRoutes from './routes/auth.js';
@@ -53,6 +56,9 @@ app.use('/api/blogs', createCrudRoutes(Blog, 'Blog'));
 app.use('/api/hotels', createCrudRoutes(Hotel, 'Hotel'));
 app.use('/api/reviews', createCrudRoutes(Review, 'Review'));
 app.use('/api/carousels', createCrudRoutes(Carousel, 'Carousel'));
+app.use('/api/ticket-groups', createCrudRoutes(TicketGroup, 'Ticket Group'));
+app.use('/api/insurance', createCrudRoutes(InsuranceService, 'Insurance Service'));
+app.use('/api/study', createCrudRoutes(StudyProgram, 'Study Program'));
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -2,6 +2,20 @@ import { Router } from 'express';
 import auth from '../middleware/auth.js';
 import { cloudinary } from '../config/cloudinary.js';
 
+const formatMongooseError = (error) => {
+  if (error.name === 'ValidationError') {
+    const messages = Object.values(error.errors).map(err => {
+      if (err.kind === 'required') {
+        const field = err.path.split('.').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        return `${field} is required.`;
+      }
+      return err.message;
+    });
+    return messages.join('\n');
+  }
+  return error.message;
+};
+
 /**
  * Creates standard CRUD routes for a Mongoose model.
  * GET    /           — Public list all
@@ -41,7 +55,7 @@ const createCrudRoutes = (Model, resourceName) => {
       await item.save();
       res.status(201).json(item);
     } catch (error) {
-      res.status(400).json({ message: `Error creating ${resourceName}.`, error: error.message });
+      res.status(400).json({ message: `Error creating ${resourceName}.`, error: formatMongooseError(error) });
     }
   });
 
@@ -55,7 +69,8 @@ const createCrudRoutes = (Model, resourceName) => {
       if (!item) return res.status(404).json({ message: `${resourceName} not found.` });
       res.json(item);
     } catch (error) {
-      res.status(400).json({ message: `Error updating ${resourceName}.`, error: error.message });
+      console.error(`[CRUD PUT ERROR] ${resourceName}:`, error);
+      res.status(400).json({ message: `Error updating ${resourceName}.`, error: formatMongooseError(error) });
     }
   });
 

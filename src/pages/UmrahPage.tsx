@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Sparkles, MapPin, Building, PlaneTakeoff, CalendarDays, Users, Info } from 'lucide-react';
 import { umrahAPI, type ApiUmrahPackage } from '../services/api';
 import { Loader2 } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 interface PageProps {
   onOpenBooking: (title?: string) => void;
@@ -31,6 +32,12 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
 
   return (
     <div className="min-h-screen bg-slate-50 pt-8 pb-20 animate-fade-in">
+      <SEO
+        title="Umrah Packages 2025 - Economy & Luxury Umrah from Pakistan"
+        description="Book Umrah packages from Islamabad, Lahore, Faisalabad & Multan. Economy & 5-Star luxury Umrah with hotels near Haram. Walking distance Makkah & Madinah hotels. Pak99 Travel & Tours — trusted Umrah operator."
+        keywords="umrah packages pakistan, umrah packages islamabad, umrah packages lahore, umrah packages faisalabad, cheap umrah packages, luxury umrah packages, 5 star umrah packages, umrah 2025, umrah booking pakistan, umrah travel agent islamabad, walking distance haram hotel, makkah hotel near haram, madinah hotel booking, economy umrah packages, best umrah packages pakistan"
+        canonicalPath="/umrah"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Breadcrumb */}
@@ -139,7 +146,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                           </span>
                         )}
                       </div>
-                      <h3 className="text-xl font-extrabold flex items-center gap-2 mt-2">
+                      <h3 className="text-xl font-extrabold text-white flex items-center gap-2 mt-2">
                         <CalendarDays className="w-5 h-5 text-amber-400" />
                         {pkg.departureDate}
                       </h3>
@@ -149,7 +156,11 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                     </div>
                     {/* Airline Badge */}
                     <div className="bg-white text-[#0b2f64] p-2 rounded-xl text-center min-w-[80px] shadow-lg relative z-10">
-                      <PlaneTakeoff className="w-6 h-6 mx-auto mb-1 text-[#ff5500]" />
+                      {pkg.airlineLogo ? (
+                        <img src={pkg.airlineLogo} alt={pkg.airline} className="h-6 w-auto mx-auto mb-1 object-contain" />
+                      ) : (
+                        <PlaneTakeoff className="w-6 h-6 mx-auto mb-1 text-[#ff5500]" />
+                      )}
                       <div className="text-[10px] font-extrabold uppercase">{pkg.airline}</div>
                       <div className="text-[9px] font-bold text-slate-500 border-t border-slate-200 mt-1 pt-1">{pkg.flightRoute.split(' ')[0]}</div>
                     </div>
@@ -163,7 +174,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                     <div className="space-y-3">
                       <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
                         <div className="bg-amber-100 p-2 rounded-lg">
-                          <img src="https://cdn-icons-png.flaticon.com/512/2983/2983713.png" alt="Kaaba" className="w-6 h-6 opacity-80" />
+                          <img src={pkg.makkahHotelIcon || "https://cdn-icons-png.flaticon.com/512/2983/2983713.png"} alt="Kaaba" className="w-6 h-6 opacity-80 object-contain" />
                         </div>
                         <div>
                           <div className="text-[10px] font-extrabold text-[#ff5500] uppercase tracking-wide">Makkah Hotel</div>
@@ -172,7 +183,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       </div>
                       <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3">
                         <div className="bg-green-100 p-2 rounded-lg">
-                          <img src="https://cdn-icons-png.flaticon.com/512/2983/2983756.png" alt="Masjid Nabawi" className="w-6 h-6 opacity-80" />
+                          <img src={pkg.madinahHotelIcon || "https://cdn-icons-png.flaticon.com/512/2983/2983756.png"} alt="Masjid Nabawi" className="w-6 h-6 opacity-80 object-contain" />
                         </div>
                         <div>
                           <div className="text-[10px] font-extrabold text-green-600 uppercase tracking-wide">Madinah Hotel</div>
@@ -190,19 +201,19 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                     <div className="grid grid-cols-4 gap-2 text-center">
                       <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
                         <div className="text-[10px] font-bold text-slate-500 uppercase">Sharing</div>
-                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing.sharing}</div>
+                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing?.sharing || '-'}</div>
                       </div>
                       <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
                         <div className="text-[10px] font-bold text-slate-500 uppercase">Quad</div>
-                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing.quad}</div>
+                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing?.quad || '-'}</div>
                       </div>
                       <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
                         <div className="text-[10px] font-bold text-slate-500 uppercase">Triple</div>
-                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing.triple}</div>
+                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing?.triple || '-'}</div>
                       </div>
                       <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
                         <div className="text-[10px] font-bold text-slate-500 uppercase">Double</div>
-                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing.double}</div>
+                        <div className="text-sm font-extrabold text-[#0b2f64] mt-1">{pkg.pricing?.double || '-'}</div>
                       </div>
                     </div>
 

@@ -42,7 +42,7 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
     });
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: res.statusText }));
-      const errorMessage = error.message || 'API request failed';
+      const errorMessage = error.error || error.message || 'API request failed';
       toast.error(errorMessage);
       throw new Error(errorMessage);
     }
@@ -98,6 +98,58 @@ function createCrudAPI<T extends { _id?: string; id?: string }>(resource: string
 // Resource APIs
 // ========================
 
+export interface ApiTicketFlight {
+  date: string;
+  time: string;
+  bag: string;
+  meal: boolean;
+  fare: string;
+  seats: string;
+}
+
+export interface ApiTicketGroup {
+  _id?: string;
+  title: string;
+  buttonText: string;
+  image: string;
+  airlineName: string;
+  airlineLogo?: string;
+  routeDisplay: string;
+  flights: ApiTicketFlight[];
+}
+
+export interface ApiInsuranceService {
+  _id?: string;
+  title: string;
+  image: string;
+  description: string;
+  features: string[];
+  buttonText: string;
+  inquiryType: string;
+}
+
+export interface ApiStudyItem {
+  title: string;
+  description: string;
+  icon?: string;
+  funding?: string;
+  target?: string;
+  buttonText?: string;
+}
+
+export interface ApiStudyProgram {
+  _id?: string;
+  slug: string;
+  pageType: 'destination' | 'scholarship' | 'attestation';
+  badgeText?: string;
+  title: string;
+  description: string;
+  ctaTitle?: string;
+  ctaDescription?: string;
+  ctaButtonText?: string;
+  items: ApiStudyItem[];
+}
+
 export interface ApiTour {
   id?: string;
   seoTitle?: string;
@@ -135,8 +187,16 @@ export interface ApiUmrahPackage {
   flightRoute: string;
   airline: string;
   hotels: { makkah: string; madinah: string };
-  pricing: { sharing: string; quad: string; triple: string; double: string };
+  pricing?: {
+    sharing?: string;
+    quad?: string;
+    triple?: string;
+    double?: string;
+  };
   seatsAvailable?: number;
+  airlineLogo?: string;
+  makkahHotelIcon?: string;
+  madinahHotelIcon?: string;
 }
 
 export interface ApiVisaCountry {
@@ -211,6 +271,9 @@ export const blogsAPI = createCrudAPI<ApiBlog>('blogs');
 export const hotelsAPI = createCrudAPI<ApiHotel>('hotels');
 export const reviewsAPI = createCrudAPI<ApiReview>('reviews');
 export const carouselsAPI = createCrudAPI<ApiCarousel>('carousels');
+export const ticketGroupsAPI = createCrudAPI<ApiTicketGroup>('ticket-groups');
+export const insuranceAPI = createCrudAPI<ApiInsuranceService>('insurance');
+export const studyAPI = createCrudAPI<ApiStudyProgram>('study');
 
 export const settingsAPI = {
   get: () => apiFetch<Record<string, any>>('/settings'),

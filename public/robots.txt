@@ -1,6 +1,21 @@
+# Pak99 Travel & Tours - Robots.txt
+# https://pak99traveling.com
+
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
 
+# Crawl delay for polite crawling
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 5
+
+# Sitemaps
 Sitemap: https://pak99traveling.com/sitemap.xml
+
+# Host
+Host: https://pak99traveling.com

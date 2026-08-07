@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isOverlayMode = currentPage === 'home' || currentPage === 'pakistan-tours' || currentPage.startsWith('tours/');
+  const isOverlayMode = currentPage === 'home' || currentPage === 'pakistan-tours' || currentPage === 'international-tours' || currentPage.startsWith('tours/');
   const isTransparent = isOverlayMode && !scrolled;
 
   return (
@@ -83,13 +83,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </div>
 
             <div className="flex items-center gap-4 text-slate-100">
-              <a href="tel:+923027751110" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors font-semibold">
+              <div className="flex items-center gap-1.5 transition-colors font-semibold">
                 <Phone className="w-3.5 h-3.5 text-orange-400" />
-                <span>+92 302 7751110</span>
-              </a>
+                <span><a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a></span>
+              </div>
               <span className="text-blue-400">|</span>
               <a
-                href="https://wa.me/923027751110?text=Hello%20Pak99%20Travel%20and%20Tours,%20I%20want%20to%20inquire%20about%20tour%20packages%20and%20Study."
+                href="https://wa.me/923108032999?text=Hello%20Pak99%20Travel%20and%20Tours,%20I%20want%20to%20inquire%20about%20tour%20packages%20and%20Study."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-extrabold transition-colors"
@@ -122,17 +122,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 className="h-11 w-auto object-contain"
               />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className={`font-extrabold text-2xl tracking-tight transition-colors ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>PAK 99</span>
-                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-[#ff5500] text-white uppercase shadow-sm">TOURS</span>
-              </div>
-              <p className={`text-[10px] tracking-widest uppercase font-extrabold transition-colors ${isTransparent ? 'text-amber-400' : 'text-[#ff5500]'}`}>Travel & Tours</p>
+            <div className="flex flex-col items-start justify-center">
+              <span className={`font-extrabold text-2xl tracking-tight leading-none transition-colors ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>PAK 99</span>
+              <span className="text-[9px] font-bold px-1.5 py-0.5 mt-1 rounded bg-[#ff5500] text-white uppercase shadow-sm whitespace-nowrap">TRAVEL & TOURS</span>
             </div>
           </button>
 
           {/* Desktop Navigation Links */}
-          <nav className={`hidden lg:flex items-center gap-2 lg:gap-4 xl:gap-6 font-extrabold text-sm xl:text-base tracking-tight uppercase ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>
+          <nav className={`hidden lg:flex items-center gap-2 lg:gap-4 xl:gap-6 font-extrabold text-sm xl:text-base tracking-tight uppercase whitespace-nowrap ${isTransparent ? 'text-white' : 'text-[#0b2f64]'}`}>
             <button
               onClick={() => handleNavClick('home')}
               className={`hover:text-[#ff5500] transition-colors cursor-pointer ${currentPage === 'home' && !isTransparent ? 'text-[#ff5500]' : ''}`}
@@ -164,6 +161,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                     className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
                   >
                     Pakistan Tours
+                  </button>
+                  <button
+                    onClick={() => handleNavClick('international-tours')}
+                    className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
+                  >
+                    International Tours
                   </button>
 
                 </div>
@@ -247,6 +250,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               className={`hover:text-[#ff5500] transition-colors cursor-pointer ${currentPage === 'hotels' && !isTransparent ? 'text-[#ff5500]' : ''}`}
             >
               Hotels
+            </button>
+            <button
+              onClick={() => handleNavClick('tickets')}
+              className={`hover:text-[#ff5500] transition-colors cursor-pointer ${currentPage === 'tickets' && !isTransparent ? 'text-[#ff5500]' : ''}`}
+            >
+              Tickets
+            </button>
+            <button
+              onClick={() => handleNavClick('insurance')}
+              className={`hover:text-[#ff5500] transition-colors cursor-pointer ${currentPage === 'insurance' && !isTransparent ? 'text-[#ff5500]' : ''}`}
+            >
+              Insurance
             </button>
             <button
               onClick={() => handleNavClick('blogs')}
@@ -350,6 +365,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                   >
                     Pakistan Tours
                   </button>
+                  <button
+                    onClick={() => handleNavClick('international-tours')}
+                    className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full"
+                  >
+                    International Tours
+                  </button>
                 </div>
               )}
             </div>
@@ -408,6 +429,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               className="block text-[#0b2f64] hover:text-[#ff5500] font-extrabold py-1 text-left w-full text-lg"
             >
               Hotels
+            </button>
+            <button
+              onClick={() => handleNavClick('tickets')}
+              className="block text-[#0b2f64] hover:text-[#ff5500] font-extrabold py-1 text-left w-full text-lg"
+            >
+              Tickets
+            </button>
+            <button
+              onClick={() => handleNavClick('insurance')}
+              className="block text-[#0b2f64] hover:text-[#ff5500] font-extrabold py-1 text-left w-full text-lg"
+            >
+              Insurance
             </button>
             <button
               onClick={() => handleNavClick('blogs')}

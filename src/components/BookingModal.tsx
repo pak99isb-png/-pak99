@@ -27,7 +27,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedMsg = `*Pak99 Quick Booking Request*\n\n📌 *Service:* ${formData.tourTitle}\n👤 *Name:* ${formData.fullName}\n📞 *Phone:* ${formData.phone}\n✉️ *Email:* ${formData.email || 'N/A'}\n📅 *Travel Date:* ${formData.travelDate || 'Flexible'}\n👥 *Travelers:* ${formData.travelersCount}\n💬 *Notes:* ${formData.notes || 'N/A'}`;
-    const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(formattedMsg)}`;
+    const whatsappUrl = `https://wa.me/923315290155?text=${encodeURIComponent(formattedMsg)}`;
     window.open(whatsappUrl, '_blank');
     onClose();
   };

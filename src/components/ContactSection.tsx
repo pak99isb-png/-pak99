@@ -10,7 +10,7 @@ export const ContactSection: React.FC = () => {
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedMsg = `*Pak99 Travel Inquiry*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📌 *Service:* ${service}\n💬 *Message:* ${message || 'I am interested in your services.'}`;
-    const whatsappUrl = `https://wa.me/923027751110?text=${encodeURIComponent(formattedMsg)}`;
+    const whatsappUrl = `https://wa.me/923315290155?text=${encodeURIComponent(formattedMsg)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -36,8 +36,8 @@ export const ContactSection: React.FC = () => {
               <MessageSquare className="w-5 h-5 text-[#25D366] shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">WhatsApp Support Desk</div>
-                <a href="https://wa.me/923027751110" target="_blank" rel="noopener noreferrer" className="text-white font-extrabold text-sm hover:text-orange-400">
-                  +92 302 7751110
+                <a href="https://wa.me/923315290155" target="_blank" rel="noopener noreferrer" className="text-white font-extrabold text-sm hover:text-orange-400">
+                  0310-8032999 / 051-2757282
                 </a>
               </div>
             </div>
@@ -46,9 +46,9 @@ export const ContactSection: React.FC = () => {
               <Phone className="w-5 h-5 text-orange-400 shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Phone Call Line</div>
-                <a href="tel:+923027751110" className="text-white font-extrabold text-sm hover:text-orange-400">
-                  +92 302 7751110
-                </a>
+                <div className="text-white font-extrabold text-sm">
+                  <a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a>
+                </div>
               </div>
             </div>
 
@@ -56,7 +56,7 @@ export const ContactSection: React.FC = () => {
               <MapPin className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Main Office</div>
-                <div className="text-white font-bold text-xs">Office 154, Central Avenue, Block A, Police Foundation, Rawalpindi</div>
+                <div className="text-white font-bold text-xs">Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad</div>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ export const ContactSection: React.FC = () => {
                 <input
                   type="tel"
                   required
-                  placeholder="e.g. +92 302 7751110"
+                  placeholder="e.g. 0310-8032999 / 051-2757282"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold focus:border-[#ff5500] outline-none"

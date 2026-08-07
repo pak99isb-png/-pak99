@@ -1,6 +1,7 @@
 import React from 'react';
 import { Hotel, MapPin, Star, CheckCircle, Loader2 } from 'lucide-react';
 import { hotelsAPI, type ApiHotel } from '../services/api';
+import { SEO } from '../components/SEO';
 
 interface PageProps {
   onOpenBooking: (title?: string) => void;
@@ -20,6 +21,12 @@ export const HotelsPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome 
 
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
+      <SEO
+        title="Hotel Booking Pakistan - Luxury & Budget Hotels"
+        description="Book discounted luxury hotels across Pakistan — Hunza, Skardu, Swat, Naran, Islamabad & more. 4-star and 5-star resort reservations with best rates. Pak99 Travel & Tours."
+        keywords="hotel booking pakistan, hotels hunza, hotels skardu, hotels swat, hotels naran, luxury hotels pakistan, budget hotels northern pakistan, resort booking pakistan, hotel reservation islamabad, best hotels gilgit baltistan"
+        canonicalPath="/hotels"
+      />
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
           <button onClick={onNavigateHome} className="hover:text-[#ff5500] cursor-pointer">Home</button>

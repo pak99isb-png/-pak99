@@ -143,7 +143,7 @@ export const TourModal: React.FC<TourModalProps> = ({ tour, onClose, onBookNow }
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <a
-              href={`https://wa.me/923027751110?text=Hello%20Pak99%20Tours,%20I%20am%20interested%20in%20${encodeURIComponent(tour.title)}`}
+              href={`https://wa.me/923315290155?text=Hello%20Pak99%20Tours,%20I%20am%20interested%20in%20${encodeURIComponent(tour.title)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 sm:flex-initial px-4 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 text-orange-600 dark:text-orange-400 font-bold text-xs border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-2 transition-colors"

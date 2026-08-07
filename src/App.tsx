@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TourCard } from './components/TourCard';
@@ -19,13 +18,12 @@ import { Suspense, lazy } from 'react';
 
 // Lazy load all pages to drastically reduce the initial bundle size
 const PakistanToursPage = lazy(() => import('./pages/PakistanToursPage').then(m => ({ default: m.PakistanToursPage })));
+const InternationalToursPage = lazy(() => import('./pages/InternationalToursPage').then(m => ({ default: m.InternationalToursPage })));
 const UmrahPage = lazy(() => import('./pages/UmrahPage').then(m => ({ default: m.UmrahPage })));
-const StudyUkPage = lazy(() => import('./pages/StudyUkPage').then(m => ({ default: m.StudyUkPage })));
-const StudyAustraliaPage = lazy(() => import('./pages/StudyAustraliaPage').then(m => ({ default: m.StudyAustraliaPage })));
-const StudyGermanyPage = lazy(() => import('./pages/StudyGermanyPage').then(m => ({ default: m.StudyGermanyPage })));
-const StudyCanadaPage = lazy(() => import('./pages/StudyCanadaPage').then(m => ({ default: m.StudyCanadaPage })));
-const ScholarshipsPage = lazy(() => import('./pages/ScholarshipsPage').then(m => ({ default: m.ScholarshipsPage })));
-const AttestationPage = lazy(() => import('./pages/AttestationPage').then(m => ({ default: m.AttestationPage })));
+const DynamicStudyPage = lazy(() => import('./pages/DynamicStudyPage').then(m => ({ default: m.DynamicStudyPage })));
+const TicketsPage = lazy(() => import('./pages/TicketsPage').then(m => ({ default: m.TicketsPage })));
+const TicketDetailsPage = lazy(() => import('./pages/TicketDetailsPage').then(m => ({ default: m.TicketDetailsPage })));
+const InsurancePage = lazy(() => import('./pages/InsurancePage').then(m => ({ default: m.InsurancePage })));
 const HotelsPage = lazy(() => import('./pages/HotelsPage').then(m => ({ default: m.HotelsPage })));
 const BlogsPage = lazy(() => import('./pages/BlogsPage').then(m => ({ default: m.BlogsPage })));
 const BlogDetailsPage = lazy(() => import('./pages/BlogDetailsPage').then(m => ({ default: m.BlogDetailsPage })));
@@ -112,7 +110,12 @@ export function App() {
           <Routes location={location} key={location.pathname}>
           <Route path="/" element={
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="flex-1 flex flex-col">
-              <SEO title="Home" />
+              <SEO
+                title="Best Travel Agency Islamabad - Tours, Umrah, Visa, Hotels"
+                description="Pak99 Travel & Tours — Islamabad's #1 travel agency. Book luxury Northern Pakistan tours (Hunza, Skardu, Swat, Naran), Umrah packages, international tours, visa services, study abroad programs, hotel bookings & flight tickets. Call 0310-8032999."
+                keywords="travel agency islamabad, best travel agency pakistan, pakistan tours, hunza tour, skardu tour, swat tour, naran tour, umrah packages, international tours, visa services pakistan, study abroad, hotel booking pakistan, flight tickets, pak99 travel, pak 99 tours"
+                canonicalPath="/"
+              />
               <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} onExploreClick={() => { const sec = document.getElementById('tours-section'); if (sec) sec.scrollIntoView({ behavior: 'smooth' }); }} />
               <main className="flex-1 space-y-20 py-12 bg-slate-50">
                 <section id="home-services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 scroll-mt-24">
@@ -124,11 +127,17 @@ export function App() {
                       Explore Our <span className="text-gradient">Primary Services</span>
                     </h2>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <motion.button onClick={() => navigate('/pakistan-tours')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
                       <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#ff5500] flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform">🇵🇰</div>
                       <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Pakistan Tours</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Hunza, Skardu, Swat, Naran & Fairy Meadows.</p>
+                      <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5" /></div>
+                    </motion.button>
+                    <motion.button onClick={() => navigate('/international-tours')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform">✈️</div>
+                      <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">International</h3>
+                      <p className="text-xs text-slate-500 font-medium leading-relaxed">Dubai, Turkey, Baku, Thailand & more.</p>
                       <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>View Packages</span><ArrowRight className="w-3.5 h-3.5" /></div>
                     </motion.button>
                     <motion.button onClick={() => navigate('/umrah')} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
@@ -177,7 +186,7 @@ export function App() {
                     </button>
                   </div>
                   {finalDisplayTours.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {finalDisplayTours.map((tour) => (
                         <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
                       ))}
@@ -195,20 +204,25 @@ export function App() {
 
           {/* Standard Routes */}
           <Route path="/pakistan-tours" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><PakistanToursPage onSelectTour={(t) => navigate(`/tours/${t.id}`)} onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/international-tours" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><InternationalToursPage onSelectTour={(t) => navigate(`/tours/${t.id}`)} onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/umrah" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><UmrahPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/study-uk" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyUkPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/study-australia" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyAustraliaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/study-germany" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyGermanyPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/study-canada" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyCanadaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/scholarships" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ScholarshipsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/attestation" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><AttestationPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study-uk" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="study-uk" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study-australia" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="study-australia" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study-germany" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="study-germany" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study-canada" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="study-canada" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/scholarships" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="scholarships" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/attestation" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="attestation" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study/:slug" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/tickets" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TicketsPage onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/tickets/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TicketDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />
+          <Route path="/insurance" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><InsurancePage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/hotels" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><HotelsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/blogs" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><BlogsPage onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/blog/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><BlogDetailsPage /></motion.div>} />
           <Route path="/why-us" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><WhyUsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/reviews" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ReviewsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/contact" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ContactPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
-          <Route path="/visa" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} onSelectCountry={(c) => navigate(`/visa/${c.code}`)} /></motion.div>} />
+          <Route path="/visa" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} onSelectCountry={(c) => navigate(`/visas/${c.code}`)} /></motion.div>} />
           
           <Route path="/tours/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TourDetailsPage onNavigate={(p) => navigate(`/${p}`)} onOpenBooking={handleOpenBooking} /></motion.div>} />
           <Route path="/visas/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />

@@ -12,13 +12,13 @@ interface PageProps {
   onNavigateHome: () => void;
 }
 
-export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBooking }) => {
-  const [pakistanTours, setPakistanTours] = useState<TourPackage[]>([]);
+export const InternationalToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBooking }) => {
+  const [internationalTours, setInternationalTours] = useState<TourPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const toursSectionRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderImages, setSliderImages] = useState<string[]>([
-    "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=800&q=80"
+    "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80"
   ]);
 
   useEffect(() => {
@@ -26,14 +26,14 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
       carouselsAPI.getAll().catch(() => []),
       toursAPI.getAll().catch(() => [])
     ]).then(([carousels, toursData]) => {
-      const pakTours = (toursData as TourPackage[]).filter((t) => t.category === 'Northern Pakistan');
-      setPakistanTours(pakTours);
+      const interTours = (toursData as TourPackage[]).filter((t) => t.category === 'International');
+      setInternationalTours(interTours);
       
-      const ptCarousel = (carousels as any[]).find(c => c.name === 'Pakistan Tours Slider');
-      if (ptCarousel && ptCarousel.images && ptCarousel.images.length > 0) {
-        setSliderImages(ptCarousel.images);
-      } else if (pakTours.length > 0) {
-        const uniqueImages = Array.from(new Set(pakTours.map(t => t.image).filter(Boolean))).slice(0, 4) as string[];
+      const itCarousel = (carousels as any[]).find(c => c.name === 'International Tours Slider');
+      if (itCarousel && itCarousel.images && itCarousel.images.length > 0) {
+        setSliderImages(itCarousel.images);
+      } else if (interTours.length > 0) {
+        const uniqueImages = Array.from(new Set(interTours.map(t => t.image).filter(Boolean))).slice(0, 4) as string[];
         if (uniqueImages.length > 0) setSliderImages(uniqueImages);
       }
     }).finally(() => setLoading(false));
@@ -54,10 +54,10 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
   return (
     <div className="w-full flex flex-col bg-slate-50 min-h-screen">
       <SEO
-        title="Pakistan Tours - Hunza, Skardu, Swat, Naran Tour Packages"
-        description="Explore luxury Northern Pakistan tour packages — Hunza Valley, Skardu, Swat, Naran Kaghan, Fairy Meadows, Neelum Valley & more. Family tours, honeymoon trips & group adventures from Islamabad. Book with Pak99 Travel & Tours."
-        keywords="pakistan tours, northern pakistan tours, hunza tour package, skardu tour package, swat tour package, naran kaghan tour, fairy meadows tour, neelum valley tour, northern areas tour, family tour pakistan, honeymoon packages pakistan, group tours pakistan, luxury tours pakistan, adventure tours pakistan, gilgit baltistan tour, pakistan tour operator islamabad, best tour packages pakistan 2025"
-        canonicalPath="/pakistan-tours"
+        title="International Tours - Dubai, Turkey, Baku, Thailand Tour Packages"
+        description="Book international tour packages from Pakistan — Dubai, Turkey, Azerbaijan (Baku), Thailand, Malaysia & more. Group tours, family holidays & honeymoon packages. Pak99 Travel & Tours Islamabad."
+        keywords="international tours from pakistan, dubai tour package from pakistan, turkey tour package, baku tour package, thailand tour from pakistan, malaysia tour, international group tours, family holiday packages, honeymoon packages international, best international tour operator islamabad"
+        canonicalPath="/international-tours"
       />
       {/* 1. Full-Bleed Hero Section Slider */}
       <section className="relative w-full h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
@@ -67,7 +67,7 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
             <img
               key={idx}
               src={img}
-              alt={`Pakistan Northern Place ${idx + 1}`}
+              alt={`International Destination ${idx + 1}`}
               fetchPriority={idx === 0 ? "high" : "auto"}
               loading={idx === 0 ? "eager" : "lazy"}
               className={`absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.7] transition-opacity duration-1000 ${
@@ -75,7 +75,6 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
               }`}
             />
           ))}
-          {/* Subtle overlay gradient to ensure text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#0b2f64]/80 via-slate-900/40 to-transparent" />
         </div>
 
@@ -98,8 +97,8 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] max-w-4xl tracking-tight"
           >
-            Discover the <span className="text-[#ff5500]">Majestic</span><br />
-            <span className="text-amber-400">Beauty</span> of Northern Pakistan
+            Explore the <span className="text-[#ff5500]">World's</span><br />
+            <span className="text-amber-400">Best Destinations</span>
           </motion.h1>
 
           <motion.p 
@@ -109,7 +108,7 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-200 max-w-2xl font-medium leading-relaxed"
           >
-            Experience the majestic peaks of Hunza, the serene lakes of Skardu, and the lush valleys of Swat. Your ultimate adventure awaits.
+            Experience breathtaking locations, rich cultures, and unforgettable adventures across the globe. Your ultimate journey awaits.
           </motion.p>
 
           <motion.div 
@@ -148,7 +147,7 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
         </div>
       </section>
 
-      {/* 2. Destinations/Tours Section (Matching Image 2) */}
+      {/* 2. Destinations/Tours Section */}
       <section ref={toursSectionRef} className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-12 scroll-mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
@@ -156,9 +155,9 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
               <Loader2 className="w-10 h-10 text-[#ff5500] animate-spin mx-auto mb-4" />
               <h3 className="text-xl font-bold text-[#0b2f64]">Curating the best packages...</h3>
             </div>
-          ) : pakistanTours.length > 0 ? (
+          ) : internationalTours.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8 col-span-full">
-              {pakistanTours.map((tour, idx) => (
+              {internationalTours.map((tour, idx) => (
                 <motion.div 
                   key={tour._id || idx}
                   initial={{ opacity: 0, y: 30 }}
@@ -176,14 +175,14 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
             </div>
           ) : (
             <div className="scroll-animate text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm col-span-full">
-              <p className="text-slate-500">No tours found at the moment.</p>
+              <p className="text-slate-500">No international tours found at the moment.</p>
             </div>
           )}
         </div>
 
         <div className="flex justify-center pt-8">
           <button
-            onClick={() => onOpenBooking('Custom Northern Pakistan Tour Inquiry')}
+            onClick={() => onOpenBooking('Custom International Tour Inquiry')}
             className="px-8 py-3 rounded-full border-2 border-slate-200 text-[#0b2f64] hover:border-[#0b2f64] font-extrabold text-sm transition-colors flex items-center gap-2 cursor-pointer bg-white"
           >
             Request Custom Tour <ArrowRight className="w-4 h-4" />
@@ -203,11 +202,10 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
           <div className="w-24 h-1.5 bg-gradient-to-r from-amber-400 to-[#0b2f64] mx-auto rounded-full mt-6"></div>
           
           <p className="text-slate-500 font-medium leading-relaxed mt-8 max-w-2xl mx-auto">
-            From the majestic peaks of Hunza to the lush valleys of Swat, our experienced guides and luxury transport ensure that your journey through Northern Pakistan is absolutely flawless. Let us turn your travel dreams into unforgettable memories.
+            From the bustling streets of Dubai to the historic wonders of Turkey, our experienced guides and seamless arrangements ensure that your journey across the globe is absolutely flawless. Let us turn your travel dreams into unforgettable memories.
           </p>
         </div>
       </section>
     </div>
   );
 };
-

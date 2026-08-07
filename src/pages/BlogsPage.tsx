@@ -22,9 +22,10 @@ export const BlogsPage: React.FC<PageProps> = () => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO 
-        title="Travel Blogs & Guides" 
-        description="Read expert travel tips, itineraries, visa advice, and destination guides from Pak99." 
-        keywords="travel blog, pak99 blog, travel advice, hunza guide, umrah guide" 
+        title="Travel Blogs & Guides - Pakistan Travel Tips" 
+        description="Expert travel blogs, destination guides, visa tips & itineraries for Pakistan tours, Umrah, international travel & study abroad. Pak99 Travel & Tours blog." 
+        keywords="travel blog pakistan, pakistan travel guide, hunza travel guide, skardu guide, umrah guide, visa tips pakistan, northern pakistan blog, travel tips islamabad, pak99 blog, pakistan tourism blog"
+        canonicalPath="/blogs"
       />
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
@@ -48,7 +49,7 @@ export const BlogsPage: React.FC<PageProps> = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {loading ? (
           <div className="col-span-full flex items-center justify-center py-20">
             <Loader2 className="w-12 h-12 text-[#ff5500] animate-spin" />

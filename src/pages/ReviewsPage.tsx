@@ -1,5 +1,6 @@
 import React from 'react';
 import { Testimonials } from '../components/Testimonials';
+import { SEO } from '../components/SEO';
 
 interface PageProps {
   onOpenBooking: (title?: string) => void;
@@ -9,6 +10,12 @@ interface PageProps {
 export const ReviewsPage: React.FC<PageProps> = ({ onNavigateHome }) => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
+      <SEO
+        title="Customer Reviews - Verified Traveler Testimonials"
+        description="Read verified reviews from 5,000+ happy travelers who booked with Pak99 Travel & Tours. Real stories from families, couples, Umrah pilgrims & student visa applicants."
+        keywords="pak99 reviews, pak99 travel reviews, travel agency reviews islamabad, tour operator reviews pakistan, customer testimonials, verified traveler reviews, umrah reviews, tour reviews pakistan"
+        canonicalPath="/reviews"
+      />
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
           <button onClick={onNavigateHome} className="hover:text-[#ff5500] cursor-pointer">Home</button>

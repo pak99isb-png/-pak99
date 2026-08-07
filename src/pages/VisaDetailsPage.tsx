@@ -99,7 +99,7 @@ export const VisaDetailsPage: React.FC<VisaDetailsPageProps> = ({
                   <button
                     key={c.name || c.id}
                     onClick={() => {
-                      navigate(`/visa/${c.code || c.id || c._id}`);
+                      navigate(`/visas/${c.code || c.id || c._id}`);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className={`flex items-center gap-3 w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${

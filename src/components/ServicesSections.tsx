@@ -237,7 +237,7 @@ export const ServicesSections: React.FC<ServicesSectionsProps> = ({ onOpenBookin
         {loadingHotels ? (
           <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 text-[#0b2f64] animate-spin" /></div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {partnerHotels.map((hotel, idx) => (
               <div key={hotel._id || idx} className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition-all group flex flex-col justify-between">
                 <div className="relative h-48 overflow-hidden">
@@ -296,7 +296,7 @@ export const ServicesSections: React.FC<ServicesSectionsProps> = ({ onOpenBookin
         {loadingBlogs ? (
           <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 text-[#0b2f64] animate-spin" /></div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogs.map((blog, idx) => (
               <article key={blog._id || idx} className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl transition-all group flex flex-col justify-between">
                 <div className="relative h-48 overflow-hidden">

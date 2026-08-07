@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   LayoutDashboard, Map, Plane, Hotel, Star, BookOpen, LogOut,
-  ChevronRight, Plus, Pencil, Trash2, X, Save, Loader2, Upload, Menu, FileText, Moon, Settings as SettingsIcon
+  ChevronRight, Plus, Pencil, Trash2, X, Save, Loader2, Upload, Menu, FileText, Moon, Settings as SettingsIcon, Ticket, ShieldCheck
 } from 'lucide-react';
-import { toursAPI, blogsAPI, hotelsAPI, reviewsAPI, destinationsAPI, uploadAPI, visasAPI, umrahAPI, settingsAPI, carouselsAPI } from '../../services/api';
-import type { ApiTour, ApiBlog, ApiHotel, ApiReview, ApiDestination, ApiVisaCountry, ApiUmrahPackage, ApiCarousel } from '../../services/api';
+import { toursAPI, blogsAPI, hotelsAPI, reviewsAPI, destinationsAPI, uploadAPI, visasAPI, umrahAPI, settingsAPI, carouselsAPI, ticketGroupsAPI, insuranceAPI, studyAPI } from '../../services/api';
+import type { ApiTour, ApiBlog, ApiHotel, ApiReview, ApiDestination, ApiVisaCountry, ApiUmrahPackage, ApiCarousel, ApiTicketGroup, ApiInsuranceService } from '../../services/api';
 
-type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'carousels' | 'settings';
+type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'carousels' | 'settings' | 'tickets' | 'insurance' | 'study';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -94,9 +94,9 @@ function DataTable<T extends { _id?: string }>({
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image' | 'image_array';
+  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image' | 'image_array' | 'itinerary_array' | 'flights_array' | 'study_items_array';
   options?: string[];
-  quickOptions?: string[];
+  quickOptions?: (string | { label: string; value: string })[];
   required?: boolean;
   placeholder?: string;
 }
@@ -120,7 +120,7 @@ function FormModal<T extends Record<string, any>>({
     if (isOpen) {
       const defaults: Record<string, any> = {};
       fields.forEach(f => {
-        if (f.type === 'array' || f.type === 'image_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
+        if (f.type === 'array' || f.type === 'image_array' || f.type === 'itinerary_array' || f.type === 'flights_array' || f.type === 'study_items_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
         else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
         else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
         else defaults[f.key] = (initialData as any)?.[f.key] || '';
@@ -137,7 +137,7 @@ function FormModal<T extends Record<string, any>>({
       }
       setFormData(defaults);
     }
-  }, [isOpen, initialData, fields, title]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -164,6 +164,22 @@ function FormModal<T extends Record<string, any>>({
     const arr = [...(formData[key] || [])];
     arr.splice(index, 1);
     handleChange(key, arr);
+  };
+
+  const handleStudyItemChange = (key: string, index: number, field: string, value: string) => {
+    setFormData(prev => {
+      const arr = [...(prev[key] || [])];
+      if (!arr[index]) arr[index] = {};
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, [key]: arr };
+    });
+  };
+
+  const handleAddStudyItem = (key: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [key]: [...(prev[key] || []), { title: '', description: '' }]
+    }));
   };
 
   const handleImageUpload = async (key: string, file: File) => {
@@ -212,7 +228,7 @@ function FormModal<T extends Record<string, any>>({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form id="crud-form" onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
           {fields.map(field => (
             <div key={field.key} className="space-y-1.5">
               <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">{field.label}</label>
@@ -316,7 +332,7 @@ function FormModal<T extends Record<string, any>>({
                     {(formData[field.key] || []).map((img: string, idx: number) => (
                       <div key={idx} className="relative group rounded-xl overflow-hidden aspect-video border border-slate-600">
                         <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
-                        <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity cursor-pointer shadow-lg">
                           <X className="w-4 h-4" />
                         </button>
                       </div>
@@ -379,19 +395,185 @@ function FormModal<T extends Record<string, any>>({
                     <div className="pt-2 border-t border-slate-700/50">
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">Quick Add</p>
                       <div className="flex flex-wrap gap-2">
-                        {field.quickOptions.map((opt) => (
-                          <button
-                            key={opt}
-                            type="button"
-                            onClick={() => handleAddArrayItem(field.key, opt)}
-                            className="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xs text-xs text-slate-300 font-medium transition-colors cursor-pointer"
-                          >
-                            + {opt}
-                          </button>
-                        ))}
+                        {field.quickOptions.map((opt: any, idx: number) => {
+                          const val = typeof opt === 'string' ? opt : opt.value;
+                          const lbl = typeof opt === 'string' ? opt : opt.label;
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => handleAddArrayItem(field.key, val)}
+                              className="px-2 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xs text-xs text-slate-300 font-medium transition-colors cursor-pointer"
+                            >
+                              + {lbl}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+
+              {field.type === 'study_items_array' && (
+                <div className="space-y-4">
+                  {(formData[field.key] || []).map((item: any, idx: number) => (
+                    <div key={idx} className="p-4 bg-slate-900 border border-slate-700 rounded-xl space-y-3 relative">
+                      <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-3 right-3 p-1 bg-red-500/10 text-red-400 rounded-md hover:bg-red-500/20 cursor-pointer">
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="grid grid-cols-2 gap-3 pr-8">
+                        <div className="col-span-2">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase">Title</label>
+                          <input type="text" value={item.title || ''} onChange={e => handleStudyItemChange(field.key, idx, 'title', e.target.value)} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase">Description</label>
+                          <textarea value={item.description || ''} onChange={e => handleStudyItemChange(field.key, idx, 'description', e.target.value)} rows={2} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                        </div>
+                        {formData['pageType'] === 'destination' && (
+                          <div className="col-span-2">
+                            <label className="text-[10px] text-slate-400 font-bold uppercase">Icon Name (e.g. GraduationCap, Award)</label>
+                            <input type="text" value={item.icon || ''} onChange={e => handleStudyItemChange(field.key, idx, 'icon', e.target.value)} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                          </div>
+                        )}
+                        {formData['pageType'] === 'scholarship' && (
+                          <>
+                            <div className="col-span-1">
+                              <label className="text-[10px] text-slate-400 font-bold uppercase">Funding (e.g. 100% Fully Funded)</label>
+                              <input type="text" value={item.funding || ''} onChange={e => handleStudyItemChange(field.key, idx, 'funding', e.target.value)} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                            </div>
+                            <div className="col-span-1">
+                              <label className="text-[10px] text-slate-400 font-bold uppercase">Target (e.g. UK Master's)</label>
+                              <input type="text" value={item.target || ''} onChange={e => handleStudyItemChange(field.key, idx, 'target', e.target.value)} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                            </div>
+                          </>
+                        )}
+                        <div className="col-span-2">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase">Button Text (Optional)</label>
+                          <input type="text" value={item.buttonText || ''} onChange={e => handleStudyItemChange(field.key, idx, 'buttonText', e.target.value)} className="w-full px-2 py-1.5 bg-slate-800 border border-slate-700 rounded text-sm text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => handleAddStudyItem(field.key)} className="text-xs font-bold text-[#ff5500] flex items-center gap-1 cursor-pointer">
+                    <Plus className="w-4 h-4" /> Add Item / Highlight
+                  </button>
+                </div>
+              )}
+
+              {field.type === 'itinerary_array' && (
+                <div className="space-y-4">
+                  {(formData[field.key] || []).map((item: any, idx: number) => (
+                    <div key={idx} className="p-4 bg-slate-700/30 border border-slate-600 rounded-xl space-y-3 relative">
+                      <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-2 right-2 p-1.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors cursor-pointer">
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="w-full sm:w-24">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Day</label>
+                          <input type="number" value={item.day || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], day: Number(e.target.value) };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" />
+                        </div>
+                        <div className="flex-1">
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Title</label>
+                          <input type="text" value={item.title || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], title: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g., Arrival in Skardu" />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Detail</label>
+                        <textarea value={item.detail || ''} onChange={(e) => {
+                          const arr = [...(formData[field.key] || [])];
+                          arr[idx] = { ...arr[idx], detail: e.target.value };
+                          handleChange(field.key, arr);
+                        }} rows={2} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50 resize-y" placeholder="Describe the day's activities..." />
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => {
+                    const arr = [...(formData[field.key] || [])];
+                    const nextDay = arr.length > 0 ? (Number(arr[arr.length - 1].day) || arr.length) + 1 : 1;
+                    handleChange(field.key, [...arr, { day: nextDay, title: '', detail: '' }]);
+                  }} className="text-xs font-bold text-[#ff5500] hover:underline flex items-center gap-1 cursor-pointer">
+                    <Plus className="w-3.5 h-3.5" /> Add Itinerary Day
+                  </button>
+                </div>
+              )}
+
+              {field.type === 'flights_array' && (
+                <div className="space-y-4">
+                  {(formData[field.key] || []).map((item: any, idx: number) => (
+                    <div key={idx} className="p-4 bg-slate-700/30 border border-slate-600 rounded-xl space-y-3 relative">
+                      <button type="button" onClick={() => handleRemoveArrayItem(field.key, idx)} className="absolute top-2 right-2 p-1.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors cursor-pointer">
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pr-8">
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Date</label>
+                          <input type="text" value={item.date || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], date: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g. 08-08-2026" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Time</label>
+                          <input type="text" value={item.time || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], time: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g. 13:20 - 15:40" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Bag</label>
+                          <input type="text" value={item.bag || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], bag: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g. 20+7 KG" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Meal Included</label>
+                          <div className="flex items-center h-9">
+                            <input type="checkbox" checked={item.meal || false} onChange={(e) => {
+                              const arr = [...(formData[field.key] || [])];
+                              arr[idx] = { ...arr[idx], meal: e.target.checked };
+                              handleChange(field.key, arr);
+                            }} className="w-5 h-5 rounded border-slate-600 text-[#ff5500] focus:ring-[#ff5500]/50 bg-slate-700/50" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Fare (PKR)</label>
+                          <input type="text" value={item.fare || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], fare: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g. 86,000" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 block">Seats</label>
+                          <input type="text" value={item.seats || ''} onChange={(e) => {
+                            const arr = [...(formData[field.key] || [])];
+                            arr[idx] = { ...arr[idx], seats: e.target.value };
+                            handleChange(field.key, arr);
+                          }} className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50" placeholder="e.g. Check Seats" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => {
+                    const arr = [...(formData[field.key] || [])];
+                    handleChange(field.key, [...arr, { date: '', time: '', bag: '20+7 KG', meal: true, fare: '', seats: 'Check Seats' }]);
+                  }} className="text-xs font-bold text-[#ff5500] hover:underline flex items-center gap-1 cursor-pointer">
+                    <Plus className="w-3.5 h-3.5" /> Add Flight Details
+                  </button>
                 </div>
               )}
             </div>
@@ -402,7 +584,7 @@ function FormModal<T extends Record<string, any>>({
           <button onClick={onClose} className="px-4 py-2.5 bg-slate-700 text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-600 transition-colors cursor-pointer">
             Cancel
           </button>
-          <button onClick={handleSubmit} disabled={saving} className="px-5 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-orange-500/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer">
+          <button type="submit" form="crud-form" disabled={saving} className="px-5 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-orange-500/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {saving ? 'Saving...' : 'Save'}
           </button>
@@ -535,10 +717,31 @@ const SettingsPanel = () => {
             </div>
           </div>
         </div>
-        
-        
-
-        
+        <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
+          <h4 className="text-[#ff5500] font-bold mb-4">Insurance Page Hero</h4>
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Hero Title</label>
+              <input
+                type="text"
+                value={settings.insurance_page_title || ''}
+                onChange={(e) => handleChange('insurance_page_title', e.target.value)}
+                placeholder="Global Ticketing & Travel Insurance Services"
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Hero Description</label>
+              <textarea
+                value={settings.insurance_page_description || ''}
+                onChange={(e) => handleChange('insurance_page_description', e.target.value)}
+                placeholder="Enjoy peace of mind with our instant ticketing..."
+                rows={3}
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50 resize-y"
+              />
+            </div>
+          </div>
+        </div>
         <button onClick={saveSettings} disabled={isSaving} className="px-6 py-3 bg-[#ff5500] hover:bg-orange-600 text-white font-extrabold rounded-xl shadow-lg transition-colors flex items-center gap-2 cursor-pointer">
           {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Settings
@@ -584,7 +787,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   const [visas, setVisas] = useState<ApiVisaCountry[]>([]);
   const [umrah, setUmrah] = useState<ApiUmrahPackage[]>([]);
   const [carousels, setCarousels] = useState<ApiCarousel[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [tickets, setTickets] = useState<ApiTicketGroup[]>([]);
+  const [insurance, setInsurance] = useState<ApiInsuranceService[]>([]);
+  const [study, setStudy] = useState<any[]>([]);
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   // Modal states
@@ -596,10 +803,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [t, b, h, r, d, v, u, c] = await Promise.all([
-        toursAPI.getAll(), blogsAPI.getAll(), hotelsAPI.getAll(), reviewsAPI.getAll(), destinationsAPI.getAll(), visasAPI.getAll(), umrahAPI.getAll(), carouselsAPI.getAll()
+      const [t, b, h, r, d, v, u, c, tk, ins, st] = await Promise.all([
+        toursAPI.getAll(), blogsAPI.getAll(), hotelsAPI.getAll(), reviewsAPI.getAll(), destinationsAPI.getAll(), visasAPI.getAll(), umrahAPI.getAll(), carouselsAPI.getAll(), ticketGroupsAPI.getAll(), insuranceAPI.getAll(), studyAPI.getAll()
       ]);
-      setTours(t); setBlogs(b); setHotels(h); setReviews(r); setDestinations(d); setVisas(v); setUmrah(u); setCarousels(c);
+      setTours(t); setBlogs(b); setHotels(h); setReviews(r); setDestinations(d); setVisas(v); setUmrah(u); setCarousels(c); setTickets(tk); setInsurance(ins); setStudy(st);
     } catch (err) {
       console.error('Failed to fetch data:', err);
     } finally {
@@ -617,7 +824,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       onConfirm: async () => {
         setConfirmDialog(prev => ({ ...prev, isOpen: false }));
         try {
-          const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI }[resource] as any;
+          const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI, tickets: ticketGroupsAPI, insurance: insuranceAPI, study: studyAPI }[resource] as any;
           if (api) { await api.delete(id); fetchData(); }
         } catch (err) { 
           setAlertDialog({isOpen: true, title: 'Error', message: 'Delete failed.'});
@@ -635,7 +842,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
         finalData.pricing = { sharing: finalData.pricing_sharing, quad: finalData.pricing_quad, triple: finalData.pricing_triple, double: finalData.pricing_double };
       }
 
-      const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI }[resource] as any;
+      const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI, tickets: ticketGroupsAPI, insurance: insuranceAPI, study: studyAPI }[resource] as any;
       if (!api) return;
       
       if (editingItem?._id) {
@@ -647,7 +854,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       setEditingItem(null);
       fetchData();
     } catch (err: any) {
-      setAlertDialog({isOpen: true, title: 'Save Failed', message: `Save failed: ${err.message}`});
+      setAlertDialog({isOpen: true, title: 'Save Failed', message: err.message});
     } finally {
       setSaving(false);
     }
@@ -663,6 +870,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { id: 'visas', icon: <FileText className="w-4 h-4" />, label: 'Visas' },
     { id: 'umrah', icon: <Moon className="w-4 h-4" />, label: 'Umrah' },
     { id: 'carousels', icon: <Upload className="w-4 h-4" />, label: 'Carousels' },
+    { id: 'tickets', icon: <Ticket className="w-4 h-4" />, label: 'Tickets' },
+    { id: 'insurance', icon: <ShieldCheck className="w-4 h-4" />, label: 'Insurance' },
+    { id: 'study', icon: <BookOpen className="w-4 h-4" />, label: 'Study & Services' },
     { id: 'settings', icon: <SettingsIcon className="w-4 h-4" />, label: 'Settings' },
   ];
 
@@ -687,6 +897,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'aboutInfo', label: 'About This Tour', type: 'textarea' },
     { key: 'highlights', label: 'Highlights', type: 'array' },
     { key: 'inclusions', label: 'Inclusions', type: 'array' },
+    { key: 'itinerary', label: 'Itinerary (Day by Day)', type: 'itinerary_array' },
           { key: 'funFacts', label: 'Did you know? Fun Facts', type: 'array' },
       { key: 'seoTitle', label: 'SEO Title (Meta Title)', type: 'text', placeholder: 'Optional custom SEO Title' },
       { key: 'seoDescription', label: 'SEO Description (Meta Description)', type: 'textarea', placeholder: 'Optional custom SEO Description' },
@@ -780,12 +991,66 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'durationText', label: 'Duration Text (e.g. 15 Days)', type: 'text', required: true },
     { key: 'airline', label: 'Airline (e.g. Saudi Airlines)', type: 'text', required: true },
     { key: 'flightRoute', label: 'Flight Route (e.g. LHE-JED-LHE)', type: 'text', required: true },
+    { key: 'airlineLogo', label: 'Airline Logo / Icon', type: 'image' },
     { key: 'hotels_makkah', label: 'Hotel in Makkah', type: 'text', required: true },
+    { key: 'makkahHotelIcon', label: 'Makkah Hotel Icon', type: 'image' },
     { key: 'hotels_madinah', label: 'Hotel in Madinah', type: 'text', required: true },
+    { key: 'madinahHotelIcon', label: 'Madinah Hotel Icon', type: 'image' },
     { key: 'pricing_sharing', label: 'Sharing Price (PKR)', type: 'text' },
     { key: 'pricing_quad', label: 'Quad Price (PKR)', type: 'text' },
     { key: 'pricing_triple', label: 'Triple Price (PKR)', type: 'text' },
     { key: 'pricing_double', label: 'Double Price (PKR)', type: 'text' },
+  ];
+
+  const ticketFields: FormField[] = [
+    { key: 'title', label: 'Card Title (e.g. United Arab Emirates)', type: 'text', required: true },
+    { key: 'buttonText', label: 'Button Text / Slug (e.g. UAE GROUP)', type: 'text', required: true },
+    { key: 'image', label: 'Cover Image URL', type: 'image', required: true },
+    { key: 'airlineName', label: 'Airline Name (e.g. AIRSIAL)', type: 'text', required: true },
+    { 
+      key: 'airlineLogo', 
+      label: 'Airline Logo', 
+      type: 'image',
+      quickOptions: [
+        { label: 'PIA', value: 'https://upload.wikimedia.org/wikipedia/commons/3/30/Pakistan_International_Airlines_Logo.svg' },
+        { label: 'Airblue', value: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Airblue_Logo.svg/512px-Airblue_Logo.svg.png' },
+        { label: 'SereneAir', value: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/SereneAir_logo.svg/512px-SereneAir_logo.svg.png' },
+        { label: 'AirSial', value: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/AirSial_logo.svg/512px-AirSial_logo.svg.png' },
+        { label: 'Fly Jinnah', value: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Fly_Jinnah_Logo.svg/512px-Fly_Jinnah_Logo.svg.png' },
+        { label: 'Emirates', value: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Emirates_logo.svg' },
+        { label: 'Saudi Airlines', value: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Saudia_logo.svg' },
+        { label: 'Qatar Airways', value: 'https://upload.wikimedia.org/wikipedia/en/2/28/Qatar_Airways_logo.svg' }
+      ]
+    },
+    { key: 'routeDisplay', label: 'Route Display (e.g. LHE-DXB)', type: 'text', required: true },
+    { key: 'flights', label: 'Flights Details', type: 'flights_array' },
+  ];
+
+  const insuranceFields: FormField[] = [
+    { key: 'title', label: 'Service Title (e.g. Schengen Insurance)', type: 'text', required: true },
+    { key: 'buttonText', label: 'Button Text (e.g. Issue Policy)', type: 'text', required: true },
+    { key: 'inquiryType', label: 'Inquiry Type (Passed to Booking Modal)', type: 'text', required: true },
+    { key: 'image', label: 'Cover Image URL', type: 'image', required: true },
+    { key: 'description', label: 'Description', type: 'textarea', required: true },
+    { key: 'features', label: 'Features (Bullet Points)', type: 'array' },
+  ];
+
+  const studyFields: FormField[] = [
+    { 
+      key: 'slug', 
+      label: 'Page Route (Select the specific page to update)', 
+      type: 'select', 
+      options: ['study-uk', 'study-australia', 'study-germany', 'study-canada', 'scholarships', 'attestation'], 
+      required: true 
+    },
+    { key: 'pageType', label: 'Page Type', type: 'select', options: ['destination', 'scholarship', 'attestation'], required: true },
+    { key: 'badgeText', label: 'Hero Badge Text (e.g. 🇬🇧 Study in UK)', type: 'text' },
+    { key: 'title', label: 'Hero Main Title', type: 'text', required: true },
+    { key: 'description', label: 'Hero Description', type: 'textarea', required: true },
+    { key: 'ctaTitle', label: 'Bottom CTA Title (Used for Destinations)', type: 'text' },
+    { key: 'ctaDescription', label: 'Bottom CTA Description', type: 'textarea' },
+    { key: 'ctaButtonText', label: 'Bottom CTA Button Text', type: 'text' },
+    { key: 'items', label: 'Highlights / Cards List', type: 'study_items_array' },
   ];
 
   // ===========================
@@ -977,6 +1242,50 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
           />
         );
 
+        case 'tickets': return (
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-extrabold text-white">Ticket Groups</h3>
+              <button onClick={() => { setEditingItem({}); setModalOpen(true); }} className="px-4 py-2 bg-[#ff5500] hover:bg-orange-600 text-white text-sm font-bold rounded-xl flex items-center gap-2 transition-colors cursor-pointer"><Plus className="w-4 h-4" /> Add Ticket Group</button>
+            </div>
+            <DataTable data={tickets} resourceName="Ticket Groups" loading={loading} onDelete={(id) => handleDelete('tickets', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+              columns={[{ key: 'title', label: 'Title' }, { key: 'buttonText', label: 'Button Text' }, { key: 'airlineName', label: 'Airline' }, { key: 'routeDisplay', label: 'Route' }]}
+            />
+          </div>
+        );
+      case 'insurance':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-extrabold text-white">Insurance Services</h3>
+              <button onClick={() => { setEditingItem({}); setModalOpen(true); }} className="px-4 py-2 bg-[#ff5500] hover:bg-orange-600 text-white text-sm font-bold rounded-xl flex items-center gap-2 transition-colors cursor-pointer"><Plus className="w-4 h-4" /> Add Insurance Service</button>
+            </div>
+            <DataTable data={insurance} resourceName="Insurance Services" loading={loading} onDelete={(id) => handleDelete('insurance', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+              columns={[
+                { key: 'image', label: 'Image', render: (i: any) => <img src={i.image} alt="" className="w-12 h-12 rounded-lg object-cover" /> },
+                { key: 'title', label: 'Title' }, 
+                { key: 'buttonText', label: 'Button Text' }, 
+                { key: 'inquiryType', label: 'Inquiry Type' }
+              ]}
+            />
+          </div>
+        );
+      case 'study':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-extrabold text-white">Study & Services Pages</h3>
+              {/* Add Page button removed because slug is locked to a dropdown */}
+            </div>
+            <DataTable data={study} resourceName="Study Pages" loading={loading} onDelete={(id) => handleDelete('study', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+              columns={[
+                { key: 'slug', label: 'URL Slug' },
+                { key: 'title', label: 'Hero Title' }, 
+                { key: 'pageType', label: 'Type', render: (s: any) => <span className="uppercase text-xs font-bold text-slate-400">{s.pageType}</span> },
+              ]}
+            />
+          </div>
+        );
       case 'settings':
         return <SettingsPanel />;
     }
@@ -992,6 +1301,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       case 'visas': return visaFields;
       case 'umrah': return umrahFields;
       case 'carousels': return carouselFields;
+      case 'tickets': return ticketFields;
+      case 'insurance': return insuranceFields;
+      case 'study': return studyFields;
       default: return [];
     }
   };
@@ -1006,6 +1318,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       case 'visas': return 'visas';
       case 'umrah': return 'umrah';
       case 'carousels': return 'carousels';
+      case 'tickets': return 'tickets';
+      case 'insurance': return 'insurance';
+      case 'study': return 'study';
       default: return 'tours';
     }
   };
@@ -1102,7 +1417,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
               <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm shadow-2xl p-6">
                 <h3 className="text-xl font-extrabold text-white mb-2">{alertDialog.title}</h3>
-                <p className="text-slate-300 text-sm mb-6">{alertDialog.message}</p>
+                <p className="text-slate-300 text-sm mb-6 whitespace-pre-line">{alertDialog.message}</p>
                 <div className="flex justify-end">
                   <button onClick={() => setAlertDialog(prev => ({ ...prev, isOpen: false }))} className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer">OK</button>
                 </div>

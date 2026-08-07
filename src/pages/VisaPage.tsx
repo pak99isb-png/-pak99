@@ -3,6 +3,7 @@ import React from 'react';
 import { ArrowRight, CheckCircle2, PlayCircle, Mail, Phone, User, MessageSquare } from 'lucide-react';
 import { visasAPI } from '../services/api';
 import { Loader2 } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 interface VisaPageProps {
   onOpenBooking: (title?: string) => void;
@@ -31,6 +32,12 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <SEO
+        title="Visa Services - Tourist, Visit & Work Visa Assistance Pakistan"
+        description="Professional visa services from Pakistan — tourist visa, visit visa, work visa, student visa for UAE, Saudi Arabia, UK, USA, Canada, Australia, Turkey, Schengen & more. Fast processing by Pak99 Travel & Tours Islamabad."
+        keywords="visa services pakistan, visa services islamabad, tourist visa pakistan, visit visa, work visa pakistan, student visa, uae visa from pakistan, saudi visa, uk visa, usa visa, canada visa, australia visa, turkey visa, schengen visa, visa consultancy islamabad, visa agent islamabad, fast visa processing"
+        canonicalPath="/visa"
+      />
       {/* Hero Section */}
       <section className="bg-[#0b2f64] text-white relative overflow-hidden">
         {/* Subtle background pattern */}
