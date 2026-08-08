@@ -2,7 +2,7 @@ import { type TourPackage } from '../types';
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PortraitTourCard } from '../components/PortraitTourCard';
-import { toursAPI, carouselsAPI } from '../services/api';
+import { toursAPI, carouselsAPI, settingsAPI } from '../services/api';
 import { PhoneCall, Sparkles, ArrowRight, ArrowDown, Loader2 } from 'lucide-react';
 import { SEO } from '../components/SEO';
 
@@ -15,6 +15,7 @@ interface PageProps {
 export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBooking }) => {
   const [pakistanTours, setPakistanTours] = useState<TourPackage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<any>({});
   const toursSectionRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sliderImages, setSliderImages] = useState<string[]>([
@@ -24,10 +25,12 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
   useEffect(() => {
     Promise.all([
       carouselsAPI.getAll().catch(() => []),
-      toursAPI.getAll().catch(() => [])
-    ]).then(([carousels, toursData]) => {
+      toursAPI.getAll().catch(() => []),
+      settingsAPI.get().catch(() => ({}))
+    ]).then(([carousels, toursData, settingsData]) => {
       const pakTours = (toursData as TourPackage[]).filter((t) => t.category === 'Northern Pakistan');
       setPakistanTours(pakTours);
+      setSettings(settingsData);
       
       const ptCarousel = (carousels as any[]).find(c => c.name === 'Pakistan Tours Slider');
       if (ptCarousel && ptCarousel.images && ptCarousel.images.length > 0) {
@@ -126,7 +129,7 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
               Explore Tours <ArrowDown className="w-4 h-4" />
             </button>
             <a
-              href="tel:+923108032999"
+              href={settings?.phone1 ? `tel:${settings.phone1.replace(/[^0-9+]/g, '')}` : 'tel:+923108032999'}
               className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-sm shadow-xl shadow-green-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <PhoneCall className="w-4 h-4" /> Call Now

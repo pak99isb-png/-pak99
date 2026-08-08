@@ -88,11 +88,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-slate-100">
               <div className="flex items-center gap-1.5 transition-colors font-semibold text-[10px] sm:text-xs">
                 <Phone className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-                <span className="whitespace-nowrap"><a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> / <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a></span>
+                <span className="whitespace-nowrap">
+                  <a href={`tel:${settings?.phone1 || '+923108032999'}`} className="hover:text-orange-400">{settings?.phone1 || '0310-8032999'}</a> 
+                  {' '}/ <a href={`tel:${settings?.phone2 || '+92512757282'}`} className="hover:text-orange-400">{settings?.phone2 || '051-2757282'}</a>
+                  {settings?.phone3 && (
+                    <>{' '}/ <a href={`tel:${settings.phone3.replace(/[^0-9+]/g, '')}`} className="hover:text-orange-400">{settings.phone3}</a></>
+                  )}
+                  {(() => {
+                    const wa = settings?.whatsappNumber || '923315290155';
+                    const displayWa = wa.startsWith('92') && wa.length === 12 ? `0${wa.slice(2, 5)}-${wa.slice(5)}` : wa;
+                    return <>{' '}/ <a href={`tel:+${wa}`} className="hover:text-orange-400">{displayWa}</a></>;
+                  })()}
+                </span>
               </div>
               <span className="hidden sm:inline text-blue-400">|</span>
               <a
-                href="https://wa.me/923108032999?text=Hello%20Pak99%20Travel%20and%20Tours,%20I%20want%20to%20inquire%20about%20tour%20packages%20and%20Study."
+                href={`https://wa.me/${settings?.whatsappNumber || '923108032999'}?text=Hello%20Pak99%20Travel%20and%20Tours,%20I%20want%20to%20inquire%20about%20tour%20packages%20and%20Study.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-orange-400 hover:text-orange-300 font-extrabold transition-colors text-[10px] sm:text-xs whitespace-nowrap shrink-0"
@@ -209,28 +220,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               {studyDropdownOpen && (
                 <div className="absolute top-full left-0 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 space-y-1 z-50 animate-fade-in normal-case">
                   <button
-                    onClick={() => handleNavClick('study-uk')}
+                    onClick={() => handleNavClick('study')}
                     className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
                   >
-                    Study in UK
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('study-australia')}
-                    className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
-                  >
-                    Study in Australia
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('study-germany')}
-                    className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
-                  >
-                    Study in Germany
-                  </button>
-                  <button
-                    onClick={() => handleNavClick('study-canada')}
-                    className="block w-full text-left px-3 py-2.5 rounded-xl text-xs font-extrabold text-[#0b2f64] hover:bg-orange-50 hover:text-[#ff5500] transition-colors cursor-pointer"
-                  >
-                    Study in Canada
+                    Study Abroad
                   </button>
                   <button
                     onClick={() => handleNavClick('scholarships')}
@@ -405,17 +398,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               
               {mobileStudyOpen && (
                 <div className="pl-3 space-y-2 animate-fade-in">
-                  <button onClick={() => handleNavClick('study-uk')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                    Study in UK
-                  </button>
-                  <button onClick={() => handleNavClick('study-australia')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                    Study in Australia
-                  </button>
-                  <button onClick={() => handleNavClick('study-germany')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                    Study in Germany
-                  </button>
-                  <button onClick={() => handleNavClick('study-canada')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
-                    Study in Canada
+                  <button onClick={() => handleNavClick('study')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
+                    Study Abroad
                   </button>
                   <button onClick={() => handleNavClick('scholarships')} className="block text-xs font-extrabold text-[#0b2f64] hover:text-[#ff5500] py-1 text-left w-full">
                     Scholarships & Grants

@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone } from 'lucide-react';
+import { settingsAPI } from '../services/api';
 
 export const WhatsAppFloating: React.FC = () => {
-  const whatsappUrl = "https://wa.me/923315290155?text=Hello%20Pak99%20Travel%20%26%20Tours,%20I%20want%20to%20inquire%20about%20your%20services.";
-  const phoneUrl = "tel:+923108032999";
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    settingsAPI.get().then(setSettings).catch(console.error);
+  }, []);
+
+  const waNum = settings?.whatsappNumber || '923315290155';
+  const whatsappUrl = `https://wa.me/${waNum}?text=Hello%20Pak99%20Travel%20%26%20Tours,%20I%20want%20to%20inquire%20about%20your%20services.`;
+  const phoneUrl = settings?.phone1 ? `tel:${settings.phone1.replace(/[^0-9+]/g, '')}` : "tel:+923108032999";
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">

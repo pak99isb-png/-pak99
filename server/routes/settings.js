@@ -7,6 +7,7 @@ const router = Router();
 // GET all settings (public so frontend can read them)
 router.get('/', async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
     const settings = await Setting.find();
     // Convert array of {key, value} to a single object {key: value}
     const settingsObj = settings.reduce((acc, curr) => {

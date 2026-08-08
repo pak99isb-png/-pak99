@@ -13,6 +13,7 @@ const studyProgramSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   pageType: { type: String, enum: ['destination', 'scholarship', 'attestation'], required: true },
   badgeText: { type: String },
+  cardIcon: { type: String },
   title: { type: String, required: true },
   description: { type: String, required: true },
   ctaTitle: { type: String },

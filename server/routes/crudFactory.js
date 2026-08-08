@@ -30,6 +30,7 @@ const createCrudRoutes = (Model, resourceName) => {
   // GET all (public)
   router.get('/', async (req, res) => {
     try {
+      res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
       const items = await Model.find().sort({ createdAt: -1 });
       res.json(items);
     } catch (error) {
@@ -40,6 +41,7 @@ const createCrudRoutes = (Model, resourceName) => {
   // GET one by id (public)
   router.get('/:id', async (req, res) => {
     try {
+      res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
       const item = await Model.findById(req.params.id);
       if (!item) return res.status(404).json({ message: `${resourceName} not found.` });
       res.json(item);

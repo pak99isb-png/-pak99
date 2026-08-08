@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 NProgress.configure({ showSpinner: false, speed: 400, minimum: 0.2 });
 
 // ========================
-// Generic fetch helpers
+// Generic fetch helpers & In-Memory Caching
 // ========================
 
 const getAuthHeaders = (): HeadersInit => {
@@ -33,7 +33,30 @@ function stopLoader() {
   }
 }
 
+interface CacheItem {
+  data: any;
+  timestamp: number;
+}
+const apiCache = new Map<string, CacheItem>();
+const CACHE_DURATION_MS = 2 * 60 * 1000; // 2 minutes
+
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const isGet = !options?.method || options.method === 'GET';
+  const isAdmin = !!localStorage.getItem('pak99_admin_token');
+
+  // 1. Serve from cache if it's a GET request, user is not admin, and cache is fresh
+  if (isGet && !isAdmin) {
+    const cached = apiCache.get(endpoint);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION_MS) {
+      return cached.data as T;
+    }
+  }
+
+  // 2. Clear cache if this is a mutating request (POST, PUT, DELETE)
+  if (!isGet) {
+    apiCache.clear();
+  }
+
   startLoader();
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
@@ -46,7 +69,14 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
       toast.error(errorMessage);
       throw new Error(errorMessage);
     }
-    return await res.json();
+    const data = await res.json();
+    
+    // 3. Save to cache
+    if (isGet && !isAdmin) {
+      apiCache.set(endpoint, { data, timestamp: Date.now() });
+    }
+    
+    return data;
   } finally {
     stopLoader();
   }
@@ -142,6 +172,7 @@ export interface ApiStudyProgram {
   slug: string;
   pageType: 'destination' | 'scholarship' | 'attestation';
   badgeText?: string;
+  cardIcon?: string;
   title: string;
   description: string;
   ctaTitle?: string;

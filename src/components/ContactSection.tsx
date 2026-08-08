@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageSquare, Phone, MapPin, Sparkles } from 'lucide-react';
+import { settingsAPI } from '../services/api';
 
 export const ContactSection: React.FC = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [service, setService] = useState('Northern Pakistan Tours');
   const [message, setMessage] = useState('');
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    settingsAPI.get().then(setSettings).catch(console.error);
+  }, []);
+
+  const waNum = settings?.whatsappNumber || '923315290155';
+  const phone1 = settings?.phone1 || '0310-8032999';
+  const phone2 = settings?.phone2 || '051-2757282';
+  const phone1Link = settings?.phone1 ? `tel:${settings.phone1.replace(/[^0-9+]/g, '')}` : 'tel:+923108032999';
+  const phone2Link = settings?.phone2 ? `tel:${settings.phone2.replace(/[^0-9+]/g, '')}` : 'tel:+92512757282';
 
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedMsg = `*Pak99 Travel Inquiry*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📌 *Service:* ${service}\n💬 *Message:* ${message || 'I am interested in your services.'}`;
-    const whatsappUrl = `https://wa.me/923315290155?text=${encodeURIComponent(formattedMsg)}`;
+    const whatsappUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(formattedMsg)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -36,8 +48,16 @@ export const ContactSection: React.FC = () => {
               <MessageSquare className="w-5 h-5 text-[#25D366] shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">WhatsApp Support Desk</div>
-                <a href="https://wa.me/923315290155" target="_blank" rel="noopener noreferrer" className="text-white font-extrabold text-sm hover:text-orange-400">
-                  0310-8032999 <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> 051-2757282
+                <a href={`https://wa.me/${waNum}`} target="_blank" rel="noopener noreferrer" className="text-white font-extrabold text-sm hover:text-orange-400">
+                  {phone1} <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> {phone2}
+                  {settings?.phone3 && (
+                    <> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> {settings.phone3}</>
+                  )}
+                  {(() => {
+                    const wa = settings?.whatsappNumber || '923315290155';
+                    const displayWa = wa.startsWith('92') && wa.length === 12 ? `0${wa.slice(2, 5)}-${wa.slice(5)}` : wa;
+                    return <> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> {displayWa}</>;
+                  })()}
                 </a>
               </div>
             </div>
@@ -47,7 +67,15 @@ export const ContactSection: React.FC = () => {
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Phone Call Line</div>
                 <div className="text-white font-extrabold text-sm">
-                  <a href="tel:+923108032999" className="hover:text-orange-400">0310-8032999</a> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> <a href="tel:+92512757282" className="hover:text-orange-400">051-2757282</a>
+                  <a href={phone1Link} className="hover:text-orange-400">{phone1}</a> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> <a href={phone2Link} className="hover:text-orange-400">{phone2}</a>
+                  {settings?.phone3 && (
+                    <> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> <a href={`tel:${settings.phone3.replace(/[^0-9+]/g, '')}`} className="hover:text-orange-400">{settings.phone3}</a></>
+                  )}
+                  {(() => {
+                    const wa = settings?.whatsappNumber || '923315290155';
+                    const displayWa = wa.startsWith('92') && wa.length === 12 ? `0${wa.slice(2, 5)}-${wa.slice(5)}` : wa;
+                    return <> <span className="hidden sm:inline">/</span> <br className="sm:hidden" /> <a href={`tel:+${wa}`} className="hover:text-orange-400">{displayWa}</a></>;
+                  })()}
                 </div>
               </div>
             </div>

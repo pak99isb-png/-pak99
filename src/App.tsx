@@ -21,6 +21,7 @@ const PakistanToursPage = lazy(() => import('./pages/PakistanToursPage').then(m 
 const InternationalToursPage = lazy(() => import('./pages/InternationalToursPage').then(m => ({ default: m.InternationalToursPage })));
 const UmrahPage = lazy(() => import('./pages/UmrahPage').then(m => ({ default: m.UmrahPage })));
 const DynamicStudyPage = lazy(() => import('./pages/DynamicStudyPage').then(m => ({ default: m.DynamicStudyPage })));
+const StudyPage = lazy(() => import('./pages/StudyPage').then(m => ({ default: m.StudyPage })));
 const TicketsPage = lazy(() => import('./pages/TicketsPage').then(m => ({ default: m.TicketsPage })));
 const TicketDetailsPage = lazy(() => import('./pages/TicketDetailsPage').then(m => ({ default: m.TicketDetailsPage })));
 const InsurancePage = lazy(() => import('./pages/InsurancePage').then(m => ({ default: m.InsurancePage })));
@@ -212,6 +213,7 @@ export function App() {
           <Route path="/study-canada" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="study-canada" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/scholarships" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="scholarships" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/attestation" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage slug="attestation" onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
+          <Route path="/study" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><StudyPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/study/:slug" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><DynamicStudyPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/tickets" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TicketsPage onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/tickets/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TicketDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />

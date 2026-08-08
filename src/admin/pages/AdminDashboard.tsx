@@ -51,26 +51,26 @@ function DataTable<T extends { _id?: string }>({
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full text-sm min-w-max">
         <thead>
           <tr className="border-b border-slate-700/50">
             {columns.map(col => (
-              <th key={col.key} className="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <th key={col.key} className="text-left py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">
                 {col.label}
               </th>
             ))}
-            <th className="text-right py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Actions</th>
+            <th className="text-right py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item._id} className="border-b border-slate-700/30 hover:bg-white/5 transition-colors">
               {columns.map(col => (
-                <td key={col.key} className="py-3 px-4 text-slate-200">
+                <td key={col.key} className="py-3 px-4 text-slate-200 whitespace-nowrap">
                   {col.render ? col.render(item) : String((item as any)[col.key] ?? '')}
                 </td>
               ))}
-              <td className="py-3 px-4 text-right">
+              <td className="py-3 px-4 text-right whitespace-nowrap">
                 <div className="flex items-center justify-end gap-2">
                   <button onClick={() => onEdit(item)} className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors cursor-pointer" title="Edit">
                     <Pencil className="w-3.5 h-3.5" />
@@ -197,10 +197,26 @@ function FormModal<T extends Record<string, any>>({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Create a copy of formData to clean it up before saving
+    const cleanedData = { ...formData };
+    
+    // Clean up arrays with empty objects (like empty study items or itinerary)
+    for (const key in cleanedData) {
+      if (Array.isArray(cleanedData[key])) {
+        cleanedData[key] = cleanedData[key].filter((item: any) => {
+          if (typeof item === 'object' && item !== null) {
+            // Keep object if it has at least one string value that isn't empty
+            return Object.values(item).some(v => typeof v === 'string' && v.trim() !== '');
+          }
+          return true; // Keep primitives like strings in basic arrays
+        });
+      }
+    }
+    
     // Strict Client-Side Validation
     for (const field of fields) {
       if (field.required) {
-        const val = formData[field.key];
+        const val = cleanedData[field.key];
         
         // 1. Text, Textarea, Select, Image (Strings)
         if (typeof val === 'string' && !val.trim()) {
@@ -216,8 +232,7 @@ function FormModal<T extends Record<string, any>>({
 
         // 3. Arrays (Custom array fields like itinerary, images, etc.)
         if (Array.isArray(val) && val.length === 0) {
-          onError(`Field "${field.label}" requires at least one item.`);
-          return;
+          // If required, we might fail here, but let backend handle if it's strictly required
         }
 
         // 4. Undefined/Null catch-all
@@ -228,7 +243,7 @@ function FormModal<T extends Record<string, any>>({
       }
     }
 
-    onSave(formData as T);
+    onSave(cleanedData as T);
   };
 
   return (
@@ -251,16 +266,16 @@ function FormModal<T extends Record<string, any>>({
           </button>
         </div>
       )}
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-10 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 pt-10 overflow-y-auto">
       <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl shadow-2xl">
-        <div className="flex items-center justify-between p-5 border-b border-slate-700">
-          <h3 className="text-lg font-extrabold text-white">{title}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-700">
+          <h3 className="text-lg font-extrabold text-white truncate pr-2">{title}</h3>
+          <button onClick={onClose} className="p-1.5 shrink-0 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form id="crud-form" onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form id="crud-form" onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4 max-h-[75vh] overflow-y-auto">
           {fields.map(field => (
             <div key={field.key} className="space-y-1.5">
               <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">{field.label}</label>
@@ -639,7 +654,17 @@ const SettingsPanel = () => {
 
   useEffect(() => {
     settingsAPI.get().then((data: any) => {
-      setSettings(data || {});
+      const d = data || {};
+      setSettings({
+        ...d,
+        phone1: d.phone1 || '0310-8032999',
+        phone2: d.phone2 || '051-2757282',
+        phone3: d.phone3 || '',
+        whatsappNumber: d.whatsappNumber || '923315290155',
+        facebookUrl: d.facebookUrl || 'https://www.facebook.com/people/PAK99-Travel-TOURS/61583047934939/',
+        instagramUrl: d.instagramUrl || 'https://www.instagram.com/pak99_travel/',
+        twitterUrl: d.twitterUrl || ''
+      });
       setIsLoading(false);
     });
   }, []);
@@ -732,6 +757,94 @@ const SettingsPanel = () => {
               <span className="text-xs text-slate-400">Display the special offer banner at the very top of the website.</span>
             </div>
           </label>
+        </div>
+
+        <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
+          <h4 className="text-[#ff5500] font-bold mb-4">Global Contact Information</h4>
+          <p className="text-xs text-slate-400 mb-6">These details will automatically update across the entire website, including the Navbar, Footer, Contact Section, Booking Forms, and Floating WhatsApp icon.</p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Primary Phone Number</label>
+              <input
+                type="text"
+                value={settings.phone1 || ''}
+                onChange={(e) => handleChange('phone1', e.target.value)}
+                placeholder="e.g. 0310-8032999"
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+              <p className="text-[10px] text-slate-500 mt-1">Shows in Navbar, Footer, Contact Page.</p>
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Secondary Phone Number</label>
+              <input
+                type="text"
+                value={settings.phone2 || ''}
+                onChange={(e) => handleChange('phone2', e.target.value)}
+                placeholder="e.g. 051-2757282"
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+              <p className="text-[10px] text-slate-500 mt-1">Shows in Navbar, Footer alongside Primary.</p>
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Third Phone Number (Optional)</label>
+              <input
+                type="text"
+                value={settings.phone3 || ''}
+                onChange={(e) => handleChange('phone3', e.target.value)}
+                placeholder="e.g. 0300-1234567"
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+              <p className="text-[10px] text-slate-500 mt-1">Shows in Navbar, Footer alongside others.</p>
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">WhatsApp Phone Number</label>
+              <input
+                type="text"
+                value={settings.whatsappNumber || ''}
+                onChange={(e) => handleChange('whatsappNumber', e.target.value)}
+                placeholder="e.g. 923108032999 (No + sign)"
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+              <p className="text-[10px] text-slate-500 mt-1">Used for the floating WhatsApp button link and direct messaging.</p>
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Facebook URL</label>
+              <input
+                type="text"
+                value={settings.facebookUrl || ''}
+                onChange={(e) => handleChange('facebookUrl', e.target.value)}
+                placeholder="e.g. https://facebook.com/..."
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Instagram URL</label>
+              <input
+                type="text"
+                value={settings.instagramUrl || ''}
+                onChange={(e) => handleChange('instagramUrl', e.target.value)}
+                placeholder="e.g. https://instagram.com/..."
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+            </div>
+            
+            <div>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Twitter / X URL</label>
+              <input
+                type="text"
+                value={settings.twitterUrl || ''}
+                onChange={(e) => handleChange('twitterUrl', e.target.value)}
+                placeholder="e.g. https://twitter.com/..."
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
@@ -897,6 +1010,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
         finalData.pricing = { sharing: finalData.pricing_sharing, quad: finalData.pricing_quad, triple: finalData.pricing_triple, double: finalData.pricing_double };
       }
 
+      if (resource === 'study' && !finalData.slug) {
+        finalData.slug = (finalData.title || 'study-program').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      }
+
       const api = { tours: toursAPI, blogs: blogsAPI, hotels: hotelsAPI, reviews: reviewsAPI, destinations: destinationsAPI, visas: visasAPI, umrah: umrahAPI, carousels: carouselsAPI, tickets: ticketGroupsAPI, insurance: insuranceAPI, study: studyAPI }[resource] as any;
       if (!api) return;
       
@@ -966,8 +1083,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'date', label: 'Date', type: 'text', required: true, placeholder: 'July 15, 2026' },
     { key: 'readTime', label: 'Read Time', type: 'text', placeholder: '5 min read' },
     { key: 'image', label: 'Cover Image', type: 'image', required: true },
-    { key: 'excerpt', label: 'Excerpt', type: 'textarea', required: true },
-    { key: 'content', label: 'Full Content', type: 'textarea' },
+    { key: 'excerpt', label: 'Short Excerpt (For Blog Card)', type: 'textarea', required: true },
+    { key: 'content', label: 'Blog Description (Full Content, supports Markdown)', type: 'textarea' },
           { key: 'published', label: 'Published', type: 'checkbox' },
       { key: 'seoTitle', label: 'SEO Title', type: 'text' },
       { key: 'seoDescription', label: 'SEO Description', type: 'textarea' },
@@ -1091,14 +1208,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   ];
 
   const studyFields: FormField[] = [
-    { 
-      key: 'slug', 
-      label: 'Page Route (Select the specific page to update)', 
-      type: 'select', 
-      options: ['study-uk', 'study-australia', 'study-germany', 'study-canada', 'scholarships', 'attestation'], 
-      required: true 
-    },
-    { key: 'pageType', label: 'Page Type', type: 'select', options: ['destination', 'scholarship', 'attestation'], required: true },
+    { key: 'pageType', label: 'Program Type', type: 'select', options: ['destination'], required: true },
+    { key: 'cardIcon', label: 'Card Icon (Upload Image for Destinations)', type: 'image' },
     { key: 'badgeText', label: 'Hero Badge Text (e.g. 🇬🇧 Study in UK)', type: 'text' },
     { key: 'title', label: 'Hero Main Title', type: 'text', required: true },
     { key: 'description', label: 'Hero Description', type: 'textarea', required: true },
@@ -1329,10 +1440,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-extrabold text-white">Study & Services Pages</h3>
-              {/* Add Page button removed because slug is locked to a dropdown */}
+              <h3 className="text-xl font-extrabold text-white">Study Abroad Programs</h3>
+              <button onClick={() => { setEditingItem({}); setModalOpen(true); }} className="px-4 py-2 bg-[#ff5500] hover:bg-orange-600 text-white text-sm font-bold rounded-xl flex items-center gap-2 transition-colors cursor-pointer"><Plus className="w-4 h-4" /> Add Study Program</button>
             </div>
-            <DataTable data={study} resourceName="Study Pages" loading={loading} onDelete={(id) => handleDelete('study', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+            <DataTable data={study} resourceName="Study Programs" loading={loading} onDelete={(id) => handleDelete('study', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
               columns={[
                 { key: 'slug', label: 'URL Slug' },
                 { key: 'title', label: 'Hero Title' }, 
@@ -1429,14 +1540,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar (mobile menu toggle) */}
-        <header className="lg:hidden sticky top-0 z-20 bg-slate-800/80 backdrop-blur-xl border-b border-slate-700/50 px-4 py-3 flex items-center gap-3">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl hover:bg-white/10 text-slate-400 cursor-pointer">
-            <Menu className="w-5 h-5" />
-          </button>
-          <span className="font-extrabold text-white">PAK 99 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5500] text-white uppercase">ADMIN</span></span>
+        <header className="lg:hidden sticky top-0 z-20 bg-slate-800/80 backdrop-blur-xl border-b border-slate-700/50 px-3 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 rounded-xl hover:bg-white/10 text-slate-400 cursor-pointer">
+              <Menu className="w-5 h-5" />
+            </button>
+            <span className="font-extrabold text-white text-sm sm:text-base truncate">PAK 99</span>
+          </div>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#ff5500] text-white uppercase whitespace-nowrap">ADMIN</span>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 overflow-y-auto">
           {renderContent()}
 
           {/* Form Modal */}
@@ -1502,9 +1616,9 @@ function ResourceManager<T extends { _id?: string }>({
 }) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-extrabold text-white">{title}</h2>
-        <button onClick={onAdd} className="px-4 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-xs font-extrabold flex items-center gap-1.5 cursor-pointer shadow-lg shadow-orange-500/20 hover:from-orange-600 hover:to-amber-600 transition-all">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-white">{title}</h2>
+        <button onClick={onAdd} className="px-4 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-orange-500/20 hover:from-orange-600 hover:to-amber-600 transition-all w-full sm:w-auto">
           <Plus className="w-3.5 h-3.5" /> Add New
         </button>
       </div>

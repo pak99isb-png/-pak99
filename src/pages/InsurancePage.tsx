@@ -119,7 +119,7 @@ export const InsurancePage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHo
           </p>
         </div>
         <a
-          href="tel:+923108032999"
+          href={settings?.phone1 ? `tel:${settings.phone1.replace(/[^0-9+]/g, '')}` : 'tel:+923108032999'}
           className="shrink-0 px-8 py-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-sm shadow-xl shadow-green-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <Phone className="w-4 h-4" /> Call Us Directly

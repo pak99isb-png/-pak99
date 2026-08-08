@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Phone, User, Calendar, Users, MessageSquare } from 'lucide-react';
+import { settingsAPI } from '../services/api';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -22,12 +23,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     notes: '',
   });
 
+  const [settings, setSettings] = useState<any>({});
+
+  useEffect(() => {
+    if (isOpen) {
+      settingsAPI.get().then(setSettings).catch(console.error);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formattedMsg = `*Pak99 Quick Booking Request*\n\n📌 *Service:* ${formData.tourTitle}\n👤 *Name:* ${formData.fullName}\n📞 *Phone:* ${formData.phone}\n✉️ *Email:* ${formData.email || 'N/A'}\n📅 *Travel Date:* ${formData.travelDate || 'Flexible'}\n👥 *Travelers:* ${formData.travelersCount}\n💬 *Notes:* ${formData.notes || 'N/A'}`;
-    const whatsappUrl = `https://wa.me/923315290155?text=${encodeURIComponent(formattedMsg)}`;
+    const waNum = settings?.whatsappNumber || '923315290155';
+    const whatsappUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(formattedMsg)}`;
     window.open(whatsappUrl, '_blank');
     onClose();
   };

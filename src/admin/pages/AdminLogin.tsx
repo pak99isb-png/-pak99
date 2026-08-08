@@ -41,7 +41,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin }) => {
         </div>
 
         {/* Login Card */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-5 sm:p-8 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-xl p-3 text-center font-medium">
