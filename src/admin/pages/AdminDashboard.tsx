@@ -885,6 +885,21 @@ const SettingsPanel = () => {
             </div>
           </div>
         </div>
+        
+        {/* Top Banner Settings */}
+        <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
+          <h4 className="text-[#ff5500] font-bold mb-4">Website Top Banner (Offers)</h4>
+          <div>
+            <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Banner Text (Leave empty to hide)</label>
+            <textarea
+              value={settings.top_banner_text || ''}
+              onChange={(e) => handleChange('top_banner_text', e.target.value)}
+              placeholder="e.g. 🌟 Special Offer: Get 20% off on all Swat Tours! Book Now"
+              rows={2}
+              className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50 resize-y"
+            />
+          </div>
+        </div>
         <div className="bg-slate-700/30 p-5 rounded-xl border border-slate-600/50">
           <h4 className="text-[#ff5500] font-bold mb-4">Insurance Page Hero</h4>
           <div className="space-y-4">

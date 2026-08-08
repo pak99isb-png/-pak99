@@ -74,6 +74,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
   return (
     <>
+      {/* Dynamic Top Banner (Offers) */}
+      {settings?.top_banner_text && (
+        <div className="bg-gradient-to-r from-orange-600 via-[#ff5500] to-orange-600 text-white py-2 px-4 text-center text-xs sm:text-sm font-extrabold tracking-wide shadow-md relative z-50">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 animate-fade-in">
+            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+            <span dangerouslySetInnerHTML={{ __html: settings.top_banner_text.replace(/\n/g, '<br />') }} />
+            <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+          </div>
+        </div>
+      )}
+
       {/* Top Announcement Bar - hidden in overlay mode to match exact reference design */}
       {!isOverlayMode && settings?.showTopBanner !== false && (
         <div className="bg-[#0b2f64] text-white text-xs py-2 px-4 shadow-sm border-b border-orange-500/30">
