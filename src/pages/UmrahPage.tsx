@@ -155,11 +155,11 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       </p>
                     </div>
                     {/* Airline Badge */}
-                    <div className="bg-white text-[#0b2f64] p-2 rounded-xl text-center min-w-[80px] shadow-lg relative z-10 shrink-0">
+                    <div className="bg-white text-[#0b2f64] p-2 sm:p-3 rounded-xl text-center w-24 sm:w-28 shadow-lg relative z-10 shrink-0">
                       {pkg.airlineLogo ? (
-                        <img src={pkg.airlineLogo} alt={pkg.airline} className="h-6 w-auto mx-auto mb-1 object-contain" />
+                        <img src={pkg.airlineLogo} alt={pkg.airline} className="h-12 sm:h-14 w-full mx-auto mb-2 object-contain" />
                       ) : (
-                        <PlaneTakeoff className="w-6 h-6 mx-auto mb-1 text-[#ff5500] shrink-0" />
+                        <PlaneTakeoff className="w-10 h-10 mx-auto mb-2 text-[#ff5500] shrink-0" />
                       )}
                       <div className="text-[10px] font-extrabold uppercase">{pkg.airline}</div>
                       <div className="text-[9px] font-bold text-slate-500 border-t border-slate-200 mt-1 pt-1">{pkg.flightRoute.split(' ')[0]}</div>
