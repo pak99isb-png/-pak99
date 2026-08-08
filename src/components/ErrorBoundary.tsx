@@ -22,6 +22,15 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error in application:', error, errorInfo);
+    
+    // Automatically reload on chunk load failures (happens when Vercel deploys a new version)
+    if (error.message.includes('Failed to fetch dynamically imported module') || error.message.includes('Importing a module script failed')) {
+      const reloadKey = 'chunk_failed_reloaded';
+      if (!sessionStorage.getItem(reloadKey)) {
+        sessionStorage.setItem(reloadKey, 'true');
+        window.location.reload();
+      }
+    }
   }
 
   public render() {

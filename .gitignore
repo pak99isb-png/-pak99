@@ -32,3 +32,7 @@ public/images/
 .env
 .env.*
 !.env.example
+
+# Local Backups & Scripts
+database_backup.json
+server/backup.js
