@@ -36,3 +36,4 @@ public/images/
 # Local Backups & Scripts
 database_backup.json
 server/backup.js
+server/restore.js
