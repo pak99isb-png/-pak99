@@ -1,5 +1,5 @@
 # Pak99 Travel & Tours - Robots.txt
-# https://pak99traveling.com
+# https://www.pak99travels.com
 
 User-agent: *
 Allow: /
@@ -15,7 +15,7 @@ Allow: /
 Crawl-delay: 5
 
 # Sitemaps
-Sitemap: https://pak99traveling.com/sitemap.xml
+Sitemap: https://www.pak99travels.com/sitemap.xml
 
 # Host
-Host: https://pak99traveling.com
+Host: https://www.pak99travels.com

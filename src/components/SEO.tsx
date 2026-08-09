@@ -13,7 +13,7 @@ interface SEOProps {
   noindex?: boolean;
 }
 
-const SITE_URL = 'https://pak99traveling.com';
+const SITE_URL = 'https://www.pak99travels.com';
 const SITE_NAME = 'Pak99 Travel & Tours';
 const DEFAULT_IMAGE = `${SITE_URL}/logo.png`;
 
@@ -56,7 +56,7 @@ export const SEO: React.FC<SEOProps> = ({
     "image": DEFAULT_IMAGE,
     "description": "Pakistan's premier travel agency offering luxury Northern Pakistan tours (Hunza, Skardu, Swat, Naran, Fairy Meadows), Umrah packages, international tours, visa services, study abroad consultancy, hotel bookings, flight tickets, and travel insurance from Islamabad.",
     "telephone": telephones,
-    "email": "info@pak99traveling.com",
+    "email": "info@pak99travels.com",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Office No. 03 Nawaz Arcade, National Police Foundation",
