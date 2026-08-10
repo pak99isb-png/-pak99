@@ -57,10 +57,22 @@ export const InternationalToursPage: React.FC<PageProps> = ({ onSelectTour, onOp
   return (
     <div className="w-full flex flex-col bg-slate-50 min-h-screen">
       <SEO
-        title="International Tours - Dubai, Turkey, Baku, Thailand Tour Packages"
-        description="Book international tour packages from Pakistan — Dubai, Turkey, Azerbaijan (Baku), Thailand, Malaysia & more. Group tours, family holidays & honeymoon packages. Pak99 Travel & Tours Islamabad."
-        keywords="international tours from pakistan, dubai tour package from pakistan, turkey tour package, baku tour package, thailand tour from pakistan, malaysia tour, international group tours, family holiday packages, honeymoon packages international, best international tour operator islamabad"
+        title="International Tours from Pakistan - Dubai, Turkey, Baku, Thailand"
+        description="Book international tour packages from Pakistan — Dubai, Turkey, Azerbaijan (Baku), Thailand, Malaysia, Egypt, Maldives & more. Group tours, family holidays, couple packages & honeymoon deals. Best prices from Pak99 Travel & Tours Islamabad."
+        keywords="international tours from pakistan, international tour packages, dubai tour package from pakistan, turkey tour package pakistan, baku tour package, thailand tour from pakistan, malaysia tour pakistan, egypt tour, maldives tour, international group tours, family holiday packages international, honeymoon packages international, best international tour operator islamabad, cheap international tours pakistan, travel agency international tours, couple tour international, europe tour from pakistan, far east tour, middle east tour packages, travel tours international"
         canonicalPath="/international-tours"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "TouristTrip",
+          "name": "International Tour Packages from Pakistan",
+          "description": "Group and family international tour packages from Pakistan to Dubai, Turkey, Baku, Thailand, Malaysia and more destinations.",
+          "touristType": ["Families", "Couples", "Groups", "Honeymooners"],
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       {/* 1. Full-Bleed Hero Section Slider */}
       <section className="relative w-full h-screen min-h-[600px] flex items-center justify-center overflow-hidden">

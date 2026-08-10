@@ -1178,6 +1178,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'durationText', label: 'Duration Text (e.g. 15 Days)', type: 'text', required: true },
     { key: 'airline', label: 'Airline (e.g. Saudi Airlines)', type: 'text', required: true },
     { key: 'flightRoute', label: 'Flight Route (e.g. LHE-JED-LHE)', type: 'text', required: true },
+    { key: 'seatsAvailable', label: 'Seats Available', type: 'number' },
     { key: 'airlineLogo', label: 'Airline Logo / Icon', type: 'image' },
     { key: 'hotels_makkah', label: 'Hotel in Makkah', type: 'text', required: true },
     { key: 'makkahHotelIcon', label: 'Makkah Hotel Icon', type: 'image' },
@@ -1395,6 +1396,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
               { key: 'city', label: 'City', render: (u: ApiUmrahPackage) => <span className="font-bold text-white">{u.city}</span> },
               { key: 'tier', label: 'Tier', render: (u: ApiUmrahPackage) => <span className="text-amber-400 font-bold">{u.tier}</span> },
               { key: 'durationText', label: 'Duration' },
+              { key: 'seatsAvailable', label: 'Seats', render: (u: ApiUmrahPackage) => <span className="text-emerald-400 font-bold">{u.seatsAvailable ?? '-'}</span> },
               { key: 'airline', label: 'Airline' },
               { key: 'pricing', label: 'Sharing Price', render: (u: ApiUmrahPackage) => <span className="text-[#ff5500] font-bold">{u.pricing?.sharing || '-'}</span> },
             ]}

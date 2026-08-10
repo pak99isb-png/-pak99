@@ -39,10 +39,22 @@ export const InsurancePage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHo
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
-        title="Travel Insurance Pakistan - Medical & Trip Insurance"
-        description="Get comprehensive travel medical insurance for international trips from Pakistan. Schengen visa insurance, trip cancellation coverage & more. Pak99 Travel & Tours Islamabad."
-        keywords="travel insurance pakistan, medical travel insurance, schengen visa insurance, trip insurance pakistan, travel insurance islamabad, international travel insurance, flight insurance pakistan, travel health insurance"
+        title="Travel Insurance Pakistan - Medical, Trip & Schengen Insurance"
+        description="Get comprehensive travel medical insurance for international trips from Pakistan. Schengen visa insurance, trip cancellation coverage, Umrah insurance, flight insurance & worldwide medical coverage. Instant policy from Pak99 Travel & Tours."
+        keywords="travel insurance pakistan, travel medical insurance, schengen visa insurance, schengen travel insurance, trip insurance pakistan, travel insurance islamabad, international travel insurance, flight insurance pakistan, travel health insurance, umrah travel insurance, trip cancellation insurance, travel insurance for visa, cheap travel insurance pakistan, best travel insurance, worldwide medical insurance, travel insurance online pakistan, insurance for international travel"
         canonicalPath="/insurance"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Travel Insurance Services",
+          "description": "Comprehensive travel medical insurance, Schengen visa insurance, trip cancellation and flight insurance from Pakistan.",
+          "serviceType": "Travel Insurance",
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       
       <div className="space-y-4">

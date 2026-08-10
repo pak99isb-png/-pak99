@@ -70,9 +70,9 @@ export const DynamicStudyPage: React.FC<PageProps> = ({ slug: propSlug, onOpenBo
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
-        title={data.title || 'Study Abroad Programs'}
+        title={data.title || 'Study Abroad Programs from Pakistan'}
         description={data.description || `Study abroad programs and university admissions assistance from Pakistan. Expert visa consultancy and scholarship guidance by Pak99 Travel & Tours Islamabad.`}
-        keywords={`study abroad pakistan, ${data.slug || ''}, university admission pakistan, student visa, study in ${(data.title || '').replace('Study in ', '') || 'abroad'}, scholarship pakistan, education consultancy islamabad, overseas education pakistan`}
+        keywords={`study abroad pakistan, ${data.slug || ''}, study in ${(data.title || '').replace('Study in ', '') || 'abroad'}, ${(data.title || '').replace('Study in ', '') || 'abroad'} student visa from pakistan, university admission ${(data.title || '').replace('Study in ', '') || 'abroad'}, ${(data.title || '').replace('Study in ', '') || 'abroad'} scholarship, education consultancy islamabad, overseas education pakistan, study abroad consultant pakistan, student visa processing`}
         canonicalPath={`/${data.slug || activeSlug}`}
       />
       <div className="space-y-4">

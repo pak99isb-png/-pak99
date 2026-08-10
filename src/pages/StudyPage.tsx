@@ -34,10 +34,23 @@ export const StudyPage: React.FC<StudyPageProps> = ({ onOpenBooking }) => {
   return (
     <div className="min-h-screen bg-slate-50">
       <SEO
-        title="Study Abroad Programs - Pak99 Travel & Tours"
-        description="Explore study abroad opportunities with Pak99 Travel & Tours. Get admissions and student visas for top destinations."
-        keywords="study abroad, student visa, study in uk, study in australia, study in canada, study in germany, overseas education pakistan"
+        title="Study Abroad from Pakistan - UK, Australia, Canada, Germany"
+        description="Study abroad with Pak99 Travel & Tours — university admissions, student visa processing & scholarship guidance for UK, Australia, Canada, Germany, Ireland, New Zealand & more. Best education consultancy in Islamabad, Pakistan."
+        keywords="study abroad pakistan, study abroad consultant islamabad, study in uk from pakistan, study in australia from pakistan, study in canada from pakistan, study in germany from pakistan, student visa pakistan, university admission pakistan, overseas education consultant, education consultancy islamabad, scholarship guidance pakistan, ielts preparation, study abroad programs, study in europe, study in ireland, best study abroad consultant pakistan, foreign education consultant"
         canonicalPath="/study"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Study Abroad Consultancy",
+          "description": "University admissions, student visa assistance and scholarship guidance for UK, Australia, Canada, Germany and more from Pakistan.",
+          "serviceType": "Education Consultancy",
+          "areaServed": { "@type": "Country", "name": "Pakistan" },
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden">

@@ -33,10 +33,23 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
   return (
     <div className="min-h-screen bg-slate-50 pt-8 pb-20 animate-fade-in">
       <SEO
-        title="Umrah Packages 2025 - Economy & Luxury Umrah from Pakistan"
-        description="Book Umrah packages from Islamabad, Lahore, Faisalabad & Multan. Economy & 5-Star luxury Umrah with hotels near Haram. Walking distance Makkah & Madinah hotels. Pak99 Travel & Tours — trusted Umrah operator."
-        keywords="umrah packages pakistan, umrah packages islamabad, umrah packages lahore, umrah packages faisalabad, cheap umrah packages, luxury umrah packages, 5 star umrah packages, umrah 2025, umrah booking pakistan, umrah travel agent islamabad, walking distance haram hotel, makkah hotel near haram, madinah hotel booking, economy umrah packages, best umrah packages pakistan"
+        title="Umrah Packages 2025 - Economy & 5-Star Luxury Umrah from Pakistan"
+        description="Book Umrah packages from Islamabad, Lahore, Faisalabad & Multan. Economy & 5-Star luxury Umrah with walking distance hotels near Haram in Makkah & Madinah. Ramadan Umrah, family Umrah & VIP packages. Pak99 Travel & Tours — Pakistan's trusted Umrah operator."
+        keywords="umrah packages pakistan, umrah packages, umrah packages 2025, umrah packages islamabad, umrah packages lahore, umrah packages faisalabad, umrah packages multan, cheap umrah packages, economy umrah packages, luxury umrah packages, 5 star umrah packages, ramadan umrah packages, umrah booking pakistan, umrah travel agent islamabad, walking distance haram hotel, makkah hotel near haram, madinah hotel booking, best umrah packages pakistan, family umrah packages, vip umrah, hajj packages pakistan, umrah visa, saudi airlines umrah, pia umrah flights, umrah from lahore, umrah from islamabad, travel agency umrah pakistan"
         canonicalPath="/umrah"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "Umrah Packages from Pakistan",
+          "description": "Economy and 5-star luxury Umrah packages from Islamabad, Lahore, Faisalabad & Multan with hotels near Haram.",
+          "brand": { "@type": "Brand", "name": "Pak99 Travel & Tours" },
+          "offers": {
+            "@type": "AggregateOffer",
+            "priceCurrency": "PKR",
+            "availability": "https://schema.org/InStock",
+            "offerCount": "10"
+          }
+        }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
@@ -155,14 +168,14 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       </p>
                     </div>
                     {/* Airline Badge */}
-                    <div className="bg-white text-[#0b2f64] p-2 sm:p-3 rounded-xl text-center w-24 sm:w-28 shadow-lg relative z-10 shrink-0">
+                    <div className="bg-white text-[#0b2f64] p-2 sm:p-3 rounded-xl text-center w-28 sm:w-36 shadow-lg relative z-10 shrink-0">
                       {pkg.airlineLogo ? (
                         <img src={pkg.airlineLogo} alt={pkg.airline} className="h-12 sm:h-14 w-full mx-auto mb-2 object-contain" />
                       ) : (
                         <PlaneTakeoff className="w-10 h-10 mx-auto mb-2 text-[#ff5500] shrink-0" />
                       )}
-                      <div className="text-[10px] font-extrabold uppercase">{pkg.airline}</div>
-                      <div className="text-[9px] font-bold text-slate-500 border-t border-slate-200 mt-1 pt-1">{pkg.flightRoute.split(' ')[0]}</div>
+                      <div className="text-[10px] font-extrabold uppercase mb-1">{pkg.airline}</div>
+                      <div className="text-xs font-bold text-slate-600 border-t border-slate-200 mt-1 pt-1 leading-tight">{pkg.flightRoute}</div>
                     </div>
                   </div>
 

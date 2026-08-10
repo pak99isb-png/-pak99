@@ -153,9 +153,12 @@ export const TicketDetailsPage: React.FC<PageProps> = ({ onOpenBooking }) => {
                     </td>
                     
                     <td className="py-4 px-4 align-middle whitespace-nowrap">
-                      <div className="bg-white border border-slate-200 text-slate-500 text-xs px-2 py-1.5 rounded mx-auto inline-block font-medium">
-                        {flight.seats.split(' ')[0]}<br/>{flight.seats.split(' ')[1]}
-                      </div>
+                      <button 
+                        onClick={() => onOpenBooking(`Check Seat: ${routeDisplay} on ${flight.date}`)}
+                        className="bg-white border border-slate-200 hover:border-[#0b2f64] hover:text-[#0b2f64] hover:bg-blue-50 text-slate-500 text-xs px-2 py-1.5 rounded mx-auto inline-block font-medium cursor-pointer transition-colors"
+                      >
+                        {flight.seats.split(' ')[0]}<br/>{flight.seats.split(' ')[1] || ''}
+                      </button>
                     </td>
                     
                     <td className="py-3 px-2 align-middle">

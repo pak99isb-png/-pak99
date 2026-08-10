@@ -60,6 +60,74 @@ app.use('/api/ticket-groups', createCrudRoutes(TicketGroup, 'Ticket Group'));
 app.use('/api/insurance', createCrudRoutes(InsuranceService, 'Insurance Service'));
 app.use('/api/study', createCrudRoutes(StudyProgram, 'Study Program'));
 
+// Dynamic Sitemap Generator
+app.get('/api/sitemap.xml', async (req, res) => {
+  try {
+    const SITE_URL = 'https://www.pak99travels.com';
+    const today = new Date().toISOString().split('T')[0];
+
+    // Fetch dynamic data
+    const [tours, blogs, visas, study] = await Promise.all([
+      Tour.find({}, '_id').lean(),
+      Blog.find({}, '_id').lean(),
+      VisaCountry.find({}, 'code').lean(),
+      StudyProgram.find({}, 'slug').lean(),
+    ]);
+
+    // Static pages
+    const staticPages = [
+      { loc: '/', priority: '1.0', changefreq: 'daily' },
+      { loc: '/pakistan-tours', priority: '0.9', changefreq: 'weekly' },
+      { loc: '/international-tours', priority: '0.9', changefreq: 'weekly' },
+      { loc: '/umrah', priority: '0.9', changefreq: 'weekly' },
+      { loc: '/visa', priority: '0.8', changefreq: 'weekly' },
+      { loc: '/hotels', priority: '0.8', changefreq: 'weekly' },
+      { loc: '/tickets', priority: '0.8', changefreq: 'weekly' },
+      { loc: '/insurance', priority: '0.8', changefreq: 'weekly' },
+      { loc: '/study', priority: '0.8', changefreq: 'monthly' },
+      { loc: '/blogs', priority: '0.8', changefreq: 'weekly' },
+      { loc: '/why-us', priority: '0.6', changefreq: 'monthly' },
+      { loc: '/reviews', priority: '0.6', changefreq: 'monthly' },
+      { loc: '/contact', priority: '0.6', changefreq: 'monthly' },
+    ];
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    // Static pages
+    for (const page of staticPages) {
+      xml += `  <url>\n    <loc>${SITE_URL}${page.loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+    }
+
+    // Dynamic tour pages
+    for (const tour of tours) {
+      xml += `  <url>\n    <loc>${SITE_URL}/tours/${tour._id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    }
+
+    // Dynamic blog pages
+    for (const blog of blogs) {
+      xml += `  <url>\n    <loc>${SITE_URL}/blog/${blog._id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+    }
+
+    // Dynamic visa detail pages
+    for (const visa of visas) {
+      xml += `  <url>\n    <loc>${SITE_URL}/visas/${visa.code}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    }
+
+    // Dynamic study pages
+    for (const s of study) {
+      xml += `  <url>\n    <loc>${SITE_URL}/${s.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    }
+
+    xml += `</urlset>`;
+
+    res.set('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    console.error('Sitemap generation error:', err);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Pak99 Tours API is running 🚀' });

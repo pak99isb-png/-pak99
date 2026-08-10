@@ -36,9 +36,31 @@ export const TourDetailsPage: React.FC<TourDetailsPageProps> = ({ onOpenBooking 
   return (
     <div className="w-full bg-slate-50 min-h-screen">
       <SEO 
-        title={tour.seoTitle || tour.title} 
-        description={tour.seoDescription || tour.aboutInfo?.substring(0, 150) || `Book the amazing ${tour.title} package with Pak99 Traveling & Tours.`}
-        keywords={tour.seoKeywords || `tour, ${tour.location}, ${tour.category}, travel pakistan`}
+        title={tour.seoTitle || `${tour.title} Tour Package`} 
+        description={tour.seoDescription || tour.aboutInfo?.substring(0, 155) || `Book the amazing ${tour.title} tour package with Pak99 Travel & Tours. ${tour.duration} trip to ${tour.location}, starting from PKR ${tour.pricePKR?.toLocaleString()}.`}
+        keywords={tour.seoKeywords || `${tour.title}, ${tour.title} tour, ${tour.location} tour, ${tour.location} tour package, ${tour.category} tour pakistan, travel tours pakistan, best ${tour.location} tour, ${tour.location} trip, pak99 ${tour.location}`}
+        canonicalPath={`/tours/${id}`}
+        image={tour.image}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "TouristTrip",
+          "name": tour.title,
+          "description": tour.seoDescription || tour.aboutInfo?.substring(0, 200) || `${tour.title} tour package by Pak99 Travel & Tours.`,
+          "image": tour.image,
+          "touristType": ["Families", "Couples", "Adventurers"],
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "PKR",
+            "price": tour.pricePKR,
+            "availability": "https://schema.org/InStock",
+            "validFrom": new Date().toISOString().split('T')[0]
+          },
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       {/* 1. Full 100vh Hero Slider */}
       <section className="relative w-full h-screen overflow-hidden bg-slate-900">

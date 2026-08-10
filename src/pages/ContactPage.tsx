@@ -11,9 +11,9 @@ export const ContactPage: React.FC<PageProps> = ({ onNavigateHome }) => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
-        title="Contact Us - Pak99 Travel & Tours Islamabad"
-        description="Contact Pak99 Travel & Tours for tour bookings, Umrah packages, visa services & travel inquiries. Visit us at Office No. 03 Nawaz Arcade, National Police Foundation, PWD Islamabad. Call 0310-8032999 or 051-2757282."
-        keywords="contact pak99 travel, travel agency islamabad contact, pak99 phone number, pak99 address, travel agent islamabad, tour booking islamabad, pak99 office location"
+        title="Contact Pak99 Travel & Tours - Islamabad Travel Agency"
+        description="Contact Pak99 Travel & Tours for tour bookings, Umrah packages, visa services & travel inquiries. Visit us at Office No. 03 Nawaz Arcade, National Police Foundation, PWD Islamabad. Call 0310-8032999 or 051-2757282. WhatsApp available."
+        keywords="contact pak99 travel, travel agency islamabad contact, pak99 phone number, pak99 address, travel agent islamabad contact, tour booking islamabad, pak99 office location, pak99 whatsapp, travel agency near me islamabad, travel agency pwd islamabad, travel company contact pakistan"
         canonicalPath="/contact"
       />
       <div className="space-y-4">

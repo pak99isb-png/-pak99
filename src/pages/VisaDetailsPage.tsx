@@ -50,9 +50,10 @@ export const VisaDetailsPage: React.FC<VisaDetailsPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 animate-fade-in">
       <SEO 
-        title={`${country.name} Visa Requirements`} 
-        description={`Get complete visa processing guidelines and requirements for ${country.name} through Pak99 Traveling & Tours.`}
-        keywords={`${country.name} visa, visa requirements, travel to ${country.name}`}
+        title={`${country.name} Visa from Pakistan - Requirements & Processing`} 
+        description={`Complete ${country.name} visa requirements, documents, processing time and charges from Pakistan. Tourist visa, visit visa & work visa for ${country.name}. Apply through Pak99 Travel & Tours Islamabad.`}
+        keywords={`${country.name} visa, ${country.name} visa from pakistan, ${country.name} visa requirements, ${country.name} tourist visa, ${country.name} visit visa, ${country.name} visa processing, ${country.name} visa fees, how to get ${country.name} visa from pakistan, ${country.name} visa agent islamabad, travel to ${country.name}`}
+        canonicalPath={`/visas/${country.code}`}
       />
 
       {/* Hero Section */}

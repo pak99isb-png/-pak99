@@ -33,10 +33,23 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
   return (
     <div className="min-h-screen bg-slate-50">
       <SEO
-        title="Visa Services - Tourist, Visit & Work Visa Assistance Pakistan"
-        description="Professional visa services from Pakistan — tourist visa, visit visa, work visa, student visa for UAE, Saudi Arabia, UK, USA, Canada, Australia, Turkey, Schengen & more. Fast processing by Pak99 Travel & Tours Islamabad."
-        keywords="visa services pakistan, visa services islamabad, tourist visa pakistan, visit visa, work visa pakistan, student visa, uae visa from pakistan, saudi visa, uk visa, usa visa, canada visa, australia visa, turkey visa, schengen visa, visa consultancy islamabad, visa agent islamabad, fast visa processing"
+        title="Visa Services Pakistan - Tourist, Visit, Work & Student Visa"
+        description="Professional visa services from Pakistan — tourist visa, visit visa, work visa, student visa for UAE, Saudi Arabia, UK, USA, Canada, Australia, Turkey, Schengen, China, Japan & 50+ countries. Fast processing, done-base & normal visa. Pak99 Travel & Tours Islamabad."
+        keywords="visa services pakistan, visa services islamabad, visa consultant pakistan, tourist visa from pakistan, visit visa pakistan, work visa pakistan, student visa pakistan, uae visa, dubai visa, saudi visa, uk visa from pakistan, usa visa, canada visa, australia visa, turkey visa, schengen visa pakistan, china visa, japan visa, malaysia visa, thailand visa, bahrain visa, oman visa, qatar visa, kuwait visa, south korea visa, egypt visa, visa agent islamabad, fast visa processing, done base visa, visa consultancy islamabad, best visa consultant pakistan, visa requirements pakistan, travel agency visa services"
         canonicalPath="/visa"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Visa Processing Services",
+          "description": "Tourist visa, visit visa, work visa and student visa processing for 50+ countries from Pakistan. Fast and reliable visa consultancy.",
+          "serviceType": "Visa Consultancy",
+          "areaServed": { "@type": "Country", "name": "Pakistan" },
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       {/* Hero Section */}
       <section className="bg-[#0b2f64] text-white relative overflow-hidden">

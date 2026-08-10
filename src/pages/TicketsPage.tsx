@@ -24,10 +24,22 @@ export const TicketsPage: React.FC<PageProps> = ({ onNavigateHome }) => {
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <SEO
-        title="Flight Tickets - Group & Individual Air Tickets Pakistan"
-        description="Book cheap group and individual flight tickets from Pakistan to UAE, Saudi Arabia, UK, Bahrain, Muscat & more. Best airline deals with Pak99 Travel & Tours Islamabad."
-        keywords="flight tickets pakistan, cheap flights from pakistan, group tickets, air tickets islamabad, flights to dubai, flights to saudi arabia, flights to uk, airline tickets pakistan, pak99 flights, best flight deals pakistan"
+        title="Flight Tickets Pakistan - Cheap Air Tickets & Group Fares"
+        description="Book cheap group and individual flight tickets from Pakistan to UAE, Saudi Arabia, UK, Bahrain, Oman, Thailand & worldwide. Best airline deals on PIA, Saudi Airlines, Emirates, Qatar Airways & more. Pak99 Travel & Tours Islamabad."
+        keywords="flight tickets pakistan, cheap flights from pakistan, air tickets pakistan, group flight tickets, airline tickets islamabad, flights to dubai from pakistan, flights to saudi arabia, flights to uk from pakistan, flights to bahrain, flights to oman, flights to thailand, cheap air tickets lahore, cheap flights islamabad, pia tickets, saudi airlines tickets, emirates tickets, qatar airways, etihad tickets, flight booking pakistan, travel agency flight tickets, best flight deals pakistan, international flights pakistan"
         canonicalPath="/tickets"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Flight Ticket Booking",
+          "description": "Cheap group and individual flight ticket booking from Pakistan to worldwide destinations.",
+          "serviceType": "Flight Booking",
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       
       <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">

@@ -32,8 +32,25 @@ export const BlogDetailsPage: React.FC = () => {
     <div className="w-full bg-slate-50 min-h-screen pb-20">
       <SEO 
         title={(blog as any).seoTitle || blog.title} 
-        description={(blog as any).seoDescription || blog.excerpt}
-        keywords={(blog as any).seoKeywords || `blog, travel, ${blog.category}`}
+        description={(blog as any).seoDescription || blog.excerpt || `Read ${blog.title} — expert travel advice and guides from Pak99 Travel & Tours Pakistan.`}
+        keywords={(blog as any).seoKeywords || `${blog.title}, travel blog, ${blog.category}, pakistan travel guide, travel tips pakistan, pak99 blog`}
+        canonicalPath={`/blog/${id}`}
+        type="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": blog.title,
+          "description": (blog as any).seoDescription || blog.excerpt,
+          "image": blog.image,
+          "author": { "@type": "Organization", "name": "Pak99 Travel & Tours" },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Pak99 Travel & Tours",
+            "logo": { "@type": "ImageObject", "url": "https://www.pak99travels.com/logo.png" }
+          },
+          "datePublished": (blog as any).createdAt,
+          "dateModified": (blog as any).updatedAt
+        }}
       />
       
       {/* Header Image */}

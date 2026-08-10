@@ -112,9 +112,9 @@ export function App() {
           <Route path="/" element={
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }} className="flex-1 flex flex-col">
               <SEO
-                title="Best Travel Agency Islamabad - Tours, Umrah, Visa, Hotels"
-                description="Pak99 Travel & Tours — Islamabad's #1 travel agency. Book luxury Northern Pakistan tours (Hunza, Skardu, Swat, Naran), Umrah packages, international tours, visa services, study abroad programs, hotel bookings & flight tickets. Call 0310-8032999."
-                keywords="travel agency islamabad, best travel agency pakistan, pakistan tours, hunza tour, skardu tour, swat tour, naran tour, umrah packages, international tours, visa services pakistan, study abroad, hotel booking pakistan, flight tickets, pak99 travel, pak 99 tours"
+                title="Best Travel Agency in Pakistan - Tours, Umrah, Visa, Hotels, Flights"
+                description="Pak99 Travel & Tours — Pakistan's #1 travel agency in Islamabad. Book luxury Northern Pakistan tours (Hunza, Skardu, Swat, Naran), Umrah packages, international tours (Dubai, Turkey, Baku), visa services for 50+ countries, study abroad programs, hotel bookings & flight tickets. Call 0310-8032999."
+                keywords="travel agency pakistan, travel agency islamabad, pakistan travel, travel tours, best travel agency in pakistan, travel tours pakistan, tour operator pakistan, northern pakistan tours, hunza tour, skardu tour, swat tour, naran tour, fairy meadows, umrah packages pakistan, international tours from pakistan, dubai tour, turkey tour, visa services pakistan, study abroad, hotel booking pakistan, flight tickets pakistan, travel insurance, pak99 travel, pak 99 tours, family tours, honeymoon packages, group tours, adventure tours, travel agency rawalpindi, travel company pakistan"
                 canonicalPath="/"
               />
               <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} onExploreClick={() => { const sec = document.getElementById('tours-section'); if (sec) sec.scrollIntoView({ behavior: 'smooth' }); }} />

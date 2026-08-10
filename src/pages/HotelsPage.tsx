@@ -22,10 +22,22 @@ export const HotelsPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome 
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
-        title="Hotel Booking Pakistan - Luxury & Budget Hotels"
-        description="Book discounted luxury hotels across Pakistan — Hunza, Skardu, Swat, Naran, Islamabad & more. 4-star and 5-star resort reservations with best rates. Pak99 Travel & Tours."
-        keywords="hotel booking pakistan, hotels hunza, hotels skardu, hotels swat, hotels naran, luxury hotels pakistan, budget hotels northern pakistan, resort booking pakistan, hotel reservation islamabad, best hotels gilgit baltistan"
+        title="Hotel Booking Pakistan - Luxury & Budget Hotels Nationwide"
+        description="Book discounted luxury and budget hotels across Pakistan — Hunza, Skardu, Swat, Naran, Islamabad, Lahore, Murree & worldwide. 4-star and 5-star resort reservations at best rates. Pak99 Travel & Tours — your hotel booking partner."
+        keywords="hotel booking pakistan, hotels in hunza, hotels in skardu, hotels in swat, hotels in naran, hotels in islamabad, hotels in lahore, hotels in murree, luxury hotels pakistan, budget hotels northern pakistan, resort booking pakistan, hotel reservation, best hotels gilgit baltistan, northern areas hotels, 5 star hotels pakistan, honeymoon hotels pakistan, family hotels pakistan, hotel deals pakistan, cheap hotel booking, travel agency hotel booking"
         canonicalPath="/hotels"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Hotel Booking Services",
+          "description": "Discounted luxury and budget hotel reservations across Pakistan and worldwide destinations.",
+          "serviceType": "Hotel Reservation",
+          "provider": {
+            "@type": "TravelAgency",
+            "name": "Pak99 Travel & Tours",
+            "url": "https://www.pak99travels.com"
+          }
+        }}
       />
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">

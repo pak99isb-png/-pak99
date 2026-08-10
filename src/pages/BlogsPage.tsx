@@ -22,9 +22,9 @@ export const BlogsPage: React.FC<PageProps> = () => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO 
-        title="Travel Blogs & Guides - Pakistan Travel Tips" 
-        description="Expert travel blogs, destination guides, visa tips & itineraries for Pakistan tours, Umrah, international travel & study abroad. Pak99 Travel & Tours blog." 
-        keywords="travel blog pakistan, pakistan travel guide, hunza travel guide, skardu guide, umrah guide, visa tips pakistan, northern pakistan blog, travel tips islamabad, pak99 blog, pakistan tourism blog"
+        title="Travel Blog Pakistan - Guides, Tips & Destination Reviews" 
+        description="Expert travel blogs, destination guides, visa tips & tour itineraries for Pakistan travel, Umrah, international tours & study abroad. Insider tips from Pak99 Travel & Tours — Pakistan's top travel blog." 
+        keywords="travel blog pakistan, pakistan travel blog, pakistan travel guide, travel tips pakistan, hunza travel guide, skardu travel guide, swat travel guide, naran travel guide, umrah guide, visa tips pakistan, northern pakistan blog, travel tips islamabad, pak99 blog, pakistan tourism blog, best places to visit pakistan, pakistan travel itinerary, northern areas guide, travel stories pakistan"
         canonicalPath="/blogs"
       />
       <div className="space-y-4">

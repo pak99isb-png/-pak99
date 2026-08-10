@@ -11,9 +11,9 @@ export const ReviewsPage: React.FC<PageProps> = ({ onNavigateHome }) => {
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
-        title="Customer Reviews - Verified Traveler Testimonials"
-        description="Read verified reviews from 5,000+ happy travelers who booked with Pak99 Travel & Tours. Real stories from families, couples, Umrah pilgrims & student visa applicants."
-        keywords="pak99 reviews, pak99 travel reviews, travel agency reviews islamabad, tour operator reviews pakistan, customer testimonials, verified traveler reviews, umrah reviews, tour reviews pakistan"
+        title="Customer Reviews - 5000+ Verified Traveler Testimonials"
+        description="Read 5,000+ verified reviews from happy travelers who booked with Pak99 Travel & Tours. Real stories from families, couples, Umrah pilgrims & student visa applicants. Pakistan's highest rated travel agency."
+        keywords="pak99 reviews, pak99 travel reviews, travel agency reviews islamabad, tour operator reviews pakistan, customer testimonials, verified traveler reviews, umrah reviews, tour reviews pakistan, pak99 ratings, best rated travel agency pakistan, travel company reviews, northern pakistan tour reviews"
         canonicalPath="/reviews"
       />
       <div className="space-y-4">
