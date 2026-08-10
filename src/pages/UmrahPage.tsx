@@ -13,6 +13,30 @@ interface PageProps {
 const CITIES: DepartureCity[] = ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'];
 const TIERS: PackageTier[] = ['Economy', 'Star'];
 
+const parseDate = (dateStr: string | undefined) => {
+  if (!dateStr) return new Date(8640000000000000).getTime();
+  
+  // Try parsing DD-MM-YYYY or DD/MM/YYYY
+  const parts = dateStr.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+  if (parts) {
+    return new Date(parseInt(parts[3], 10), parseInt(parts[2], 10) - 1, parseInt(parts[1], 10)).getTime();
+  }
+  
+  // Fallback to standard Date parsing (handles "15 Aug 2026", etc.)
+  const parsed = new Date(dateStr).getTime();
+  if (!isNaN(parsed)) return parsed;
+
+  // Max value for invalid dates so they appear at the bottom
+  return new Date(8640000000000000).getTime(); 
+};
+
+const formatDisplayDate = (dateStr: string | undefined) => {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
+
 export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }) => {
   const [selectedCity, setSelectedCity] = useState<DepartureCity>('Faisalabad');
   const [selectedTier, setSelectedTier] = useState<PackageTier>('Economy');
@@ -26,9 +50,9 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredPackages = packages.filter(
-    (pkg) => pkg.city === selectedCity && pkg.tier === selectedTier
-  );
+  const filteredPackages = packages
+    .filter((pkg) => pkg.city === selectedCity && pkg.tier === selectedTier)
+    .sort((a, b) => parseDate(a.departureDate) - parseDate(b.departureDate));
 
   return (
     <div className="min-h-screen bg-slate-50 pt-8 pb-20 animate-fade-in">
@@ -161,7 +185,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                       </div>
                       <h3 className="text-xl font-extrabold text-white flex items-center gap-2 mt-2">
                         <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
-                        {pkg.departureDate}
+                        {formatDisplayDate(pkg.departureDate)}
                       </h3>
                       <p className="text-blue-200 text-sm font-medium flex items-center gap-1">
                         {pkg.durationText}

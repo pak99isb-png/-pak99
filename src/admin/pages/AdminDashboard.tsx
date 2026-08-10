@@ -94,7 +94,7 @@ function DataTable<T extends { _id?: string }>({
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image' | 'image_array' | 'itinerary_array' | 'flights_array' | 'study_items_array';
+  type: 'text' | 'number' | 'textarea' | 'select' | 'checkbox' | 'array' | 'image' | 'image_array' | 'itinerary_array' | 'flights_array' | 'study_items_array' | 'date';
   options?: string[];
   quickOptions?: (string | { label: string; value: string })[];
   required?: boolean;
@@ -113,31 +113,50 @@ function FormModal<T extends Record<string, any>>({
   title: string;
   saving: boolean;
 }) {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, any>>(() => {
+    const defaults: Record<string, any> = { ...initialData }; // Ensure all fields, including _id, are preserved
+    fields.forEach(f => {
+      if (f.type === 'array' || f.type === 'image_array' || f.type === 'itinerary_array' || f.type === 'flights_array' || f.type === 'study_items_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
+      else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
+      else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
+      else defaults[f.key] = (initialData as any)?.[f.key] || '';
+    });
+    // Handle flat to nested for Umrah
+    if (title.toLowerCase().includes('umra')) {
+      const umrah = initialData as unknown as ApiUmrahPackage;
+      defaults['hotels_makkah'] = umrah.hotels?.makkah || '';
+      defaults['hotels_madinah'] = umrah.hotels?.madinah || '';
+      defaults['pricing_sharing'] = umrah.pricing?.sharing || '';
+      defaults['pricing_quad'] = umrah.pricing?.quad || '';
+      defaults['pricing_triple'] = umrah.pricing?.triple || '';
+      defaults['pricing_double'] = umrah.pricing?.double || '';
+    }
+    return defaults;
+  });
+
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      const defaults: Record<string, any> = {};
-      fields.forEach(f => {
-        if (f.type === 'array' || f.type === 'image_array' || f.type === 'itinerary_array' || f.type === 'flights_array' || f.type === 'study_items_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
-        else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
-        else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
-        else defaults[f.key] = (initialData as any)?.[f.key] || '';
-      });
-      // Handle flat to nested for Umrah
-      if (title.includes('Umrah')) {
-        const umrah = initialData as unknown as ApiUmrahPackage;
-        defaults['hotels_makkah'] = umrah.hotels?.makkah || '';
-        defaults['hotels_madinah'] = umrah.hotels?.madinah || '';
-        defaults['pricing_sharing'] = umrah.pricing?.sharing || '';
-        defaults['pricing_quad'] = umrah.pricing?.quad || '';
-        defaults['pricing_triple'] = umrah.pricing?.triple || '';
-        defaults['pricing_double'] = umrah.pricing?.double || '';
-      }
-      setFormData(defaults);
+    // We initialized state synchronously, so we only need to reset if initialData changes while mounted.
+    // (This usually doesn't happen because the modal is conditionally rendered in the parent)
+    const defaults: Record<string, any> = { ...initialData };
+    fields.forEach(f => {
+      if (f.type === 'array' || f.type === 'image_array' || f.type === 'itinerary_array' || f.type === 'flights_array' || f.type === 'study_items_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
+      else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
+      else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
+      else defaults[f.key] = (initialData as any)?.[f.key] || '';
+    });
+    if (title.toLowerCase().includes('umra')) {
+      const umrah = initialData as unknown as ApiUmrahPackage;
+      defaults['hotels_makkah'] = umrah.hotels?.makkah || '';
+      defaults['hotels_madinah'] = umrah.hotels?.madinah || '';
+      defaults['pricing_sharing'] = umrah.pricing?.sharing || '';
+      defaults['pricing_quad'] = umrah.pricing?.quad || '';
+      defaults['pricing_triple'] = umrah.pricing?.triple || '';
+      defaults['pricing_double'] = umrah.pricing?.double || '';
     }
-  }, [isOpen]);
+    setFormData(defaults);
+  }, [initialData, title, fields]);
 
   if (!isOpen) return null;
 
@@ -299,6 +318,35 @@ function FormModal<T extends Record<string, any>>({
                   placeholder={field.placeholder}
                   required={field.required}
                   className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
+                />
+              )}
+
+              {field.type === 'date' && (
+                <input
+                  type="date"
+                  value={
+                    formData[field.key]
+                      ? (() => {
+                          const str = formData[field.key];
+                          if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+                          
+                          // Try DD-MM-YYYY
+                          const parts = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+                          if (parts) {
+                            return `${parts[3]}-${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                          }
+                          
+                          const d = new Date(str);
+                          if (!isNaN(d.getTime())) {
+                            return d.toISOString().split('T')[0];
+                          }
+                          return '';
+                        })()
+                      : ''
+                  }
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  required={field.required}
+                  className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50 [color-scheme:dark]"
                 />
               )}
 
@@ -1174,7 +1222,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { key: 'packageId', label: 'Package ID', type: 'text', required: true },
     { key: 'city', label: 'Departure City', type: 'select', options: ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'], required: true },
     { key: 'tier', label: 'Tier', type: 'select', options: ['Economy', 'Star'], required: true },
-    { key: 'departureDate', label: 'Departure Date', type: 'text', required: true },
+    { key: 'departureDate', label: 'Departure Date', type: 'date', required: true },
     { key: 'durationText', label: 'Duration Text (e.g. 15 Days)', type: 'text', required: true },
     { key: 'airline', label: 'Airline (e.g. Saudi Airlines)', type: 'text', required: true },
     { key: 'flightRoute', label: 'Flight Route (e.g. LHE-JED-LHE)', type: 'text', required: true },
