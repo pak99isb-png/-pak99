@@ -5,6 +5,7 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
+Allow: /api/sitemap.xml
 
 # Crawl delay for polite crawling
 User-agent: Googlebot
@@ -15,6 +16,7 @@ Allow: /
 Crawl-delay: 5
 
 # Sitemaps
+Sitemap: https://www.pak99travels.com/api/sitemap.xml
 Sitemap: https://www.pak99travels.com/sitemap.xml
 
 # Host
