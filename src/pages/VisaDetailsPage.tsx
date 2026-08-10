@@ -154,11 +154,45 @@ export const VisaDetailsPage: React.FC<VisaDetailsPageProps> = ({
             </div>
 
             {country.note && (
-              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex gap-3 text-blue-900">
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex gap-3 text-blue-900 mb-6">
                 <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <p className="text-sm font-semibold">{country.note}</p>
               </div>
             )}
+
+            {/* Quick Details Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+              {country.visaType && (
+                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:border-[#ff5500]/30 transition-colors">
+                  <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Visa Type</div>
+                  <div className="text-sm font-bold text-[#0b2f64]">{country.visaType}</div>
+                </div>
+              )}
+              {country.duration && (
+                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:border-[#ff5500]/30 transition-colors">
+                  <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Duration</div>
+                  <div className="text-sm font-bold text-[#0b2f64]">{country.duration}</div>
+                </div>
+              )}
+              {country.processingTime && (
+                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:border-[#ff5500]/30 transition-colors">
+                  <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Processing Time</div>
+                  <div className="text-sm font-bold text-[#0b2f64]">{country.processingTime}</div>
+                </div>
+              )}
+              {country.normalCharges && (
+                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:border-[#ff5500]/30 transition-colors">
+                  <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Normal Charges</div>
+                  <div className="text-sm font-bold text-[#ff5500]">{country.normalCharges}</div>
+                </div>
+              )}
+              {country.doneBaseCharges && (
+                <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:border-[#ff5500]/30 transition-colors">
+                  <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Done Base Charges</div>
+                  <div className="text-sm font-bold text-[#25D366]">{country.doneBaseCharges}</div>
+                </div>
+              )}
+            </div>
 
             {/* Documents Sections */}
             <div className="space-y-10">

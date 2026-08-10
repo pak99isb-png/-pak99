@@ -131,6 +131,10 @@ function FormModal<T extends Record<string, any>>({
       defaults['pricing_triple'] = umrah.pricing?.triple || '';
       defaults['pricing_double'] = umrah.pricing?.double || '';
     }
+    // Default Flag for Visa
+    if (title.toLowerCase().includes('visa') && initialData.code && !initialData.customUrl) {
+      defaults['customUrl'] = `https://flagcdn.com/${initialData.code.toLowerCase()}.svg`;
+    }
     return defaults;
   });
 
@@ -154,6 +158,9 @@ function FormModal<T extends Record<string, any>>({
       defaults['pricing_quad'] = umrah.pricing?.quad || '';
       defaults['pricing_triple'] = umrah.pricing?.triple || '';
       defaults['pricing_double'] = umrah.pricing?.double || '';
+    }
+    if (title.toLowerCase().includes('visa') && initialData.code && !initialData.customUrl) {
+      defaults['customUrl'] = `https://flagcdn.com/${initialData.code.toLowerCase()}.svg`;
     }
     setFormData(defaults);
   }, [initialData, title, fields]);
@@ -1443,6 +1450,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
             columns={[
               { key: 'city', label: 'City', render: (u: ApiUmrahPackage) => <span className="font-bold text-white">{u.city}</span> },
               { key: 'tier', label: 'Tier', render: (u: ApiUmrahPackage) => <span className="text-amber-400 font-bold">{u.tier}</span> },
+              { key: 'departureDate', label: 'Date', render: (u: ApiUmrahPackage) => <span className="text-blue-200 font-bold">{u.departureDate ? new Date(u.departureDate).toLocaleDateString() : '-'}</span> },
               { key: 'durationText', label: 'Duration' },
               { key: 'seatsAvailable', label: 'Seats', render: (u: ApiUmrahPackage) => <span className="text-emerald-400 font-bold">{u.seatsAvailable ?? '-'}</span> },
               { key: 'airline', label: 'Airline' },
