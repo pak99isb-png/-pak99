@@ -1,6 +1,6 @@
 import { type DepartureCity, type PackageTier } from '../types';
 import React, { useState } from 'react';
-import { Sparkles, MapPin, Building, PlaneTakeoff, CalendarDays, Users, Info } from 'lucide-react';
+import { Sparkles, MapPin, Building, PlaneTakeoff, CalendarDays, Users, Info, Banknote } from 'lucide-react';
 import { umrahAPI, type ApiUmrahPackage } from '../services/api';
 import { Loader2 } from 'lucide-react';
 import { SEO } from '../components/SEO';
@@ -37,9 +37,20 @@ const formatDisplayDate = (dateStr: string | undefined) => {
   return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
+const getMinPrice = (pricing?: any) => {
+  if (!pricing) return Infinity;
+  const prices = [pricing.sharing, pricing.quad, pricing.triple, pricing.double]
+    .filter(Boolean)
+    .map(p => parseInt(String(p).replace(/[^0-9]/g, ''), 10))
+    .filter(n => !isNaN(n));
+  return prices.length > 0 ? Math.min(...prices) : Infinity;
+};
+
 export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }) => {
   const [selectedCity, setSelectedCity] = useState<DepartureCity>('Faisalabad');
   const [selectedTier, setSelectedTier] = useState<PackageTier>('Economy');
+  const [selectedMonth, setSelectedMonth] = useState<string>('All');
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>('All');
   const [packages, setPackages] = useState<ApiUmrahPackage[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,16 +61,43 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
       .finally(() => setLoading(false));
   }, []);
 
+  const availableMonths = Array.from(new Set(packages.map(pkg => {
+    const timestamp = parseDate(pkg.departureDate);
+    if (timestamp === 8640000000000000) return null;
+    const d = new Date(timestamp);
+    return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  }).filter(Boolean))) as string[];
+
   const filteredPackages = packages
-    .filter((pkg) => pkg.city === selectedCity && pkg.tier === selectedTier)
+    .filter((pkg) => {
+      if (pkg.city !== selectedCity || pkg.tier !== selectedTier) return false;
+      
+      if (selectedMonth !== 'All') {
+        const timestamp = parseDate(pkg.departureDate);
+        if (timestamp === 8640000000000000) return false;
+        const monthStr = new Date(timestamp).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        if (monthStr !== selectedMonth) return false;
+      }
+
+      if (selectedPriceRange !== 'All') {
+        const minPrice = getMinPrice(pkg.pricing);
+        if (selectedPriceRange === 'Under 200,000' && minPrice >= 200000) return false;
+        if (selectedPriceRange === '200,000 - 300,000' && (minPrice < 200000 || minPrice > 300000)) return false;
+        if (selectedPriceRange === 'Over 300,000' && minPrice <= 300000) return false;
+      }
+
+      return true;
+    })
     .sort((a, b) => parseDate(a.departureDate) - parseDate(b.departureDate));
+
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className="min-h-screen bg-slate-50 pt-8 pb-20 animate-fade-in">
       <SEO
-        title="Umrah Packages 2025 - Economy & 5-Star Luxury Umrah from Pakistan"
+        title={`Umrah Packages ${currentYear} - Economy & 5-Star Luxury Umrah from Pakistan`}
         description="Book Umrah packages from Islamabad, Lahore, Faisalabad & Multan. Economy & 5-Star luxury Umrah with walking distance hotels near Haram in Makkah & Madinah. Ramadan Umrah, family Umrah & VIP packages. Pak99 Travel & Tours — Pakistan's trusted Umrah operator."
-        keywords="umrah packages pakistan, umrah packages, umrah packages 2025, umrah packages islamabad, umrah packages lahore, umrah packages faisalabad, umrah packages multan, cheap umrah packages, economy umrah packages, luxury umrah packages, 5 star umrah packages, ramadan umrah packages, umrah booking pakistan, umrah travel agent islamabad, walking distance haram hotel, makkah hotel near haram, madinah hotel booking, best umrah packages pakistan, family umrah packages, vip umrah, hajj packages pakistan, umrah visa, saudi airlines umrah, pia umrah flights, umrah from lahore, umrah from islamabad, travel agency umrah pakistan"
+        keywords={`umrah packages pakistan, umrah packages, umrah packages ${currentYear}, umrah packages islamabad, umrah packages lahore, umrah packages faisalabad, umrah packages multan, cheap umrah packages, economy umrah packages, luxury umrah packages, 5 star umrah packages, ramadan umrah packages, umrah booking pakistan, umrah travel agent islamabad, walking distance haram hotel, makkah hotel near haram, madinah hotel booking, best umrah packages pakistan, family umrah packages, vip umrah, hajj packages pakistan, umrah visa, saudi airlines umrah, pia umrah flights, umrah from lahore, umrah from islamabad, travel agency umrah pakistan`}
         canonicalPath="/umrah"
         jsonLd={{
           "@context": "https://schema.org",
@@ -147,6 +185,46 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
                   <span className="whitespace-nowrap">{tier} Package</span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="h-px bg-slate-100 w-full"></div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Date Selection */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-extrabold text-[#0b2f64] uppercase tracking-wider flex items-center gap-2">
+                <CalendarDays className="w-4 h-4 text-[#ff5500]" /> Select Departure Month
+              </h3>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold focus:outline-none focus:ring-2 focus:ring-[#ff5500] cursor-pointer appearance-none"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%230b2f64\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.2em' }}
+              >
+                <option value="All">Any Month</option>
+                {availableMonths.map(month => (
+                  <option key={month} value={month}>{month}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price Selection */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-extrabold text-[#0b2f64] uppercase tracking-wider flex items-center gap-2">
+                <Banknote className="w-4 h-4 text-[#ff5500]" /> Select Price Range
+              </h3>
+              <select
+                value={selectedPriceRange}
+                onChange={(e) => setSelectedPriceRange(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-bold focus:outline-none focus:ring-2 focus:ring-[#ff5500] cursor-pointer appearance-none"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%230b2f64\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.2em' }}
+              >
+                <option value="All">Any Price</option>
+                <option value="Under 200,000">Under PKR 200,000</option>
+                <option value="200,000 - 300,000">PKR 200,000 - 300,000</option>
+                <option value="Over 300,000">Over PKR 300,000</option>
+              </select>
             </div>
           </div>
         </div>

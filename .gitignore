@@ -37,3 +37,6 @@ public/images/
 database_backup.json
 server/backup.js
 server/restore.js
+
+# AI Agent Skills
+.agents/

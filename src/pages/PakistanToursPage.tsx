@@ -54,12 +54,14 @@ export const PakistanToursPage: React.FC<PageProps> = ({ onSelectTour, onOpenBoo
     toursSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="w-full flex flex-col bg-slate-50 min-h-screen">
       <SEO
         title="Pakistan Tours - Hunza, Skardu, Swat, Naran & Fairy Meadows Packages"
         description="Book luxury Northern Pakistan tour packages — Hunza Valley, Skardu, Swat, Naran Kaghan, Fairy Meadows, Neelum Valley, Kumrat, Chitral & more. Family tours, honeymoon trips & group adventures from Islamabad, Lahore, Karachi. Pak99 Travel & Tours — Pakistan's best tour operator."
-        keywords="pakistan tours, pakistan travel, travel tours pakistan, northern pakistan tours, northern areas pakistan, hunza tour package, hunza valley tour, skardu tour package, swat tour package, naran kaghan tour, fairy meadows tour, neelum valley tour, gilgit baltistan tour, kashmir tour, kumrat valley tour, chitral tour, attabad lake tour, khunjerab pass tour, deosai plains, pakistan tour operator, best tour packages pakistan, family tour pakistan, honeymoon packages pakistan, group tours pakistan, adventure tours pakistan, luxury tours pakistan, couple tour pakistan, pakistan tour from islamabad, pakistan tour from lahore, northern pakistan tour 2025, summer tour pakistan, winter tour pakistan, eid tour packages pakistan, travel agency pakistan tours"
+        keywords={`pakistan tours, pakistan travel, travel tours pakistan, northern pakistan tours, northern areas pakistan, hunza tour package, hunza valley tour, skardu tour package, swat tour package, naran kaghan tour, fairy meadows tour, neelum valley tour, gilgit baltistan tour, kashmir tour, kumrat valley tour, chitral tour, attabad lake tour, khunjerab pass tour, deosai plains, pakistan tour operator, best tour packages pakistan, family tour pakistan, honeymoon packages pakistan, group tours pakistan, adventure tours pakistan, luxury tours pakistan, couple tour pakistan, pakistan tour from islamabad, pakistan tour from lahore, northern pakistan tour ${currentYear}, summer tour pakistan, winter tour pakistan, eid tour packages pakistan, travel agency pakistan tours`}
         canonicalPath="/pakistan-tours"
         jsonLd={{
           "@context": "https://schema.org",
