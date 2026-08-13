@@ -10,7 +10,6 @@ interface PageProps {
   onNavigateHome: () => void;
 }
 
-const CITIES: DepartureCity[] = ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'];
 const TIERS: PackageTier[] = ['Economy', 'Star'];
 
 const parseDate = (dateStr: string | undefined) => {
@@ -47,7 +46,7 @@ const getMinPrice = (pricing?: any) => {
 };
 
 export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }) => {
-  const [selectedCity, setSelectedCity] = useState<DepartureCity>('Faisalabad');
+  const [selectedCity, setSelectedCity] = useState<DepartureCity>('');
   const [selectedTier, setSelectedTier] = useState<PackageTier>('Economy');
   const [selectedMonth, setSelectedMonth] = useState<string>('All');
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('All');
@@ -56,10 +55,18 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
 
   React.useEffect(() => {
     umrahAPI.getAll()
-      .then(setPackages)
+      .then((data) => {
+        setPackages(data);
+        const cities = Array.from(new Set(data.map(p => p.city).filter(Boolean)));
+        if (cities.length > 0) {
+          setSelectedCity(cities.includes('Faisalabad') ? 'Faisalabad' : cities[0]);
+        }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  const availableCities = Array.from(new Set(packages.map(pkg => pkg.city).filter(Boolean))) as string[];
 
   const availableMonths = Array.from(new Set(packages.map(pkg => {
     const timestamp = parseDate(pkg.departureDate);
@@ -147,7 +154,7 @@ export const UmrahPage: React.FC<PageProps> = ({ onOpenBooking, onNavigateHome }
               <MapPin className="w-4 h-4 text-[#ff5500]" /> Select Departure City
             </h3>
             <div className="flex flex-wrap gap-3">
-              {CITIES.map((city) => (
+              {availableCities.map((city) => (
                 <button
                   key={city}
                   onClick={() => setSelectedCity(city)}

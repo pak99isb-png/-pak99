@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const umrahPackageSchema = new mongoose.Schema({
   packageId: { type: String, required: true, unique: true },
-  city: { type: String, required: true, enum: ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'] },
+  city: { type: String, required: true },
   tier: { type: String, required: true, enum: ['Economy', 'Star'] },
   departureDate: { type: String, required: true },
   durationText: { type: String, required: true },

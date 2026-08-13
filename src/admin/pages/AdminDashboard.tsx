@@ -1227,7 +1227,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
 
   const umrahFields: FormField[] = [
     { key: 'packageId', label: 'Package ID', type: 'text', required: true },
-    { key: 'city', label: 'Departure City', type: 'select', options: ['Lahore', 'Islamabad', 'Faisalabad', 'Multan'], required: true },
+    { key: 'city', label: 'Departure City', type: 'text', required: true },
     { key: 'tier', label: 'Tier', type: 'select', options: ['Economy', 'Star'], required: true },
     { key: 'departureDate', label: 'Departure Date', type: 'date', required: true },
     { key: 'durationText', label: 'Duration Text (e.g. 15 Days)', type: 'text', required: true },
