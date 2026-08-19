@@ -59,10 +59,23 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
 
   startLoader();
   try {
-    const res = await fetch(`${API_BASE}${endpoint}`, {
+    const fetchOptions: RequestInit = {
       headers: getAuthHeaders(),
       ...options,
-    });
+    };
+    
+    // Prevent browser caching for GET requests when logged in as admin
+    if (isGet && isAdmin) {
+      fetchOptions.cache = 'no-store';
+      fetchOptions.headers = {
+        ...fetchOptions.headers,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      };
+    }
+
+    const res = await fetch(`${API_BASE}${endpoint}`, fetchOptions);
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: res.statusText }));
       const errorMessage = error.error || error.message || 'API request failed';

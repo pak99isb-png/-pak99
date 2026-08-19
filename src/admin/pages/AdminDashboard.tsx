@@ -28,7 +28,7 @@ function DataTable<T extends { _id?: string }>({
   data: T[];
   columns: Column<T>[];
   onEdit: (item: T) => void;
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   loading: boolean;
   resourceName: string;
 }) {
@@ -75,9 +75,11 @@ function DataTable<T extends { _id?: string }>({
                   <button onClick={() => onEdit(item)} className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors cursor-pointer" title="Edit">
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
-                  <button onClick={() => item._id && onDelete(item._id)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer" title="Delete">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  {onDelete && (
+                    <button onClick={() => item._id && onDelete(item._id)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer" title="Delete">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -140,30 +142,7 @@ function FormModal<T extends Record<string, any>>({
 
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    // We initialized state synchronously, so we only need to reset if initialData changes while mounted.
-    // (This usually doesn't happen because the modal is conditionally rendered in the parent)
-    const defaults: Record<string, any> = { ...initialData };
-    fields.forEach(f => {
-      if (f.type === 'array' || f.type === 'image_array' || f.type === 'itinerary_array' || f.type === 'flights_array' || f.type === 'study_items_array') defaults[f.key] = (initialData as any)?.[f.key] || [];
-      else if (f.type === 'checkbox') defaults[f.key] = (initialData as any)?.[f.key] || false;
-      else if (f.type === 'number') defaults[f.key] = (initialData as any)?.[f.key] ?? '';
-      else defaults[f.key] = (initialData as any)?.[f.key] || '';
-    });
-    if (title.toLowerCase().includes('umra')) {
-      const umrah = initialData as unknown as ApiUmrahPackage;
-      defaults['hotels_makkah'] = umrah.hotels?.makkah || '';
-      defaults['hotels_madinah'] = umrah.hotels?.madinah || '';
-      defaults['pricing_sharing'] = umrah.pricing?.sharing || '';
-      defaults['pricing_quad'] = umrah.pricing?.quad || '';
-      defaults['pricing_triple'] = umrah.pricing?.triple || '';
-      defaults['pricing_double'] = umrah.pricing?.double || '';
-    }
-    if (title.toLowerCase().includes('visa') && initialData.code && !initialData.customUrl) {
-      defaults['customUrl'] = `https://flagcdn.com/${initialData.code.toLowerCase()}.svg`;
-    }
-    setFormData(defaults);
-  }, [initialData, title, fields]);
+
 
   if (!isOpen) return null;
 
@@ -220,8 +199,8 @@ function FormModal<T extends Record<string, any>>({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
     
     // Create a copy of formData to clean it up before saving
     const cleanedData = { ...formData };
@@ -296,12 +275,12 @@ function FormModal<T extends Record<string, any>>({
       <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl shadow-2xl">
         <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-700">
           <h3 className="text-lg font-extrabold text-white truncate pr-2">{title}</h3>
-          <button onClick={onClose} className="p-1.5 shrink-0 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer">
+          <button type="button" onClick={onClose} className="p-1.5 shrink-0 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form id="crud-form" onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <div id="crud-form" className="p-4 sm:p-5 space-y-4 max-h-[75vh] overflow-y-auto">
           {fields.map(field => (
             <div key={field.key} className="space-y-1.5">
               <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">{field.label}</label>
@@ -680,18 +659,18 @@ function FormModal<T extends Record<string, any>>({
               )}
             </div>
           ))}
-        </form>
 
-        <div className="flex items-center justify-end gap-3 p-5 border-t border-slate-700">
-          <button onClick={onClose} className="px-4 py-2.5 bg-slate-700 text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-600 transition-colors cursor-pointer">
-            Cancel
-          </button>
-          <button type="submit" form="crud-form" disabled={saving} className="px-5 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-orange-500/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer">
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {saving ? 'Saving...' : 'Save'}
-          </button>
+          <div className="flex items-center justify-end gap-3 pt-5 mt-2 border-t border-slate-700">
+            <button type="button" onClick={onClose} className="px-4 py-2.5 bg-slate-700 text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-600 transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button type="button" onClick={handleSubmit} disabled={saving} className="px-5 py-2.5 bg-gradient-to-r from-[#ff5500] to-amber-500 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-orange-500/20 flex items-center gap-2 disabled:opacity-50 cursor-pointer">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {saving ? 'Saving...' : 'Save'}
+            </button>
+          </div>
         </div>
-            </div>
+      </div>
     </div>
     </>
   );
@@ -1013,7 +992,13 @@ const SettingsPanel = () => {
 // MAIN ADMIN DASHBOARD
 // ===========================
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminName }) => {
-  const [currentPage, setCurrentPage] = useState<AdminPage>('dashboard');
+  const [currentPage, setCurrentPage] = useState(() => {
+    return localStorage.getItem('admin_dashboard_tab') || 'dashboard';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('admin_dashboard_tab', currentPage);
+  }, [currentPage]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Data states
@@ -1279,7 +1264,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
   ];
 
   const studyFields: FormField[] = [
-    { key: 'pageType', label: 'Program Type', type: 'select', options: ['destination'], required: true },
     { key: 'cardIcon', label: 'Card Icon (Upload Image for Destinations)', type: 'image' },
     { key: 'badgeText', label: 'Hero Badge Text (e.g. 🇬🇧 Study in UK)', type: 'text' },
     { key: 'title', label: 'Hero Main Title', type: 'text', required: true },
@@ -1514,9 +1498,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-extrabold text-white">Study Abroad Programs</h3>
-              <button onClick={() => { setEditingItem({}); setModalOpen(true); }} className="px-4 py-2 bg-[#ff5500] hover:bg-orange-600 text-white text-sm font-bold rounded-xl flex items-center gap-2 transition-colors cursor-pointer"><Plus className="w-4 h-4" /> Add Study Program</button>
             </div>
-            <DataTable data={study} resourceName="Study Programs" loading={loading} onDelete={(id) => handleDelete('study', id)} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
+            <DataTable data={study} resourceName="Study Programs" loading={loading} onEdit={(item) => { setEditingItem(item); setModalOpen(true); }}
               columns={[
                 { key: 'slug', label: 'URL Slug' },
                 { key: 'title', label: 'Hero Title' }, 
@@ -1561,6 +1544,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
       case 'insurance': return 'insurance';
       case 'study': return 'study';
       default: return 'tours';
+    }
+  };
+
+  const getSingularTitle = () => {
+    switch (currentPage) {
+      case 'tours': return 'Tour';
+      case 'blogs': return 'Blog Post';
+      case 'hotels': return 'Hotel';
+      case 'reviews': return 'Review';
+      case 'destinations': return 'Destination';
+      case 'visas': return 'Visa';
+      case 'umrah': return 'Umrah Package';
+      case 'carousels': return 'Carousel Image';
+      case 'tickets': return 'Ticket Group';
+      case 'insurance': return 'Insurance Service';
+      case 'study': return 'Study Program';
+      default: return 'Item';
     }
   };
 
@@ -1635,7 +1635,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
               onError={(msg) => setAlertDialog({ isOpen: true, title: 'Error', message: msg })}
               fields={getFieldsForPage()}
               initialData={editingItem || {}}
-              title={editingItem?._id ? `Edit ${getResourceForPage().slice(0, -1)}` : `Add New ${getResourceForPage().slice(0, -1)}`}
+              title={editingItem?._id ? `Edit ${getSingularTitle()}` : `Add New ${getSingularTitle()}`}
               saving={saving}
             />
           )}
@@ -1647,8 +1647,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
                 <h3 className="text-xl font-extrabold text-white mb-2">{confirmDialog.title}</h3>
                 <p className="text-slate-300 text-sm mb-6">{confirmDialog.message}</p>
                 <div className="flex justify-end gap-3">
-                  <button onClick={() => setConfirmDialog(prev => ({ ...prev, isOpen: false }))} className="px-4 py-2 text-sm font-bold text-slate-300 hover:text-white transition-colors cursor-pointer">Cancel</button>
-                  <button onClick={confirmDialog.onConfirm} className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer">Confirm</button>
+                  <button type="button" onClick={() => setConfirmDialog(prev => ({ ...prev, isOpen: false }))} className="px-4 py-2 text-sm font-bold text-slate-300 hover:text-white transition-colors cursor-pointer">Cancel</button>
+                  <button type="button" onClick={confirmDialog.onConfirm} className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer">Confirm</button>
                 </div>
               </div>
             </div>
@@ -1661,7 +1661,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
                 <h3 className="text-xl font-extrabold text-white mb-2">{alertDialog.title}</h3>
                 <p className="text-slate-300 text-sm mb-6 whitespace-pre-line">{alertDialog.message}</p>
                 <div className="flex justify-end">
-                  <button onClick={() => setAlertDialog(prev => ({ ...prev, isOpen: false }))} className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer">OK</button>
+                  <button type="button" onClick={() => setAlertDialog(prev => ({ ...prev, isOpen: false }))} className="px-4 py-2 text-sm font-bold bg-[#ff5500] hover:bg-orange-600 text-white rounded-xl shadow-lg shadow-orange-500/30 transition-all cursor-pointer">OK</button>
                 </div>
               </div>
             </div>
