@@ -21,7 +21,16 @@ export const TourCard: React.FC<TourCardProps> = ({ tour, onSelectTour, onBookNo
       {/* Image Header */}
       <div className="relative h-56 overflow-hidden">
         <img
-          src={tour.image}
+          src={tour.image || (tour.category?.toLowerCase().includes('umrah') ? 'https://images.unsplash.com/photo-1565552643982-2775796245d8?q=80&w=800&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop')}
+          onError={(e) => {
+            const target = e.currentTarget;
+            const fallback = tour.category?.toLowerCase().includes('umrah') 
+              ? 'https://images.unsplash.com/photo-1565552643982-2775796245d8?q=80&w=800&auto=format&fit=crop' 
+              : 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop';
+            if (target.src !== fallback) {
+              target.src = fallback;
+            }
+          }}
           alt={tour.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out filter brightness-[0.95]"
         />

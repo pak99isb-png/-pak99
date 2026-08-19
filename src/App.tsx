@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TourCard } from './components/TourCard';
+import { UmrahTourCard } from './components/UmrahTourCard';
 import { TourModal } from './components/TourModal';
 import { ContactSection } from './components/ContactSection';
 import { BookingModal } from './components/BookingModal';
@@ -44,6 +45,7 @@ export function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingTourTitle, setBookingTourTitle] = useState<string | undefined>(undefined);
   const [allTours, setAllTours] = useState<TourPackage[]>([]);
+  const [homeTab, setHomeTab] = useState<'Tours' | 'Umrah'>('Tours');
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,6 +79,12 @@ export function App() {
   const finalDisplayTours = (displayHomeTours.length === 0 && searchQuery.trim() === '' && selectedCategory === 'All') 
     ? allTours.slice(0, 3) 
     : displayHomeTours;
+
+  const currentTabTours = finalDisplayTours.filter(tour => {
+    if (searchQuery || selectedCategory !== 'All') return true;
+    const isUmrah = (tour.category || '').toLowerCase().includes('umrah');
+    return homeTab === 'Tours' ? !isUmrah : isUmrah;
+  });
 
   const handleOpenBooking = (tourTitle?: string) => {
     setBookingTourTitle(tourTitle);
@@ -182,19 +190,39 @@ export function App() {
                         </>
                       )}
                     </div>
-                    <button onClick={() => navigate('/pakistan-tours')} className="text-xs font-extrabold text-[#ff5500] hover:underline flex items-center gap-1 cursor-pointer">
-                      <span>View All Packages</span><ArrowRight className="w-4 h-4" />
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                      {(!searchQuery && selectedCategory === 'All') && (
+                        <div className="flex bg-slate-200/50 p-1 rounded-xl shrink-0">
+                          <button 
+                            onClick={() => setHomeTab('Tours')}
+                            className={`px-5 py-2 rounded-lg text-sm font-extrabold transition-all cursor-pointer ${homeTab === 'Tours' ? 'bg-white text-[#ff5500] shadow-sm' : 'text-slate-500 hover:text-[#0b2f64]'}`}
+                          >
+                            Tours
+                          </button>
+                          <button 
+                            onClick={() => setHomeTab('Umrah')}
+                            className={`px-5 py-2 rounded-lg text-sm font-extrabold transition-all flex items-center gap-1 cursor-pointer ${homeTab === 'Umrah' ? 'bg-white text-[#ff5500] shadow-sm' : 'text-slate-500 hover:text-[#0b2f64]'}`}
+                          >
+                            Umrah
+                          </button>
+                        </div>
+                      )}
+                      <button onClick={() => navigate('/pakistan-tours')} className="text-xs font-extrabold text-[#ff5500] hover:underline flex items-center gap-1 cursor-pointer">
+                        <span>View All Packages</span><ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                  {finalDisplayTours.length > 0 ? (
+                  {currentTabTours.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {finalDisplayTours.map((tour) => (
-                        <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
+                      {currentTabTours.map((tour) => (
+                        tour.category?.toLowerCase().includes('umrah') 
+                          ? <UmrahTourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
+                          : <TourCard key={tour.id} tour={tour} onSelectTour={(t) => navigate(`/tours/${t.id}`)} onBookNow={(title) => handleOpenBooking(title)} />
                       ))}
                     </div>
                   ) : (
                     <div className="py-12 text-center text-slate-500 font-bold bg-white rounded-3xl border border-slate-200">
-                      No tours found matching your search criteria.
+                      No packages found in this category.
                     </div>
                   )}
                 </section>

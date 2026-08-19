@@ -121,24 +121,15 @@ export const TicketDetailsPage: React.FC<PageProps> = ({ onOpenBooking }) => {
                   <tr key={idx} className={`${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'} border-b border-slate-100 hover:bg-orange-50 transition-colors`}>
                     
                     <td className="py-4 px-4 text-slate-600 font-semibold align-middle whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span>{flight.date.substring(0, 5)}-</span>
-                        <span>{flight.date.substring(6)}</span>
-                      </div>
+                      {flight.date}
                     </td>
                     
                     <td className="py-4 px-4 text-slate-600 font-semibold align-middle whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span>{flight.time.split(' - ')[0]} -</span>
-                        <span>{flight.time.split(' - ')[1]}</span>
-                      </div>
+                      {flight.time}
                     </td>
                     
                     <td className="py-4 px-4 text-slate-600 font-semibold align-middle whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span>{flight.bag.split(' ')[0]}</span>
-                        <span>{flight.bag.split(' ')[1]}</span>
-                      </div>
+                      {flight.bag}
                     </td>
                     
                     <td className="py-4 px-4 font-bold text-green-700 align-middle whitespace-nowrap">
@@ -146,18 +137,17 @@ export const TicketDetailsPage: React.FC<PageProps> = ({ onOpenBooking }) => {
                     </td>
                     
                     <td className="py-4 px-4 align-middle whitespace-nowrap">
-                      <div className="flex flex-col font-bold text-slate-700">
-                        <span>{flight.fare}</span>
-                        <span className="text-xs text-slate-500">PKR/-</span>
+                      <div className="font-bold text-slate-700">
+                        {flight.fare} <span className="text-xs text-slate-500">PKR/-</span>
                       </div>
                     </td>
                     
                     <td className="py-4 px-4 align-middle whitespace-nowrap">
                       <button 
                         onClick={() => onOpenBooking(`Check Seat: ${routeDisplay} on ${flight.date}`)}
-                        className="bg-white border border-slate-200 hover:border-[#0b2f64] hover:text-[#0b2f64] hover:bg-blue-50 text-slate-500 text-xs px-2 py-1.5 rounded mx-auto inline-block font-medium cursor-pointer transition-colors"
+                        className="bg-white border border-slate-200 hover:border-[#0b2f64] hover:text-[#0b2f64] hover:bg-blue-50 text-slate-500 text-xs px-2 py-1.5 rounded mx-auto inline-block font-medium cursor-pointer transition-colors whitespace-nowrap"
                       >
-                        {flight.seats.split(' ')[0]}<br/>{flight.seats.split(' ')[1] || ''}
+                        {flight.seats}
                       </button>
                     </td>
                     

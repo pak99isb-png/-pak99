@@ -23,7 +23,8 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
       fetch(fetchUrl).then(res => res.json()).catch(() => ({}))
     ])
       .then(([countriesData, settingsData]) => {
-        setCountries(countriesData as any);
+        const sortedCountries = (countriesData as VisaRequirement[]).sort((a, b) => a.name.localeCompare(b.name));
+        setCountries(sortedCountries);
         setSettings(settingsData);
       })
       .catch(console.error)
