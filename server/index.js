@@ -16,6 +16,7 @@ import Carousel from './models/Carousel.js';
 import TicketGroup from './models/TicketGroup.js';
 import InsuranceService from './models/InsuranceService.js';
 import StudyProgram from './models/StudyProgram.js';
+import VisaApplication from './models/VisaApplication.js';
 
 // Routes
 import authRoutes from './routes/auth.js';
@@ -59,6 +60,26 @@ app.use('/api/carousels', createCrudRoutes(Carousel, 'Carousel'));
 app.use('/api/ticket-groups', createCrudRoutes(TicketGroup, 'Ticket Group'));
 app.use('/api/insurance', createCrudRoutes(InsuranceService, 'Insurance Service'));
 app.use('/api/study', createCrudRoutes(StudyProgram, 'Study Program'));
+app.use('/api/visa-applications', createCrudRoutes(VisaApplication, 'Visa Application'));
+
+// Custom route for tracking visa by reference number
+app.get('/api/visa-applications/track/:query', async (req, res) => {
+  try {
+    const query = req.params.query.trim();
+    const application = await VisaApplication.findOne({
+      $or: [
+        { referenceNumber: query.toUpperCase() },
+        { passportNumber: { $regex: new RegExp(`^${query}$`, 'i') } }
+      ]
+    });
+    if (!application) {
+      return res.status(404).json({ message: 'Visa application not found.' });
+    }
+    res.json(application);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching visa application.', error: error.message });
+  }
+});
 
 // Dynamic Sitemap Generator
 app.get('/api/sitemap.xml', async (req, res) => {

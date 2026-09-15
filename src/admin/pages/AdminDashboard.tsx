@@ -5,8 +5,9 @@ import {
 } from 'lucide-react';
 import { toursAPI, blogsAPI, hotelsAPI, reviewsAPI, destinationsAPI, uploadAPI, visasAPI, umrahAPI, settingsAPI, carouselsAPI, ticketGroupsAPI, insuranceAPI, studyAPI } from '../../services/api';
 import type { ApiTour, ApiBlog, ApiHotel, ApiReview, ApiDestination, ApiVisaCountry, ApiUmrahPackage, ApiCarousel, ApiTicketGroup, ApiInsuranceService } from '../../services/api';
+import { AdminVisaTracking } from './AdminVisaTracking';
 
-type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'carousels' | 'settings' | 'tickets' | 'insurance' | 'study';
+type AdminPage = 'dashboard' | 'tours' | 'destinations' | 'blogs' | 'hotels' | 'reviews' | 'visas' | 'umrah' | 'carousels' | 'settings' | 'tickets' | 'insurance' | 'study' | 'visa-tracking';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -1099,7 +1100,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
     { id: 'carousels', icon: <Upload className="w-4 h-4" />, label: 'Carousels' },
     { id: 'tickets', icon: <Ticket className="w-4 h-4" />, label: 'Tickets' },
     { id: 'insurance', icon: <ShieldCheck className="w-4 h-4" />, label: 'Insurance' },
-    { id: 'study', icon: <BookOpen className="w-4 h-4" />, label: 'Study & Services' },
+    { id: 'study', icon: <BookOpen className="w-4 h-4" />, label: 'Study Programs' },
+    { id: 'visa-tracking', icon: <FileText className="w-4 h-4" />, label: 'Visa Tracking' },
     { id: 'settings', icon: <SettingsIcon className="w-4 h-4" />, label: 'Settings' },
   ];
 
@@ -1508,6 +1510,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
             />
           </div>
         );
+      case 'visa-tracking':
+        return <AdminVisaTracking />;
       case 'settings':
         return <SettingsPanel />;
     }

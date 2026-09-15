@@ -307,6 +307,19 @@ export interface ApiCarousel {
   images: string[];
 }
 
+export interface ApiVisaApplication {
+  _id?: string;
+  customerName: string;
+  referenceNumber: string;
+  passportNumber?: string;
+  visaType: string;
+  status: string;
+  expectedDate?: string;
+  notes?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export const toursAPI = createCrudAPI<ApiTour>('tours');
 export const umrahAPI = createCrudAPI<ApiUmrahPackage>('umrah');
 export const visasAPI = createCrudAPI<ApiVisaCountry>('visas');
@@ -318,6 +331,10 @@ export const carouselsAPI = createCrudAPI<ApiCarousel>('carousels');
 export const ticketGroupsAPI = createCrudAPI<ApiTicketGroup>('ticket-groups');
 export const insuranceAPI = createCrudAPI<ApiInsuranceService>('insurance');
 export const studyAPI = createCrudAPI<ApiStudyProgram>('study');
+export const visaApplicationsAPI = {
+  ...createCrudAPI<ApiVisaApplication>('visa-applications'),
+  track: (referenceNumber: string) => apiFetch<ApiVisaApplication>(`/visa-applications/track/${referenceNumber}`),
+};
 
 export const settingsAPI = {
   get: () => apiFetch<Record<string, any>>('/settings'),
