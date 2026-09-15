@@ -97,19 +97,11 @@ export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCount
 
             <div className="pt-6 flex flex-col sm:flex-row items-center sm:items-start gap-4">
               <button
-                onClick={() => onOpenBooking('Visa Consultation')}
-                className="w-full max-w-[300px] sm:w-auto bg-[#ff5500] hover:bg-orange-600 text-white font-extrabold px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(255,85,0,0.4)] hover:shadow-[0_0_30px_rgba(255,85,0,0.6)] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 cursor-pointer group"
-              >
-                Book Appointment
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button
                 onClick={() => navigate('/track-visa')}
                 className="w-full max-w-[300px] sm:w-auto bg-amber-400 hover:bg-amber-500 text-[#0b2f64] font-extrabold px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(251,191,36,0.4)] hover:shadow-[0_0_30px_rgba(251,191,36,0.6)] hover:-translate-y-1 transition-all flex items-center justify-center gap-3 cursor-pointer group"
               >
                 <Search className="w-5 h-5 text-[#0b2f64]" />
-                Track Your Visa
+                Track Your Application
               </button>
             </div>
           </div>

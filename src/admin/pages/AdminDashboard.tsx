@@ -1414,7 +1414,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, adminN
         return (
           <ResourceManager
             title="Visa Operations"
-            data={visas}
+            data={[...visas].sort((a, b) => a.name.localeCompare(b.name))}
             columns={[
               { key: 'name', label: 'Country', render: (v: ApiVisaCountry) => <span className="font-bold text-white">{v.name} ({v.code})</span> },
               { key: 'visaType', label: 'Type' },

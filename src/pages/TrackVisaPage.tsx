@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Calendar, CheckCircle2, XCircle, Clock, Loader2, FileText, AlertCircle, MessageSquare } from 'lucide-react';
+import { Search, MapPin, Calendar, CheckCircle2, XCircle, Clock, Loader2, FileText, AlertCircle, MessageSquare, Watch } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { visaApplicationsAPI, settingsAPI } from '../services/api';
 import type { ApiVisaApplication } from '../services/api';
@@ -40,7 +40,7 @@ export const TrackVisaPage: React.FC = () => {
     switch (status) {
       case 'Approved': return 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400';
       case 'Rejected': return 'bg-red-500/20 border-red-500/40 text-red-400';
-      case 'Processing': return 'bg-blue-500/20 border-blue-500/40 text-blue-400';
+      case 'Under Process': return 'bg-blue-500/20 border-blue-500/40 text-blue-400';
       default: return 'bg-amber-500/20 border-amber-500/40 text-amber-400';
     }
   };
@@ -49,7 +49,7 @@ export const TrackVisaPage: React.FC = () => {
     switch (status) {
       case 'Approved': return <CheckCircle2 className="w-8 h-8 text-emerald-400" />;
       case 'Rejected': return <XCircle className="w-8 h-8 text-red-400" />;
-      case 'Processing': return <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />;
+      case 'Under Process': return <Clock className="w-8 h-8 text-blue-400" />;
       default: return <Clock className="w-8 h-8 text-amber-400" />;
     }
   };
@@ -81,7 +81,7 @@ export const TrackVisaPage: React.FC = () => {
             Track Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-[#ff5500]">Visa</span>
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto font-medium">
-            Enter your unique reference number or passport number to check the real-time status of your visa application.
+            Enter your unique reference number to check the real-time status of your visa application.
           </p>
         </motion.div>
 
@@ -102,7 +102,7 @@ export const TrackVisaPage: React.FC = () => {
                   type="text"
                   value={referenceNumber}
                   onChange={(e) => setReferenceNumber(e.target.value.toUpperCase())}
-                  placeholder="Enter Reference or Passport No."
+                  placeholder="Enter Reference Number"
                   className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-800 text-base sm:text-lg font-bold placeholder:text-slate-400 placeholder:font-normal focus:outline-none focus:border-[#ff5500] focus:bg-white transition-all"
                   required
                 />
@@ -165,9 +165,9 @@ export const TrackVisaPage: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className={`flex flex-col items-center justify-center px-6 py-4 rounded-2xl border-2 backdrop-blur-md ${getStatusColor(application.status)}`}>
-                        {getStatusIcon(application.status)}
-                        <span className="mt-2 font-extrabold tracking-wide uppercase text-sm">{application.status}</span>
+                      <div className={`flex flex-col items-center justify-center px-6 py-4 rounded-2xl border-2 backdrop-blur-md ${getStatusColor(application.status === 'Processing' ? 'Under Process' : application.status)}`}>
+                        {getStatusIcon(application.status === 'Processing' ? 'Under Process' : application.status)}
+                        <span className="mt-2 font-extrabold tracking-wide uppercase text-sm">{application.status === 'Processing' ? 'Under Process' : application.status}</span>
                       </div>
                     </div>
                   </div>
@@ -181,7 +181,7 @@ export const TrackVisaPage: React.FC = () => {
                     <div className="space-y-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Expected Date</span>
                       <p className="text-lg font-extrabold text-[#0b2f64]">
-                        {application.expectedDate ? new Date(application.expectedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'To Be Decided'}
+                        {application.expectedDate ? new Date(application.expectedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
                       </p>
                     </div>
 

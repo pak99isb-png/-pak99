@@ -25,7 +25,7 @@ const visaApplicationSchema = new mongoose.Schema({
   status: {
     type: String,
     required: [true, 'Status is required'],
-    enum: ['Pending', 'Processing', 'Documents Submitted', 'Approved', 'Rejected'],
+    enum: ['Pending', 'Under Process', 'Documents Submitted', 'Approved', 'Rejected'],
     default: 'Pending'
   },
   expectedDate: {

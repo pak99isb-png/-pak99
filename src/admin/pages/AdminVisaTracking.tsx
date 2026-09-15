@@ -10,6 +10,7 @@ export const AdminVisaTracking: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Partial<ApiVisaApplication> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState<{isOpen: boolean; title: string; message: string; id: string | null}>({isOpen: false, title: '', message: '', id: null});
 
   const fetchApplications = useCallback(async () => {
     setLoading(true);
@@ -27,14 +28,25 @@ export const AdminVisaTracking: React.FC = () => {
     fetchApplications();
   }, [fetchApplications]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this visa application?')) return;
+  const handleDeleteClick = (id: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this visa application? This action cannot be undone.',
+      id
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDialog.id) return;
     try {
-      await visaApplicationsAPI.delete(id);
+      await visaApplicationsAPI.delete(confirmDialog.id);
       toast.success('Deleted successfully');
       fetchApplications();
     } catch (err) {
       toast.error('Failed to delete');
+    } finally {
+      setConfirmDialog({ isOpen: false, title: '', message: '', id: null });
     }
   };
 
@@ -109,10 +121,10 @@ export const AdminVisaTracking: React.FC = () => {
                     <span className={`px-2 py-1 rounded text-xs font-bold ${
                       app.status === 'Approved' ? 'bg-emerald-500/20 text-emerald-400' :
                       app.status === 'Rejected' ? 'bg-red-500/20 text-red-400' :
-                      app.status === 'Processing' ? 'bg-blue-500/20 text-blue-400' :
+                      (app.status === 'Under Process' || app.status === 'Processing') ? 'bg-blue-500/20 text-blue-400' :
                       'bg-amber-500/20 text-amber-400'
                     }`}>
-                      {app.status}
+                      {app.status === 'Processing' ? 'Under Process' : app.status}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-right">
@@ -120,7 +132,7 @@ export const AdminVisaTracking: React.FC = () => {
                       <button onClick={() => { setEditingItem(app); setModalOpen(true); }} className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 cursor-pointer">
                         <Pencil className="w-4 h-4" />
                       </button>
-                      <button onClick={() => handleDelete(app._id!)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 cursor-pointer">
+                      <button onClick={() => handleDeleteClick(app._id!)} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 cursor-pointer">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -162,7 +174,7 @@ export const AdminVisaTracking: React.FC = () => {
                 <select required value={editingItem?.status || 'Pending'} onChange={e => setEditingItem({...editingItem, status: e.target.value})} className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50">
                   <option value="Pending">Pending</option>
                   <option value="Documents Submitted">Documents Submitted</option>
-                  <option value="Processing">Processing</option>
+                  <option value="Under Process">Under Process</option>
                   <option value="Approved">Approved</option>
                   <option value="Rejected">Rejected</option>
                 </select>
@@ -183,6 +195,29 @@ export const AdminVisaTracking: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Confirm Delete Dialog */}
+      {confirmDialog.isOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] flex items-center justify-center p-4">
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-xl font-extrabold text-white mb-2">{confirmDialog.title}</h3>
+            <p className="text-slate-300 text-sm mb-6">{confirmDialog.message}</p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setConfirmDialog({ isOpen: false, title: '', message: '', id: null })} 
+                className="px-4 py-2 text-sm font-bold text-slate-300 hover:text-white cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmDelete} 
+                className="px-4 py-2 text-sm font-bold bg-red-500 hover:bg-red-600 text-white rounded-xl shadow-lg shadow-red-500/30 transition-all cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
