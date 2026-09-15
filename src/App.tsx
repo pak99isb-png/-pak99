@@ -168,9 +168,9 @@ export function App() {
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Discounted luxury resort reservations.</p>
                       <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Reserve Hotels</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
-                    <motion.button onClick={() => navigate('/track-visa')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
+                    <motion.button onClick={() => navigate('/track-application')} className="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#ff5500]/60 transition-all text-left group space-y-3 cursor-pointer">
                       <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-900 flex items-center justify-center font-extrabold text-xl group-hover:scale-110 transition-transform"><FileText className="w-6 h-6 text-red-600 shrink-0" /></div>
-                      <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Track Visa</h3>
+                      <h3 className="text-base font-extrabold text-[#0b2f64] group-hover:text-[#ff5500]">Track Application</h3>
                       <p className="text-xs text-slate-500 font-medium leading-relaxed">Instantly check your visa application status.</p>
                       <div className="text-xs font-extrabold text-[#ff5500] flex items-center gap-1 pt-2"><span>Track Status</span><ArrowRight className="w-3.5 h-3.5 shrink-0" /></div>
                     </motion.button>
@@ -260,7 +260,7 @@ export function App() {
           <Route path="/reviews" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ReviewsPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/contact" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><ContactPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} /></motion.div>} />
           <Route path="/visa" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaPage onOpenBooking={handleOpenBooking} onNavigateHome={() => navigate('/')} onSelectCountry={(c) => navigate(`/visas/${c.code}`)} /></motion.div>} />
-          <Route path="/track-visa" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TrackVisaPage /></motion.div>} />
+          <Route path="/track-application" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TrackVisaPage /></motion.div>} />
           
           <Route path="/tours/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TourDetailsPage onNavigate={(p) => navigate(`/${p}`)} onOpenBooking={handleOpenBooking} /></motion.div>} />
           <Route path="/visas/:id" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><VisaDetailsPage onOpenBooking={handleOpenBooking} /></motion.div>} />

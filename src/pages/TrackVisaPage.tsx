@@ -40,7 +40,7 @@ export const TrackVisaPage: React.FC = () => {
     switch (status) {
       case 'Approved': return 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400';
       case 'Rejected': return 'bg-red-500/20 border-red-500/40 text-red-400';
-      case 'Under Process': return 'bg-blue-500/20 border-blue-500/40 text-blue-400';
+      case 'Under Process': return 'bg-amber-500/20 border-amber-500/40 text-amber-400';
       default: return 'bg-amber-500/20 border-amber-500/40 text-amber-400';
     }
   };
@@ -49,7 +49,7 @@ export const TrackVisaPage: React.FC = () => {
     switch (status) {
       case 'Approved': return <CheckCircle2 className="w-8 h-8 text-emerald-400" />;
       case 'Rejected': return <XCircle className="w-8 h-8 text-red-400" />;
-      case 'Under Process': return <Clock className="w-8 h-8 text-blue-400" />;
+      case 'Under Process': return <Clock className="w-8 h-8 text-amber-400" />;
       default: return <Clock className="w-8 h-8 text-amber-400" />;
     }
   };
@@ -57,9 +57,9 @@ export const TrackVisaPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col relative pt-24 sm:pt-32">
       <SEO
-        title="Track Your Visa Application - Pak99 Travel & Tours"
+        title="Track Application - Pak99 Travel & Tours"
         description="Easily track the status of your visa application with Pak99 Travel & Tours using your reference number."
-        canonicalPath="/track-visa"
+        canonicalPath="/track-application"
       />
 
       {/* Hero Section */}
@@ -78,7 +78,7 @@ export const TrackVisaPage: React.FC = () => {
             <Search className="w-3.5 h-3.5" /> Track Status
           </div>
           <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight">
-            Track Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-[#ff5500]">Visa</span>
+            Track <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-[#ff5500]">Application</span>
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto font-medium">
             Enter your unique reference number to check the real-time status of your visa application.
