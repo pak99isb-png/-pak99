@@ -698,7 +698,8 @@ const SettingsPanel = () => {
         whatsappNumber: d.whatsappNumber || '923315290155',
         facebookUrl: d.facebookUrl || 'https://www.facebook.com/people/PAK99-Travel-TOURS/61583047934939/',
         instagramUrl: d.instagramUrl || 'https://www.instagram.com/pak99_travel/',
-        twitterUrl: d.twitterUrl || ''
+        twitterUrl: d.twitterUrl || '',
+        address: d.address || 'Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad'
       });
       setIsLoading(false);
     });
@@ -833,6 +834,18 @@ const SettingsPanel = () => {
                 className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50"
               />
               <p className="text-[10px] text-slate-500 mt-1">Shows in Navbar, Footer alongside others.</p>
+            </div>
+            
+            <div className="sm:col-span-2">
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Office Address</label>
+              <textarea
+                value={settings.address || ''}
+                onChange={(e) => handleChange('address', e.target.value)}
+                placeholder="e.g. Office No. 03 Nawaz Arcade..."
+                rows={2}
+                className="w-full px-3 py-2.5 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5500]/50 resize-y"
+              />
+              <p className="text-[10px] text-slate-500 mt-1">Shows in Footer and Contact sections.</p>
             </div>
             
             <div>

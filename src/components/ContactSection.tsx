@@ -84,7 +84,7 @@ export const ContactSection: React.FC = () => {
               <MapPin className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
                 <div className="text-[10px] text-slate-400 uppercase font-extrabold">Main Office</div>
-                <div className="text-white font-bold text-[11px] sm:text-xs break-words pr-2">Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad</div>
+                <div className="text-white font-bold text-[11px] sm:text-xs break-words pr-2">{settings?.address || 'Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad'}</div>
               </div>
             </div>
           </div>

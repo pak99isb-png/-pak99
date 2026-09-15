@@ -1,6 +1,6 @@
 import { type VisaRequirement } from '../types';
 import React from 'react';
-import { ArrowRight, CheckCircle2, PlayCircle, MessageSquare, Search } from 'lucide-react';
+import { CheckCircle2, PlayCircle, MessageSquare, Search } from 'lucide-react';
 import { visasAPI } from '../services/api';
 import { Loader2 } from 'lucide-react';
 import { SEO } from '../components/SEO';
@@ -12,7 +12,7 @@ interface VisaPageProps {
   onSelectCountry: (country: VisaRequirement) => void;
 }
 
-export const VisaPage: React.FC<VisaPageProps> = ({ onOpenBooking, onSelectCountry }) => {
+export const VisaPage: React.FC<VisaPageProps> = ({ onSelectCountry }) => {
   const navigate = useNavigate();
   const [countries, setCountries] = React.useState<VisaRequirement[]>([]);
   const [settings, setSettings] = React.useState<any>(null);

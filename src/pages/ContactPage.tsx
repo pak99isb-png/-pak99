@@ -1,6 +1,7 @@
 import React from 'react';
 import { ContactSection } from '../components/ContactSection';
 import { SEO } from '../components/SEO';
+import { settingsAPI } from '../services/api';
 
 interface PageProps {
   onOpenBooking: (title?: string) => void;
@@ -8,11 +9,21 @@ interface PageProps {
 }
 
 export const ContactPage: React.FC<PageProps> = ({ onNavigateHome }) => {
+  const [settings, setSettings] = React.useState<any>({});
+
+  React.useEffect(() => {
+    settingsAPI.get().then(setSettings).catch(console.error);
+  }, []);
+
+  const address = settings?.address || 'Office No. 03 Nawaz Arcade, National Police Foundation, PWD Islamabad';
+  const phone1 = settings?.phone1 || '0310-8032999';
+  const phone2 = settings?.phone2 || '051-2757282';
+
   return (
     <div className="space-y-12 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto animate-fade-in">
       <SEO
         title="Contact Pak99 Travel & Tours - Islamabad Travel Agency"
-        description="Contact Pak99 Travel & Tours for tour bookings, Umrah packages, visa services & travel inquiries. Visit us at Office No. 03 Nawaz Arcade, National Police Foundation, PWD Islamabad. Call 0310-8032999 or 051-2757282. WhatsApp available."
+        description={`Contact Pak99 Travel & Tours for tour bookings, Umrah packages, visa services & travel inquiries. Visit us at ${address}. Call ${phone1} or ${phone2}. WhatsApp available.`}
         keywords="contact pak99 travel, travel agency islamabad contact, pak99 phone number, pak99 address, travel agent islamabad contact, tour booking islamabad, pak99 office location, pak99 whatsapp, travel agency near me islamabad, travel agency pwd islamabad, travel company contact pakistan"
         canonicalPath="/contact"
       />

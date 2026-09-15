@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Calendar, CheckCircle2, XCircle, Clock, Loader2, FileText, AlertCircle, MessageSquare, Watch } from 'lucide-react';
+import { Search, MapPin, Calendar, CheckCircle2, XCircle, Clock, Loader2, FileText, AlertCircle, MessageSquare } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { visaApplicationsAPI, settingsAPI } from '../services/api';
 import type { ApiVisaApplication } from '../services/api';

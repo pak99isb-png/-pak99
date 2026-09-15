@@ -108,7 +108,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToTour }) => {
           <div className="space-y-3 text-slate-200 font-medium">
             <div className="flex items-start gap-2.5">
               <MapPin className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
-              <span>Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad</span>
+              <span>{settings?.address || 'Office No. 03 Nawaz Arcade National Police Foundation, PWD Islamabad'}</span>
             </div>
             <div className="flex items-start gap-2.5">
               <Phone className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
