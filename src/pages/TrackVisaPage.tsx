@@ -178,12 +178,14 @@ export const TrackVisaPage: React.FC = () => {
                       <p className="text-lg font-extrabold text-[#0b2f64]">{application.visaType}</p>
                     </div>
 
-                    <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Expected Date</span>
-                      <p className="text-lg font-extrabold text-[#0b2f64]">
-                        {application.expectedDate ? new Date(application.expectedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
-                      </p>
-                    </div>
+                    {application.status !== 'Approved' && application.status !== 'Rejected' && (
+                      <div className="space-y-1">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Expected Date</span>
+                        <p className="text-lg font-extrabold text-[#0b2f64]">
+                          {application.expectedDate ? new Date(application.expectedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
+                        </p>
+                      </div>
+                    )}
 
                     {application.passportNumber && (
                       <div className="space-y-1 col-span-1 sm:col-span-2 pt-4 border-t border-slate-100">
